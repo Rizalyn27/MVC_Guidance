@@ -1,0 +1,146 @@
+﻿@model IEnumerable<MVC_DenoyJabines.Models.Students>
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.StuFullName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.GradeSec)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.StuLRN)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.StuStatus)
+                </th>
+                <th>
+                    Action
+                </th>
+                <th>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StuFullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.GradeSec)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StuLRN)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StuStatus)
+                    </td>
+                    <td>
+                     <!--View-->
+                        <button class="btn btn-primary"
+                                onclick="openEditPanel(this)"
+                                data-id="@item.StuLRN"
+                                data-stuid="@item.StuID"
+                                data-fname="@item.StuFName"
+                                data-mname="@item.StuMName"
+                                data-lname="@item.StuLName"
+                                data-gender="@item.Gender"
+                                data-birthdate="@item.Birthdate.ToString("yyyy-MM-dd")"
+                                data-address="@item.Address"
+                                data-contact="@item.Contact"
+                                data-email="@item.Email"
+                                data-department="@item.Department"
+                                data-yearlevel="@item.YearLevel"
+                                data-section="@item.Section"
+                                data-adviser="@item.Adviser"
+                                data-guardianname="@item.GuardianName"
+                                data-relationship="@item.Relationship"
+                                data-guardiancontact="@item.GuardianContact"
+                                data-guardianaddress="@item.GuardianAddress"
+                                data-reason="@item.Reason"
+                                data-casetype="@item.CaseType"
+                                data-status="@item.CounselingStatus"
+                                data-remarks="@item.Remarks">
+                            View
+                        </button>
+                     <!--Delete-->
+                        <button type="submit">
+                            <img src="~/images/pencil.png" width="25" height="25" /> 
+                        </button>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div id="editPanel" class="card mt-3" style="display:none;">
+        <div class="card-body">
+
+            <input type="hidden" id="ID">
+
+            <label>First Name</label>
+            <input type="text" id="StuFName" class="form-control">
+
+            <label>Middle Name</label>
+            <input type="text" id="StuMName" class="form-control">
+
+            <label>Last Name</label>
+            <input type="text" id="StuLName" class="form-control">
+
+            <label>Gender</label>
+            <input type="text" id="Gender" class="form-control">
+
+            <label>Birthdate</label>
+            <input type="date" id="Birthdate" class="form-control">
+
+            <label>Address</label>
+            <input type="text" id="Address" class="form-control">
+
+            <label>Contact</label>
+            <input type="text" id="Contact" class="form-control">
+
+            <label>Email</label>
+            <input type="text" id="Email" class="form-control">
+
+            <!-- you can continue adding all the other fields -->
+
+            <button class="btn btn-success mt-3">Save</button>
+            <button class="btn btn-secondary mt-3" onclick="closePanel()">Close</button>
+
+        </div>
+    </div>
+
+}
+
+<script>
+
+    function openEditPanel(button)
+    {
+        document.getElementById("editPanel").style.display = "block";
+
+        document.getElementById("ID").value = button.dataset.id;
+        document.getElementById("StuFName").value = button.dataset.fname;
+        document.getElementById("StuMName").value = button.dataset.mname;
+        document.getElementById("StuLName").value = button.dataset.lname;
+        document.getElementById("Gender").value = button.dataset.gender;
+        document.getElementById("Birthdate").value = button.dataset.birthdate;
+        document.getElementById("Address").value = button.dataset.address;
+        document.getElementById("Contact").value = button.dataset.contact;
+        document.getElementById("Email").value = button.dataset.email;
+
+        // continue for other fields if needed
+    }
+
+    function closePanel()
+    {
+        document.getElementById("editPanel").style.display = "none";
+    }
+
+</script>
