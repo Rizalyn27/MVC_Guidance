@@ -1,0 +1,160 @@
+﻿@model MVC_DenoyJabines.Models.Users
+@{
+    ViewData["Title"] = "Register";
+}
+@{
+    <!-- Hero Section -->
+    <main class="hero-section">
+        <div class="container hero-container">
+            <div class="hero-left">
+                <h1 class="hero-title">Guidance and Counseling</h1>
+                <div class="hero-image-wrapper">
+                    <img src="/photos/counsel.png" alt="Illustration of a counseling session" class="hero-image">
+                </div>
+            </div>
+
+            <form method="post" class="hero-form" onsubmit="return checkPasswords()">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <!-- Role (dropdown) -->
+                <div class="form-group mb-3">
+                    <label asp-for="Role" class="form-label">
+                        Register as <span class="text-danger">*</span>
+                    </label>
+                    <select asp-for="Role" class="form-select" aria-required="true" placeholder="-- Select Role --">
+                        <option value="Student">Student</option>
+                        <option value="Teacher">Counselor</option>
+                        <option value="Admin">Admin</option>
+                    </select>
+                    <span asp-validation-for="Role" class="text-danger"></span>
+                </div>
+
+                <!-- Username -->
+                <div class="form-group mb-3">
+                    <label asp-for="Username" class="form-label">
+                        Username <span class="text-danger">*</span>
+                    </label>
+                    <input asp-for="Username" class="form-control" id="username" aria-required="true" placeholder="Enter username" />
+                    <span asp-validation-for="Username" class="text-danger"></span>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group mb-3">
+                    <label asp-for="Email" class="form-label">
+                        Email <span class="text-danger">*</span>
+                    </label>
+                    <input asp-for="Email" class="form-control" id="email" aria-required="true" placeholder="Enter Email" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group mb-3">
+                    <label asp-for="Password" class="form-label">
+                        Password <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                        <input asp-for="Password" type="password" class="form-control" id="password" placeholder="Enter password" />
+                        <button type="button" style="background-color:#fffffe" class="btn @* btn-outline-secondary *@" onclick="togglePassword('password')" tabindex="-1">
+                            <img id="passwordToggleImg" src="/photos/hidepass.png" alt="Toggle password" style="height:20px;">
+                        </button>
+                    </div>
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="form-group mb-3">
+                    <label asp-for="ConfirmPassword" class="form-label">
+                        Confirm Password <span class="text-danger">*</span>
+                    </label>
+                    <div class="input-group">
+                        <input asp-for="ConfirmPassword" type="password" class="form-control" id="confirmPassword" placeholder="Re-enter password" />
+                        <button type="button" style="background-color:#fffffe" class="btn @* btn-outline-secondary *@" onclick="togglePassword('confirmPassword')" tabindex="-1">
+                            <img id="confirmPasswordToggleImg" src="/photos/hidepass.png" alt="Toggle password" style="height:20px;">
+                        </button>
+                    </div>
+                    <span id="confirmPasswordError" class="text-danger"></span>
+                </div>
+
+                <!-- Submit -->
+                <div class="form-group mb-3">
+                    <button type="submit" class="btn btn-primary w-100">Create</button>
+                </div>
+
+                <!-- Already have an Account -->
+                <a class="helper-text" style="margin-left: 150px;" asp-controller="Login" asp-action="Login">Already have an account? Login here</a>
+
+
+            </form>
+        </div>
+
+    </main>
+
+    <!-- Footer / Profile Section -->
+    <footer class="profile-section">
+        <div class="profile-container">
+            <div class="profile-card">
+                <div class="avatar-wrapper">
+                    <img src="/photos/avatar.png" alt="Rizalyn Denoy" class="avatar">
+                </div>
+                <div class="profile-info">
+                    <h2 class="profile-name">Rizalyn Denoy</h2>
+                    <div class="profile-tags">
+                        <span class="tag">Counsellor</span>
+                        <span class="tag">Advisor</span>
+                    </div>
+                    <p class="profile-tagline">Here to guide you every step of the way.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    @section Scripts {
+        @{
+            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+
+        @* For toggle show and hide password *@
+        <script>
+            function togglePassword(id) {
+                var pw = document.getElementById(id);
+                var img;
+
+                if (id === 'password')
+                {
+                    img = document.getElementById('passwordToggleImg');
+                }
+                else
+                {
+                    img = document.getElementById('confirmPasswordToggleImg');
+                }
+
+                if(pw.type === "password"){
+                    pw.type = "text";
+                    img.src = "/Photos/hide.png";
+                } else {
+                    pw.type = "password";
+                    img.src = "/Photos/hidepass.png";
+                }
+            }
+
+
+            @* For toggle show and hide password *@
+
+            function checkPasswords() {
+                var password = document.getElementById("password").value;
+                var confirmPassword = document.getElementById("confirmPassword").value;
+                var errorSpan = document.getElementById("confirmPasswordError");
+
+                if(password !== confirmPassword){
+                    errorSpan.textContent = "Passwords do not match!";
+                    return false;
+                } else {
+                    errorSpan.textContent = "";
+                    return true;
+                }
+            }
+
+
+        </script>
+    }
+}

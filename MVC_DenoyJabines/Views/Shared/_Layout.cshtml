@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MVC_DenoyJabines</title>
+    <script type="importmap"></script>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="@(Url.Content("~/lib/bootstrap/dist/css/bootstrap.min.css"))" />
+
+    <!-- Your site CSS -->
+    <link rel="stylesheet" href="@(Url.Content("~/css/site.css"))" />
+
+    <!-- Optional: extra CSS -->
+    <link rel="stylesheet" href="@(Url.Content("~/MVC_DenoyJabines.styles.css"))" />
+
+
+</head>
+<body>
+   
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2026 - MVC_DenoyJabines - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="@(Url.Content("~/lib/jquery/dist/jquery.min.js"))"></script>
+    <script src="@(Url.Content("~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"))"></script>
+    <script src="@(Url.Content("~/js/site.js"))"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
