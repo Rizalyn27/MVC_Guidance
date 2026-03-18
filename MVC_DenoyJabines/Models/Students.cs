@@ -75,7 +75,7 @@ namespace MVC_DenoyJabines.Models
 
         //Year level
         [Required(ErrorMessage = "Year level is required")]
-        [StringLength(20, ErrorMessage = "Year level must not exceed 20 characters")]
+        [Range(7, 12, ErrorMessage = "Year level must be between 7 and 12")]
         public int YearLevel { get; set; }
 
         //Section

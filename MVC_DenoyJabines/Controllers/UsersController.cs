@@ -14,7 +14,7 @@ namespace MVC_DenoyJabines.Controllers
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> UsersIndex()
         {
             var users = await _context.User.ToListAsync();
             return View(users);

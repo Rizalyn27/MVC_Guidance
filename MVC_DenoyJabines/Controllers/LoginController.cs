@@ -80,18 +80,24 @@ namespace MVC_DenoyJabines.Controllers
                 .FirstOrDefaultAsync(u => (u.Username == username || u.Email == username)
                                         && u.Password == hashedPassword);
 
-            // If user not found, show error
             if (user == null)
             {
                 ModelState.AddModelError("", "Invalid username or password");
                 return View();
             }
 
-            // Redirect based on user role
-            if (user.Role == "Admin")
-                return RedirectToAction("Admin", "Home"); // Admin dashboard
-            else
-                return RedirectToAction("Home", "Home");  // Regular user dashboard
+            // Role-based redirect
+            switch (user.Role)
+            {
+                case "Admin":
+                    return RedirectToAction("Admin", "Home");
+
+                case "Student":
+                    return RedirectToAction("Home", "Home");
+
+                default:
+                    return RedirectToAction("Index"); 
+            }
         }
 
         // Hash Pass
