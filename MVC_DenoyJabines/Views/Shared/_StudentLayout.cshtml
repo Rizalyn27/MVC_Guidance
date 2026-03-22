@@ -35,11 +35,7 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a class="nav-link text-white" asp-controller="Students" asp-action="Index">
-                        Student Profiles
-                    </a>
-                </li>
+             
 
                 <li class="nav-item">
                     <a class="nav-link text-white" asp-controller="Appointments" asp-action="Index">
@@ -49,18 +45,15 @@
 
             </ul>
 
-            <p class="text-secondary mt-4">RECORDS</p>
-
-            <ul class="nav flex-column">
-
-                <li class="nav-item">
-                    <a class="nav-link text-white" asp-controller="CaseNotes" asp-action="Index">
-                        Case Notes
-                    </a>
-                </li>
-
-            </ul>
-
+            
+            <!-- Logout Button -->
+            <div class="mt-auto pt-4">
+                <form asp-controller="Login" asp-action="Logout" method="post">
+                    <button type="submit" class="btn btn-danger w-100">
+                        Logout
+                    </button>
+                </form>
+            </div>
         </div>
 
 
@@ -71,11 +64,7 @@
                 @RenderBody()
             </main>
 
-            <footer class="border-top footer text-muted mt-5">
-                <div class="container">
-                    &copy; 2026 - MVC_DenoyJabines
-                </div>
-            </footer>
+         
 
         </div>
 

@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "User Management";
-    Layout = "_Layout";
 }
 
 <div class="container mt-4">
@@ -14,13 +13,14 @@
                 <th class="text-start">Username</th>
                 <th class="text-start">Email</th>
                 <th>Role</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             @if (!Model.Any())
             {
                 <tr>
-                    <td colspan="3" class="text-muted">No users found.</td>
+                    <td colspan="4" class="text-muted">No users found.</td>
                 </tr>
             }
             else
@@ -31,9 +31,19 @@
                         <td class="text-start">@item.Username</td>
                         <td class="text-start">@item.Email</td>
                         <td>@item.Role</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.UserId" class="btn btn-sm btn-primary">✏️ Edit</a>
+                            <a asp-action="Delete" asp-route-id="@item.UserId" class="btn btn-sm btn-danger">🗑 Delete</a>
+                        </td>
                     </tr>
                 }
             }
         </tbody>
     </table>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

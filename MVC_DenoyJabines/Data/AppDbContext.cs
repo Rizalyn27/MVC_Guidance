@@ -14,6 +14,8 @@ namespace MVC_DenoyJabines.Data
         public DbSet<MVC_DenoyJabines.Models.Users> User { get; set; }
         public DbSet<MVC_DenoyJabines.Models.Students> Students { get; set; }
 
+        public DbSet<MVC_DenoyJabines.Models.Appointment> Appointments { get; set; }
+
 
     }
 }

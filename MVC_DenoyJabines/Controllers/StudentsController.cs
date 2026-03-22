@@ -24,13 +24,26 @@ namespace MVC_DenoyJabines.Controllers
         {
             var students = _context.Students.AsQueryable();
 
-            if (status == "inactive")
-                students = students.Where(s => !s.StuStatus);
-            else
-                students = students.Where(s => s.StuStatus);
+            if (!string.IsNullOrEmpty(status))
+            {
+                if (status.ToLower() == "active")
+                {
+                    students = students.Where(s => s.StuStatus); // Active students
+                }
+                else if (status.ToLower() == "inactive")
+                {
+                    students = students.Where(s => !s.StuStatus); // Inactive students
+                }
+                else if (status.ToLower() == "all")
+                {
+                    // No filter, return all students
+                    students = students;
+                }
+            }
 
             return View(await students.ToListAsync());
         }
+
 
         // GET: Students/Details/5
         public async Task<IActionResult> Details(int? id)

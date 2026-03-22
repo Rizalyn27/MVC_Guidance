@@ -4,6 +4,9 @@ using MVC_DenoyJabines.Data;
 using MVC_DenoyJabines.Models;
 using System.Text;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
 
 namespace MVC_DenoyJabines.Controllers
 {
@@ -86,18 +89,49 @@ namespace MVC_DenoyJabines.Controllers
                 return View();
             }
 
-            // Role-based redirect
+            // CLAIM
+            var claims = new List<Claim>
+    {
+        new Claim(ClaimTypes.Name, user.Username),
+        new Claim(ClaimTypes.Role, user.Role) // ENABLES ROLE CHECKING
+    };
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = true // keeps user logged in
+            };
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                authProperties);
+
+            // Role base 
             switch (user.Role)
             {
                 case "Admin":
                     return RedirectToAction("Admin", "Home");
 
-                case "Student":
+                case "Counselor":
                     return RedirectToAction("Home", "Home");
 
+                case "Student":
+                    return RedirectToAction("StudentsHome", "Home");
+
                 default:
-                    return RedirectToAction("Index"); 
+                    return RedirectToAction("StudentsHome", "Home");
             }
+        }
+
+        //Logout
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Login");
         }
 
         // Hash Pass

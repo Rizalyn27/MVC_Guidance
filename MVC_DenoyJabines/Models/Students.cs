@@ -30,6 +30,7 @@ namespace MVC_DenoyJabines.Models
         [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Last name can only contain letters")]
         public string StuLName { get; set; }
 
+
         [StringLength(50, ErrorMessage = "Middle name must not exceed 50 characters")]
         [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessage = "Middle name can only contain letters")]
         public string StuMName { get; set; }

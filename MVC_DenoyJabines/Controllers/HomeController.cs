@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MVC_DenoyJabines.Models;
 
@@ -13,16 +14,20 @@ namespace MVC_DenoyJabines.Controllers
             _logger = logger;
         }
 
+        [Authorize(Roles = "Admin")]
         public IActionResult Admin()
         {
             return View();
         }
+
+        [Authorize(Roles = "Counselor")]
 
         public IActionResult Home()
         {
             return View();
         }
 
+        [Authorize(Roles = "Admin,Counselor")]
         public IActionResult Profile()
         {
             return View();
