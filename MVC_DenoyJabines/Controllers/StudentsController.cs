@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVC_DenoyJabines.Data;
 using MVC_DenoyJabines.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MVC_DenoyJabines.Controllers
 {
@@ -24,26 +25,30 @@ namespace MVC_DenoyJabines.Controllers
         {
             var students = _context.Students.AsQueryable();
 
+            if (User.IsInRole("Student"))
+            {
+                var username = User.Identity?.Name;
+
+                var result = await students
+                    .Where(s => s.Email == username
+                             || s.StuLRN == username 
+                             || (s.StuFName + s.StuLName) == username) 
+                    .ToListAsync();
+
+                return View("StudentIndex", result ?? new List<Students>());
+            }
+
+            // Counselor/Admin full list
             if (!string.IsNullOrEmpty(status))
             {
                 if (status.ToLower() == "active")
-                {
-                    students = students.Where(s => s.StuStatus); // Active students
-                }
+                    students = students.Where(s => s.StuStatus);
                 else if (status.ToLower() == "inactive")
-                {
-                    students = students.Where(s => !s.StuStatus); // Inactive students
-                }
-                else if (status.ToLower() == "all")
-                {
-                    // No filter, return all students
-                    students = students;
-                }
+                    students = students.Where(s => !s.StuStatus);
             }
 
             return View(await students.ToListAsync());
         }
-
 
         // GET: Students/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -177,6 +182,17 @@ namespace MVC_DenoyJabines.Controllers
         private bool StudentsExists(int id)
         {
             return _context.Students.Any(e => e.StuID == id);
+        }
+
+        [Authorize(Roles = "Student")]
+        public async Task<IActionResult> Profile()
+        {
+            var username = User.Identity?.Name;
+            var result = await _context.Students
+                .Where(s => s.Email == username || s.StuLRN == username)
+                .ToListAsync();
+
+            return View(result ?? new List<Students>());
         }
     }
 }

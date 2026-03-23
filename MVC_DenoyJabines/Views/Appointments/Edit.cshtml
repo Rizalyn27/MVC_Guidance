@@ -1,0 +1,120 @@
+﻿@model MVC_DenoyJabines.Models.Appointment
+
+@{
+    ViewData["Title"] = "Edit Appointment";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@600&display=swap');
+
+    .appt-form {
+        font-family: 'DM Sans', sans-serif;
+        max-width: 680px;
+        margin: auto;
+    }
+
+        .appt-form h2 {
+            font-family: 'Playfair Display', serif;
+            color: #1a1a2e;
+        }
+
+        .appt-form .form-label {
+            font-weight: 500;
+            font-size: .88rem;
+            color: #333;
+        }
+
+        .appt-form .form-control, .appt-form .form-select {
+            border-radius: 8px;
+            font-size: .9rem;
+        }
+
+            .appt-form .form-control:focus, .appt-form .form-select:focus {
+                border-color: #1a1a2e;
+                box-shadow: 0 0 0 3px rgba(26,26,46,.1);
+            }
+
+    .card-section {
+        background: #f9f9fb;
+        border: 1px solid #e8e8f0;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 20px;
+    }
+
+    .section-label {
+        font-size: .75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        color: #888;
+        margin-bottom: 16px;
+    }
+</style>
+
+<div class="container mt-4 appt-form">
+    <h2 class="mb-1">✏️ Edit Appointment</h2>
+    <p class="text-muted mb-4" style="font-size:.9rem;">Update appointment details and status below.</p>
+
+    <form asp-action="Edit" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="AppointmentID" />
+
+        <div class="card-section">
+            <div class="section-label">Student & Counselor</div>
+
+            <div class="mb-3">
+                <label asp-for="StudentID" class="form-label">Student</label>
+                <select asp-for="StudentID" asp-items="ViewBag.StudentID" class="form-select">
+                    <option value="">-- Select Student --</option>
+                </select>
+                <span asp-validation-for="StudentID" class="text-danger small"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="CounselorID" class="form-label">Counselor</label>
+                <select asp-for="CounselorID" asp-items="ViewBag.CounselorID" class="form-select">
+                    <option value="">-- Unassigned --</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="card-section">
+            <div class="section-label">Appointment Details</div>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="AppointmentDate" class="form-label">Date & Time</label>
+                    <input asp-for="AppointmentDate" type="datetime-local" class="form-control" />
+                    <span asp-validation-for="AppointmentDate" class="text-danger small"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="AppointmentType" class="form-label">Type</label>
+                    <select asp-for="AppointmentType" asp-items="ViewBag.AppointmentTypes" class="form-select"></select>
+                    <span asp-validation-for="AppointmentType" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="mt-3">
+                <label asp-for="Notes" class="form-label">Notes</label>
+                <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="mt-3">
+                <label asp-for="Status" class="form-label">Status</label>
+                <select asp-for="Status" asp-items="ViewBag.StatusOptions" class="form-select"></select>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <a asp-action="Index" class="btn btn-secondary">⬅ Back</a>
+            <button type="submit" class="btn btn-success px-4">💾 Save Changes</button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

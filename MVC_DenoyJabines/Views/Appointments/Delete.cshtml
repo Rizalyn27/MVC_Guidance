@@ -1,0 +1,72 @@
+﻿@model MVC_DenoyJabines.Models.Appointment
+
+@{
+    ViewData["Title"] = "Cancel Appointment";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@600&display=swap');
+
+    .del-page {
+        font-family: 'DM Sans', sans-serif;
+        max-width: 560px;
+        margin: auto;
+    }
+
+        .del-page h2 {
+            font-family: 'Playfair Display', serif;
+            color: #1a1a2e;
+        }
+
+    .confirm-card {
+        border: 1.5px solid #f5c2c7;
+        background: #fff8f8;
+        border-radius: 12px;
+        padding: 28px;
+    }
+
+    .detail-label {
+        font-size: .78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: #888;
+        margin-bottom: 2px;
+    }
+
+    .detail-value {
+        font-size: .95rem;
+        color: #1a1a2e;
+        margin-bottom: 14px;
+    }
+</style>
+
+<div class="container mt-4 del-page">
+    <h2 class="mb-1">🗑 Cancel Appointment</h2>
+    <p class="text-muted mb-4" style="font-size:.9rem;">
+        This will mark the appointment as <strong>Cancelled</strong>. It will not be permanently deleted.
+    </p>
+
+    <div class="confirm-card mb-4">
+        <div class="detail-label">Student</div>
+        <div class="detail-value">@Model.Student?.StuFName @Model.Student?.StuLName</div>
+
+        <div class="detail-label">Date & Time</div>
+        <div class="detail-value">@Model.AppointmentDate.ToString("MMMM dd, yyyy — hh:mm tt")</div>
+
+        <div class="detail-label">Type</div>
+        <div class="detail-value">@Model.AppointmentType</div>
+
+        <div class="detail-label">Counselor</div>
+        <div class="detail-value">@(Model.Counselor?.Username ?? "—")</div>
+    </div>
+
+    <form asp-action="Delete" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="AppointmentID" />
+        <div class="d-flex justify-content-between">
+            <a asp-action="Index" class="btn btn-secondary">⬅ Keep It</a>
+            <button type="submit" class="btn btn-danger px-4">🗑 Yes, Cancel Appointment</button>
+        </div>
+    </form>
+</div>

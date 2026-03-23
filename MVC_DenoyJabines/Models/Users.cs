@@ -38,5 +38,7 @@ namespace MVC_DenoyJabines.Models
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Passwords do not match")]
         public string ConfirmPassword { get; set; }
+
+        public bool IsActive { get; set; } = true;
     }
 }

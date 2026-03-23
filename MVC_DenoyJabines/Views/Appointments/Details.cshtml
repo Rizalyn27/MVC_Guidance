@@ -1,0 +1,125 @@
+﻿@model MVC_DenoyJabines.Models.Appointment
+
+@{
+    ViewData["Title"] = "Appointment Details";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@600&display=swap');
+
+    .detail-page {
+        font-family: 'DM Sans', sans-serif;
+        max-width: 680px;
+        margin: auto;
+    }
+
+        .detail-page h2 {
+            font-family: 'Playfair Display', serif;
+            color: #1a1a2e;
+        }
+
+    .detail-card {
+        background: #f9f9fb;
+        border: 1px solid #e8e8f0;
+        border-radius: 12px;
+        padding: 28px;
+    }
+
+    .detail-label {
+        font-size: .78rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        color: #888;
+        margin-bottom: 2px;
+    }
+
+    .detail-value {
+        font-size: .95rem;
+        color: #1a1a2e;
+        margin-bottom: 18px;
+    }
+
+    .divider {
+        border-top: 1px solid #e8e8f0;
+        margin: 18px 0;
+    }
+
+    .badge-pending {
+        background: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffc107;
+        border-radius: 12px;
+        padding: 4px 14px;
+        font-size: .82rem;
+    }
+
+    .badge-completed {
+        background: #d1e7dd;
+        color: #0a3622;
+        border: 1px solid #198754;
+        border-radius: 12px;
+        padding: 4px 14px;
+        font-size: .82rem;
+    }
+
+    .badge-cancelled {
+        background: #f8d7da;
+        color: #58151c;
+        border: 1px solid #dc3545;
+        border-radius: 12px;
+        padding: 4px 14px;
+        font-size: .82rem;
+    }
+</style>
+
+<div class="container mt-4 detail-page">
+    <h2 class="mb-1">📋 Appointment Details</h2>
+    <p class="text-muted mb-4" style="font-size:.9rem;">ID #@Model.AppointmentID</p>
+
+    <div class="detail-card mb-4">
+        <div class="row">
+            <div class="col-6">
+                <div class="detail-label">Student</div>
+                <div class="detail-value">@Model.Student?.StuFName @Model.Student?.StuLName</div>
+            </div>
+            <div class="col-6">
+                <div class="detail-label">Counselor</div>
+                <div class="detail-value">@(Model.Counselor?.Username ?? "—")</div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="row">
+            <div class="col-6">
+                <div class="detail-label">Date & Time</div>
+                <div class="detail-value">@Model.AppointmentDate.ToString("MMMM dd, yyyy — hh:mm tt")</div>
+            </div>
+            <div class="col-6">
+                <div class="detail-label">Type</div>
+                <div class="detail-value">@Model.AppointmentType</div>
+            </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="detail-label">Status</div>
+        <div class="detail-value">
+            <span class="badge-@Model.Status.ToLower()">@Model.Status</span>
+        </div>
+
+        <div class="detail-label">Notes</div>
+        <div class="detail-value">
+            @(string.IsNullOrEmpty(Model.Notes) ? "No notes provided." : Model.Notes)
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between">
+        <a asp-action="Index" class="btn btn-secondary">⬅ Back</a>
+        <div class="d-flex gap-2">
+            <a asp-action="Edit" asp-route-id="@Model.AppointmentID" class="btn btn-primary">✏️ Edit</a>
+            <a asp-action="Delete" asp-route-id="@Model.AppointmentID" class="btn btn-danger">🗑 Cancel</a>
+        </div>
+    </div>
+</div>
