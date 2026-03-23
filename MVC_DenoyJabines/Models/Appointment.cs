@@ -1,46 +1,63 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MVC_DenoyJabines.Models;
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MVC_DenoyJabines.Models
 {
-        public class Appointment
-        {
+    public class Appointment
+    {
             [Key]
             [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
             [HiddenInput(DisplayValue = false)]
             public int AppointmentID { get; set; }
 
-            // Foreign Key: Student
-            [Required(ErrorMessage = "Student is required")]
-            public int StudentID { get; set; }
+            // Patient / Client Info
+            [Required(ErrorMessage = "First name is required")]
+            [StringLength(100)]
+            public string FirstName { get; set; } = string.Empty;
 
-            [ForeignKey("StudentID")]
-            public Students Student { get; set; }
+            [Required(ErrorMessage = "Last name is required")]
+            [StringLength(100)]
+            public string LastName { get; set; } = string.Empty;
 
-            // Foreign Key: Counselor / User (optional)
-            public int? CounselorID { get; set; }
+            [StringLength(100)]
+            public string? MiddleName { get; set; }
 
-            [ForeignKey("CounselorID")]
-            public Users Counselor { get; set; }
+            [Required(ErrorMessage = "Email is required")]
+            [EmailAddress]
+            public string Email { get; set; } = string.Empty;
 
-            // Appointment Info
+            [Phone]
+            [StringLength(20)]
+            public string ContactNumber { get; set; } = string.Empty;
+
+            // Appointment Details
             [Required(ErrorMessage = "Appointment date is required")]
             [DataType(DataType.DateTime)]
-            public DateTime AppointmentDate { get; set; }
+            public DateTime AppointmentDate { get; set; } = DateTime.Now;
 
             [Required(ErrorMessage = "Appointment type is required")]
-            [StringLength(100, ErrorMessage = "Type must not exceed 100 characters")]
-            public string AppointmentType { get; set; }  // e.g., Consultation, Follow-up
+            [StringLength(100)]
+            public string AppointmentType { get; set; } = string.Empty;
 
-            [StringLength(500, ErrorMessage = "Notes must not exceed 500 characters")]
-            public string Notes { get; set; }
+            [StringLength(500)]
+            public string? Notes { get; set; }
 
-            // Status
+            // Status (Pending, Confirmed, Cancelled, Completed)
             [Required]
             [StringLength(50)]
-            public string Status { get; set; } = "Pending"; // Pending, Completed, Cancelled
-        }
+            public string Status { get; set; }
+
+            // Audit Fields
+            public DateTime CreatedAt { get; set; } 
+
+            public DateTime? UpdatedAt { get; set; } 
+
+        // User ID
+        [Required]
+            public int UserId { get; set; }  // FK to Users table
+
+            [ForeignKey("UserId")]
+            public Users? User { get; set; }
+    }
 }

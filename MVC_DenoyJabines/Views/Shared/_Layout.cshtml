@@ -5,97 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - MVC_DenoyJabines</title>
     <script type="importmap"></script>
-    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="@(Url.Content("~/lib/bootstrap/dist/css/bootstrap.min.css"))" />
-
-    <!-- Your site CSS -->
     <link rel="stylesheet" href="@(Url.Content("~/css/site.css"))" />
-
-    <!-- Optional: extra CSS -->
     <link rel="stylesheet" href="@(Url.Content("~/MVC_DenoyJabines.styles.css"))" />
-
-
 </head>
 <body>
-
     <div class="d-flex">
 
-        <!-- SIDEBAR -->
         <div class="bg-dark text-white p-3" style="width:250px; min-height:100vh;">
-
             <h4 class="mb-4">Counselor Panel</h4>
 
             <p class="text-secondary">MAIN</p>
-
             <ul class="nav flex-column">
-
                 <li class="nav-item">
                     <a class="nav-link text-white" asp-controller="Home" asp-action="Home">
-                        Dashboard
+                        🏠 Dashboard
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <a class="nav-link text-white" asp-controller="Students" asp-action="Index">
-                        Student Profiles
+                        🎓 Student Profiles
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <a class="nav-link text-white" asp-controller="Appointments" asp-action="Index">
-                        Appointments
+                        🗓 Appointments
                     </a>
                 </li>
-
             </ul>
 
             <p class="text-secondary mt-4">RECORDS</p>
-
             <ul class="nav flex-column">
-
                 <li class="nav-item">
                     <a class="nav-link text-white" asp-controller="CaseNotes" asp-action="Index">
-                        Case Notes
+                        📋 Case Notes
                     </a>
                 </li>
-
             </ul>
 
-            <!-- Logout Button -->
             <div class="mt-auto pt-4">
                 <form asp-controller="Login" asp-action="Logout" method="post">
-                    <button type="submit" class="btn btn-danger w-100">
-                        Logout
-                    </button>
+                    <button type="submit" class="btn btn-danger w-100">Logout</button>
                 </form>
             </div>
-
         </div>
 
-
-        <!-- PAGE CONTENT -->
         <div class="flex-grow-1 p-4">
-
             <main role="main" class="pb-3">
                 @RenderBody()
             </main>
-
             <footer class="border-top footer text-muted mt-5">
                 <div class="container">
                     &copy; 2026 - MVC_DenoyJabines
                 </div>
             </footer>
-
         </div>
 
     </div>
 
-
     <script src="@(Url.Content("~/lib/jquery/dist/jquery.min.js"))"></script>
     <script src="@(Url.Content("~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"))"></script>
     <script src="@(Url.Content("~/js/site.js"))"></script>
-
     @await RenderSectionAsync("Scripts", required: false)
-
 </body>
 </html>

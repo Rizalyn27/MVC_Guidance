@@ -4,6 +4,7 @@ using MVC_DenoyJabines.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MVC_DenoyJabines.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260322093453_AddedAppoinments")]
+    partial class AddedAppoinments
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,31 +41,8 @@ namespace MVC_DenoyJabines.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("ContactNumber")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("MiddleName")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
+                    b.Property<int?>("CounselorID")
+                        .HasColumnType("int");
 
                     b.Property<string>("Notes")
                         .HasMaxLength(500)
@@ -73,15 +53,14 @@ namespace MVC_DenoyJabines.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
+                    b.Property<int>("StudentID")
                         .HasColumnType("int");
 
                     b.HasKey("AppointmentID");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("CounselorID");
+
+                    b.HasIndex("StudentID");
 
                     b.ToTable("Appointments");
                 });
@@ -240,13 +219,19 @@ namespace MVC_DenoyJabines.Migrations
 
             modelBuilder.Entity("MVC_DenoyJabines.Models.Appointment", b =>
                 {
-                    b.HasOne("MVC_DenoyJabines.Models.Users", "User")
+                    b.HasOne("MVC_DenoyJabines.Models.Users", "Counselor")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("CounselorID");
+
+                    b.HasOne("MVC_DenoyJabines.Models.Students", "Student")
+                        .WithMany()
+                        .HasForeignKey("StudentID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("Counselor");
+
+                    b.Navigation("Student");
                 });
 #pragma warning restore 612, 618
         }

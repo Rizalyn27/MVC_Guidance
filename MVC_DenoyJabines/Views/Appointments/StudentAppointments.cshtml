@@ -1,0 +1,41 @@
+﻿@model IEnumerable<MVC_DenoyJabines.Models.Appointment>
+
+@{
+    ViewData["Title"] = "My Appointments";
+}
+
+<div class="container mt-4">
+    <div class="text-center mb-4">
+        <h1 class="display-4">📅 My Appointments</h1>
+        <p>See all your booked appointments below.</p>
+        <a asp-action="Create" class="btn btn-success">➕ Book Appointment</a>
+    </div>
+
+    <table class="table table-striped table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Notes</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.AppointmentDate.ToString("g")</td>
+                    <td>@item.AppointmentType</td>
+                    <td>@item.Status</td>
+                    <td>@item.Notes</td>
+                    <td>
+                        <a asp-action="AppointmentDetails" asp-route-id="@item.AppointmentID" class="btn btn-info btn-sm">Details</a>
+                        <a asp-action="AppointmentEdit" asp-route-id="@item.AppointmentID" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-action="AppointmentDelete" asp-route-id="@item.AppointmentID" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,110 @@
+﻿@model MVC_DenoyJabines.Models.Appointment
+
+@{
+    ViewData["Title"] = "Edit Appointment";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-lg border-0">
+
+        <!-- HEADER -->
+        <div class="card-header bg-warning text-white">
+            <h4 class="mb-0">✏️ Edit Appointment</h4>
+        </div>
+
+        <div class="card-body">
+
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                <input type="hidden" asp-for="AppointmentID" />
+
+                <!-- 👤 CLIENT INFO -->
+                <h5 class="text-primary mt-3">👤 Client Information</h5>
+                <hr />
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="FirstName"></label>
+                        <input asp-for="FirstName" class="form-control" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="LastName"></label>
+                        <input asp-for="LastName" class="form-control" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="MiddleName"></label>
+                        <input asp-for="MiddleName" class="form-control" />
+                        <span asp-validation-for="MiddleName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- 📬 CONTACT -->
+                <h5 class="text-success mt-4">📬 Contact Details</h5>
+                <hr />
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="ContactNumber"></label>
+                        <input asp-for="ContactNumber" class="form-control" />
+                        <span asp-validation-for="ContactNumber" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- 📅 APPOINTMENT DETAILS -->
+                <h5 class="text-warning mt-4">📅 Appointment Info</h5>
+                <hr />
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="AppointmentDate"></label>
+                        <input asp-for="AppointmentDate" type="datetime-local" class="form-control" />
+                        <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="AppointmentType"></label>
+                        <input asp-for="AppointmentType" class="form-control" />
+                        <span asp-validation-for="AppointmentType" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Status"></label>
+                        <select asp-for="Status" class="form-control">
+                            <option value="">-- Select Status --</option>
+                            <option>Pending</option>
+                            <option>Approved</option>
+                            <option>Completed</option>
+                            <option>Cancelled</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- 📝 NOTES -->
+                <h5 class="text-info mt-4">📝 Notes</h5>
+                <hr />
+                <div class="row">
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="Notes"></label>
+                        <textarea asp-for="Notes" class="form-control"></textarea>
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- BUTTONS -->
+                <div class="d-flex justify-content-between mt-4">
+                    @{
+                        var roleClaim = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+                        var backAction = roleClaim == "Student" ? "StudentAppointments" : "Index";
+                    }
+                    <a asp-action="@backAction" class="btn btn-secondary">⬅ Back</a>
+                    <button type="submit" class="btn btn-success">💾 Save Changes</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+</div>
