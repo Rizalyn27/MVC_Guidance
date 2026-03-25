@@ -19,13 +19,39 @@ namespace MVC_DenoyJabines.Controllers
         }
 
         [Authorize(Roles = "Admin")]
-        public IActionResult Admin()
+        public async Task<IActionResult> Admin()
         {
+            ViewBag.TotalStudents = await _context.Students.CountAsync();
+            ViewBag.ActiveStudents = await _context.Students.CountAsync(s => s.StuStatus);
+            ViewBag.InactiveStudents = await _context.Students.CountAsync(s => !s.StuStatus);
+            ViewBag.TotalUsers = await _context.User.CountAsync();
+            ViewBag.ActiveUsers = await _context.User.CountAsync(u => u.IsActive);
+            ViewBag.TotalAppts = await _context.Appointments.CountAsync();
+            ViewBag.PendingAppts = await _context.Appointments.CountAsync(a => a.Status == "Pending");
+            ViewBag.ConfirmedAppts = await _context.Appointments.CountAsync(a => a.Status == "Confirmed");
+            ViewBag.CompletedAppts = await _context.Appointments.CountAsync(a => a.Status == "Completed");
+            ViewBag.CancelledAppts = await _context.Appointments.CountAsync(a => a.Status == "Cancelled");
+            ViewBag.MissedAppts = await _context.Appointments.CountAsync(a => a.Status == "Missed");
             return View();
         }
 
         [Authorize(Roles = "Counselor")]
-        public IActionResult Home()
+        public async Task<IActionResult> Home()
+        {
+            ViewBag.TotalStudents = await _context.Students.CountAsync();
+            ViewBag.ActiveStudents = await _context.Students.CountAsync(s => s.StuStatus);
+            ViewBag.InactiveStudents = await _context.Students.CountAsync(s => !s.StuStatus);
+            ViewBag.TotalAppts = await _context.Appointments.CountAsync();
+            ViewBag.PendingAppts = await _context.Appointments.CountAsync(a => a.Status == "Pending");
+            ViewBag.ConfirmedAppts = await _context.Appointments.CountAsync(a => a.Status == "Confirmed");
+            ViewBag.CompletedAppts = await _context.Appointments.CountAsync(a => a.Status == "Completed");
+            ViewBag.CancelledAppts = await _context.Appointments.CountAsync(a => a.Status == "Cancelled");
+            ViewBag.MissedAppts = await _context.Appointments.CountAsync(a => a.Status == "Missed");
+            return View();
+        }
+
+        [Authorize(Roles = "Student")]
+        public IActionResult StudentsHome()
         {
             return View();
         }
@@ -43,17 +69,7 @@ namespace MVC_DenoyJabines.Controllers
             return View("~/Views/Appointments/Index.cshtml");
         }
 
-        [Authorize(Roles = "Student")]
-        public async Task<IActionResult> StudentsHome()
-        {
-            var username = User.Identity?.Name;
-            var result = await _context.Students
-                .Where(s => s.Email == username || s.StuLRN == username)
-                .ToListAsync();
-
-            return View(result ?? new List<Students>());
-        }
-
+      
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

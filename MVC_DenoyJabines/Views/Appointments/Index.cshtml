@@ -1,0 +1,96 @@
+﻿@model IEnumerable<MVC_DenoyJabines.Models.Appointment>
+@{
+    ViewData["Title"] = "Appointments";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+            <h4 class="mb-0">📅 All Appointments</h4>
+            <a asp-action="Create" class="btn btn-light btn-sm">➕ New Appointment</a>
+        </div>
+
+        <div class="card-body">
+            @if (!Model.Any())
+            {
+                <div class="alert alert-info">No appointments found.</div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-primary">
+                            <tr>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Contact</th>
+                                <th>Date & Time</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.FirstName @item.MiddleName @item.LastName</td>
+                                    <td>@item.Email</td>
+                                    <td>@item.ContactNumber</td>
+                                    <td>@item.AppointmentDate.ToString("MMM dd, yyyy hh:mm tt")</td>
+                                    <td>@item.AppointmentType</td>
+                                    <td>
+                                        @if (User.IsInRole("Counselor") || User.IsInRole("Admin"))
+                                        {
+                                            <form asp-action="UpdateStatus" method="post" class="d-flex gap-1">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@item.AppointmentID" />
+                                                <select name="status" class="form-select form-select-sm" style="min-width:130px">
+                                                    <option value="Pending" selected="@(item.Status == "Pending" ? "selected" : null)">⏳ Pending</option>
+                                                    <option value="Confirmed" selected="@(item.Status == "Confirmed" ? "selected" : null)">✅ Confirmed</option>
+                                                    <option value="Cancelled" selected="@(item.Status == "Cancelled" ? "selected" : null)">❌ Cancelled</option>
+                                                    <option value="Completed" selected="@(item.Status == "Completed" ? "selected" : null)">🎓 Completed</option>
+                                                    <option value="Missed" selected="@(item.Status == "Missed" ? "selected" : null)">🚫 Missed</option>
+                                                </select>
+                                                <button type="submit" class="btn btn-sm btn-outline-primary">💾</button>
+                                            </form>
+                                        }
+                                        else
+                                        {
+                                            @switch (item.Status)
+                                            {
+                                                case "Pending":
+                                                    <span class="badge bg-warning text-dark">⏳ Pending</span>
+                                                    break;
+                                                case "Confirmed":
+                                                    <span class="badge bg-success">✅ Confirmed</span>
+                                                    break;
+                                                case "Cancelled":
+                                                    <span class="badge bg-danger">❌ Cancelled</span>
+                                                    break;
+                                                case "Completed":
+                                                    <span class="badge bg-primary">🎓 Completed</span>
+                                                    break;
+                                                case "Missed":
+                                                    <span class="badge bg-secondary">🚫 Missed</span>
+                                                    break;
+                                                default:
+                                                    <span class="badge bg-secondary">@item.Status</span>
+                                                    break;
+                                            }
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <a asp-action="Edit" asp-route-id="@item.AppointmentID" class="btn btn-warning btn-sm">✏️</a>
+                                        <a asp-action="Details" asp-route-id="@item.AppointmentID" class="btn btn-info btn-sm">🔍</a>
+                                        <a asp-action="Delete" asp-route-id="@item.AppointmentID" class="btn btn-danger btn-sm">🗑️</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+</div>

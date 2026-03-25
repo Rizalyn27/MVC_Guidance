@@ -80,8 +80,8 @@ namespace MVC_DenoyJabines.Controllers
             string hashedPassword = HashPassword(password);
 
             var user = await _context.User
-                .FirstOrDefaultAsync(u => (u.Username == username || u.Email == username)
-                                        && u.Password == hashedPassword);
+     .FirstOrDefaultAsync(u => (u.Username == username || u.Email == username)
+                             && u.Password == hashedPassword);
 
             if (user == null)
             {
@@ -89,7 +89,14 @@ namespace MVC_DenoyJabines.Controllers
                 return View();
             }
 
-            // CLAIM
+            // IsActive check
+            if (!user.IsActive)
+            {
+                ModelState.AddModelError("", "Your account is inactive. Please contact the administrator.");
+                return View();
+            }
+
+            // CLAIMS
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Username),

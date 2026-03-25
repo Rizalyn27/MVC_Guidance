@@ -34,6 +34,7 @@ namespace MVC_DenoyJabines.Models
             // Appointment Details
             [Required(ErrorMessage = "Appointment date is required")]
             [DataType(DataType.DateTime)]
+            [FutureDate(ErrorMessage = "Appointment date and time must be in the future.")]
             public DateTime AppointmentDate { get; set; } = DateTime.Now;
 
             [Required(ErrorMessage = "Appointment type is required")]
@@ -59,5 +60,18 @@ namespace MVC_DenoyJabines.Models
 
             [ForeignKey("UserId")]
             public Users? User { get; set; }
+    }
+
+    public class FutureDateAttribute : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext context)
+        {
+            if (value is DateTime date)
+            {
+                if (date <= DateTime.Now)
+                    return new ValidationResult("Appointment date and time must be in the future.");
+            }
+            return ValidationResult.Success;
+        }
     }
 }

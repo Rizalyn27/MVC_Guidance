@@ -1,9 +1,89 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    Layout = "_Layout";
+    ViewData["Title"] = "Admin Dashboard";
 }
 
+<div class="container mt-4">
+    <h4 class="mb-4">👋 Welcome, <strong>@User.Identity.Name</strong>!</h4>
 
-<div class="text-center">
-    <h1 class="display-4">Welcome Admin</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <!-- STUDENTS -->
+    <h6 class="text-secondary text-uppercase mb-2">🎓 Students</h6>
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div class="display-6 fw-bold text-primary">@ViewBag.TotalStudents</div>
+                <div class="text-muted">Total Students</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div class="display-6 fw-bold text-success">@ViewBag.ActiveStudents</div>
+                <div class="text-muted">Active</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div class="display-6 fw-bold text-danger">@ViewBag.InactiveStudents</div>
+                <div class="text-muted">Inactive</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- USERS -->
+    <h6 class="text-secondary text-uppercase mb-2">👤 Users</h6>
+    <div class="row g-3 mb-4">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div class="display-6 fw-bold text-primary">@ViewBag.TotalUsers</div>
+                <div class="text-muted">Total Users</div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div class="display-6 fw-bold text-success">@ViewBag.ActiveUsers</div>
+                <div class="text-muted">Active Users</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- APPOINTMENTS -->
+    <h6 class="text-secondary text-uppercase mb-2">📅 Appointments</h6>
+    <div class="row g-3">
+        <div class="col-md-2">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div class="display-6 fw-bold text-primary">@ViewBag.TotalAppts</div>
+                <div class="text-muted">Total</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div class="display-6 fw-bold text-warning">@ViewBag.PendingAppts</div>
+                <div class="text-muted">Pending</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div class="display-6 fw-bold text-success">@ViewBag.ConfirmedAppts</div>
+                <div class="text-muted">Confirmed</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div class="display-6 fw-bold text-primary">@ViewBag.CompletedAppts</div>
+                <div class="text-muted">Completed</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div class="display-6 fw-bold text-danger">@ViewBag.CancelledAppts</div>
+                <div class="text-muted">Cancelled</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div class="display-6 fw-bold text-secondary">@ViewBag.MissedAppts</div>
+                <div class="text-muted">Missed</div>
+            </div>
+        </div>
+    </div>
 </div>

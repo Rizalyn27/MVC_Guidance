@@ -1,0 +1,106 @@
+﻿@model MVC_DenoyJabines.Models.Appointment
+@{
+    ViewData["Title"] = "Edit Appointment";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-warning text-dark">
+            <h4 class="mb-0">✏️ Edit Appointment</h4>
+        </div>
+
+        <div class="card-body">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                <input type="hidden" asp-for="AppointmentID" />
+
+                <!-- 👤 PERSONAL INFO -->
+                <h5 class="text-primary">👤 Personal Information</h5>
+                <hr />
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="FirstName"></label>
+                        <input asp-for="FirstName" class="form-control" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="LastName"></label>
+                        <input asp-for="LastName" class="form-control" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="MiddleName"></label>
+                        <input asp-for="MiddleName" class="form-control" />
+                        <span asp-validation-for="MiddleName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="ContactNumber"></label>
+                        <input asp-for="ContactNumber" class="form-control" />
+                        <span asp-validation-for="ContactNumber" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- 📅 APPOINTMENT DETAILS -->
+                <h5 class="text-warning mt-4">📅 Appointment Details</h5>
+                <hr />
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="AppointmentDate"></label>
+                        <input asp-for="AppointmentDate" class="form-control" type="datetime-local"
+                               min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                        <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="AppointmentType"></label>
+                        <input asp-for="AppointmentType" class="form-control" />
+                        <span asp-validation-for="AppointmentType" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Status"></label>
+                        <input type="hidden" asp-for="Status" />
+                        <input type="text" class="form-control" value="@Model.Status" readonly />
+                        <span class="text-muted small">Status can only be changed by a Counselor.</span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Submitted By</label>
+                        <input type="text" class="form-control" value="@User.Identity.Name" readonly />
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="Notes"></label>
+                        <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+                        <span asp-validation-for="Notes" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- BUTTONS -->
+                <div class="d-flex justify-content-between">
+                    @if (User.IsInRole("Student"))
+                    {
+                        <a asp-action="StudentsAppt" class="btn btn-secondary">⬅ Back</a>
+                    }
+                    else
+                    {
+                        <a asp-action="Index" class="btn btn-secondary">⬅ Back</a>
+                    }
+                    <button type="submit" class="btn btn-warning text-dark">💾 Save Changes</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

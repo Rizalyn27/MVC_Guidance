@@ -1,0 +1,44 @@
+﻿@model IEnumerable<MVC_DenoyJabines.Models.Appointment>
+
+@{
+    ViewData["Title"] = "My Appointments";
+    Layout = "_StudentLayout";
+}
+
+<h2>My Appointments</h2>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Book Appointment</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date & Time</th>
+            <th>Type</th>
+            <th>Notes</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="5" class="text-center">You have no appointments yet.</td>
+            </tr>
+        }
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.AppointmentDate.ToString("MMMM dd, yyyy hh:mm tt")</td>
+                <td>@item.AppointmentType</td>
+                <td>@item.Notes</td>
+                <td>@item.Status</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.AppointmentID">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
