@@ -1,0 +1,112 @@
+﻿@model IEnumerable<MVC_DenoyJabines.Models.Students>
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+
+        <h3>📋 Student List</h3>
+
+        <div class="d-flex align-items-center gap-3">
+
+            <!-- Add Button -->
+            <a asp-action="Create" class="btn btn-primary btn-sm">
+                Add Student
+            </a>
+
+            <!-- Filters -->
+            <div class="btn-group">
+                <a asp-action="Index" asp-route-status="active" class="btn btn-success btn-sm">Active</a>
+                <a asp-action="Index" asp-route-status="inactive" class="btn btn-secondary btn-sm">Inactive</a>
+                <a asp-action="Index" asp-route-status="all" class="btn btn-dark btn-sm">All</a>
+            </div>
+
+        </div>
+    </div>
+
+    <table class="table table-bordered table-hover align-middle text-center shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th class="text-start">Full Name</th>
+                <th>Grade & Section</th>
+                <th>LRN</th>
+                <th>Status</th>
+                <th style="width: 230px;">Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (!Model.Any())
+            {
+                <tr>
+                    <td colspan="5" class="text-muted">No students found.</td>
+                </tr>
+            }
+            else
+            {
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="text-start">@item.StuFullName</td>
+
+                        <td>@item.GradeSec</td>
+
+                        <td>@item.StuLRN</td>
+
+                        <td>
+                            @if (item.StuStatus)
+                            {
+                                <span class="badge bg-success">● Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">● Inactive</span>
+                            }
+                        </td>
+
+                        <td>
+                            <div class="d-flex justify-content-center gap-2 flex-wrap">
+
+                                <!-- Edit -->
+                                <a asp-action="Edit"
+                                   asp-route-id="@item.StuID"
+                                   class="btn btn-sm btn-warning">
+                                    ✏️
+                                </a>
+
+                                <!-- Details -->
+                                <a asp-action="Details"
+                                   asp-route-id="@item.StuID"
+                                   class="btn btn-sm btn-info text-white">
+                                    👁
+                                </a>
+
+                                @if (item.StuStatus)
+                                {
+                                    <!-- Deactivate -->
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.StuID"
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('Deactivate this student?');">
+                                        🚫
+                                    </a>
+                                }
+                                else
+                                {
+                                    <!-- Restore -->
+                                    <a asp-action="Restore"
+                                       asp-route-id="@item.StuID"
+                                       class="btn btn-sm btn-success"
+                                       onclick="return confirm('Restore this student?');">
+                                        ♻️
+                                    </a>
+                                }
+
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+</div>

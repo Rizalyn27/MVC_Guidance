@@ -30,6 +30,7 @@ namespace MVC_DenoyJabines.Models
         [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Last name can only contain letters")]
         public string StuLName { get; set; }
 
+
         [StringLength(50, ErrorMessage = "Middle name must not exceed 50 characters")]
         [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessage = "Middle name can only contain letters")]
         public string StuMName { get; set; }
@@ -75,7 +76,7 @@ namespace MVC_DenoyJabines.Models
 
         //Year level
         [Required(ErrorMessage = "Year level is required")]
-        [StringLength(20, ErrorMessage = "Year level must not exceed 20 characters")]
+        [Range(7, 12, ErrorMessage = "Year level must be between 7 and 12")]
         public int YearLevel { get; set; }
 
         //Section

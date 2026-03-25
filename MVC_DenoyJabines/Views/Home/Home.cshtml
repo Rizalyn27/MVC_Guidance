@@ -1,7 +1,73 @@
 ﻿@{
-    ViewData["Title"] = "Privacy Policy";
+    Layout = "_Layout";
+    ViewData["Title"] = "Counselor Dashboard";
 }
 <h1>@ViewData["Title"]</h1>
 
-<h1>Hello Student</h1>
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="container mt-4">
+    <h4 class="mb-4">👋 Welcome, <strong>@User.Identity.Name</strong>!</h4>
+
+    <!-- STUDENTS -->
+    <h6 class="text-secondary text-uppercase mb-2">🎓 Students</h6>
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div class="display-6 fw-bold text-primary">@ViewBag.TotalStudents</div>
+                <div class="text-muted">Total Students</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div class="display-6 fw-bold text-success">@ViewBag.ActiveStudents</div>
+                <div class="text-muted">Active</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div class="display-6 fw-bold text-danger">@ViewBag.InactiveStudents</div>
+                <div class="text-muted">Inactive</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- APPOINTMENTS -->
+    <h6 class="text-secondary text-uppercase mb-2">📅 Appointments</h6>
+    <div class="row g-3">
+        <div class="col-md-2">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div class="display-6 fw-bold text-primary">@ViewBag.TotalAppts</div>
+                <div class="text-muted">Total</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div class="display-6 fw-bold text-warning">@ViewBag.PendingAppts</div>
+                <div class="text-muted">Pending</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div class="display-6 fw-bold text-success">@ViewBag.ConfirmedAppts</div>
+                <div class="text-muted">Confirmed</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div class="display-6 fw-bold text-primary">@ViewBag.CompletedAppts</div>
+                <div class="text-muted">Completed</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div class="display-6 fw-bold text-danger">@ViewBag.CancelledAppts</div>
+                <div class="text-muted">Cancelled</div>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <div class="card border-0 shadow-sm text-center p-3">
+                <div class="display-6 fw-bold text-secondary">@ViewBag.MissedAppts</div>
+                <div class="text-muted">Missed</div>
+            </div>
+        </div>
+    </div>
+</div>

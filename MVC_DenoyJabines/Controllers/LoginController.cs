@@ -4,6 +4,9 @@ using MVC_DenoyJabines.Data;
 using MVC_DenoyJabines.Models;
 using System.Text;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
 
 namespace MVC_DenoyJabines.Controllers
 {
@@ -77,8 +80,8 @@ namespace MVC_DenoyJabines.Controllers
             string hashedPassword = HashPassword(password);
 
             var user = await _context.User
-                .FirstOrDefaultAsync(u => (u.Username == username || u.Email == username)
-                                        && u.Password == hashedPassword);
+     .FirstOrDefaultAsync(u => (u.Username == username || u.Email == username)
+                             && u.Password == hashedPassword);
 
             // If user not found, show error
             if (user == null)
@@ -87,11 +90,57 @@ namespace MVC_DenoyJabines.Controllers
                 return View();
             }
 
-            // Redirect based on user role
-            if (user.Role == "Admin")
-                return RedirectToAction("Admin", "Home"); // Admin dashboard
-            else
-                return RedirectToAction("Home", "Home");  // Regular user dashboard
+            // IsActive check
+            if (!user.IsActive)
+            {
+                ModelState.AddModelError("", "Your account is inactive. Please contact the administrator.");
+                return View();
+            }
+
+            // CLAIMS
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Role, user.Role),
+                new Claim("UserId", user.UserId.ToString())
+            };
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = true // keeps user logged in
+            };
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity),
+                authProperties);
+
+            // Role base 
+            switch (user.Role)
+            {
+                case "Admin":
+                    return RedirectToAction("Admin", "Home");
+
+                case "Counselor":
+                    return RedirectToAction("Home", "Home");
+
+                case "Student":
+                    return RedirectToAction("StudentsHome", "Home");
+
+                default:
+                    return RedirectToAction("StudentsHome", "Home");
+            }
+        }
+
+        //Logout
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Login", "Login");
         }
 
         // Hash Pass

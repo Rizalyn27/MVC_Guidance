@@ -1,8 +1,21 @@
 ﻿@model MVC_DenoyJabines.Models.Users
 @{
-    ViewData["Title"] = "Register";
+    Layout = null;
 }
-@{
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - MVC_DenoyJabines</title>
+
+    <!-- Include Bootstrap & your site CSS -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/MVC_DenoyJabines.styles.css" />
+</head>
+<body>
+
     <!-- Hero Section -->
     <main class="hero-section">
         <div class="container hero-container">
@@ -23,7 +36,7 @@
                     </label>
                     <select asp-for="Role" class="form-select" aria-required="true" placeholder="-- Select Role --">
                         <option value="Student">Student</option>
-                        <option value="Teacher">Counselor</option>
+                        <option value="Counselor">Counselor</option>
                         <option value="Admin">Admin</option>
                     </select>
                     <span asp-validation-for="Role" class="text-danger"></span>
@@ -49,12 +62,10 @@
 
                 <!-- Password -->
                 <div class="form-group mb-3">
-                    <label asp-for="Password" class="form-label">
-                        Password <span class="text-danger">*</span>
-                    </label>
+                    <label asp-for="Password" class="form-label">Password <span class="text-danger">*</span></label>
                     <div class="input-group">
                         <input asp-for="Password" type="password" class="form-control" id="password" placeholder="Enter password" />
-                        <button type="button" style="background-color:#fffffe" class="btn @* btn-outline-secondary *@" onclick="togglePassword('password')" tabindex="-1">
+                        <button type="button" class="btn btn-light" onclick="togglePassword('password')" tabindex="-1">
                             <img id="passwordToggleImg" src="/photos/hidepass.png" alt="Toggle password" style="height:20px;">
                         </button>
                     </div>
@@ -63,16 +74,14 @@
 
                 <!-- Confirm Password -->
                 <div class="form-group mb-3">
-                    <label asp-for="ConfirmPassword" class="form-label">
-                        Confirm Password <span class="text-danger">*</span>
-                    </label>
+                    <label asp-for="ConfirmPassword" class="form-label">Confirm Password <span class="text-danger">*</span></label>
                     <div class="input-group">
                         <input asp-for="ConfirmPassword" type="password" class="form-control" id="confirmPassword" placeholder="Re-enter password" />
-                        <button type="button" style="background-color:#fffffe" class="btn @* btn-outline-secondary *@" onclick="togglePassword('confirmPassword')" tabindex="-1">
+                        <button type="button" class="btn btn-light" onclick="togglePassword('confirmPassword')" tabindex="-1">
                             <img id="confirmPasswordToggleImg" src="/photos/hidepass.png" alt="Toggle password" style="height:20px;">
                         </button>
                     </div>
-                    <span id="confirmPasswordError" class="text-danger"></span>
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                 </div>
 
                 <!-- Submit -->
@@ -108,53 +117,61 @@
         </div>
     </footer>
 
-    @section Scripts {
-        @{
-            await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        }
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.min.js"></script>
+    <script src="~/js/site.js"></script>
 
         @* For toggle show and hide password *@
-        <script>
-            function togglePassword(id) {
-                var pw = document.getElementById(id);
-                var img;
+    <script>
+        function togglePassword(id) {
+            var pw = document.getElementById(id);
+            var img;
 
-                if (id === 'password')
-                {
-                    img = document.getElementById('passwordToggleImg');
-                }
-                else
-                {
-                    img = document.getElementById('confirmPasswordToggleImg');
-                }
-
-                if(pw.type === "password"){
-                    pw.type = "text";
-                    img.src = "/Photos/hide.png";
-                } else {
-                    pw.type = "password";
-                    img.src = "/Photos/hidepass.png";
-                }
+            if (id === 'password')
+            {
+                img = document.getElementById('passwordToggleImg');
+            }
+            else
+            {
+                img = document.getElementById('confirmPasswordToggleImg');
             }
 
-
-            @* For toggle show and hide password *@
-
-            function checkPasswords() {
-                var password = document.getElementById("password").value;
-                var confirmPassword = document.getElementById("confirmPassword").value;
-                var errorSpan = document.getElementById("confirmPasswordError");
-
-                if(password !== confirmPassword){
-                    errorSpan.textContent = "Passwords do not match!";
-                    return false;
-                } else {
-                    errorSpan.textContent = "";
-                    return true;
-                }
+            if(pw.type === "password"){
+                pw.type = "text";
+                img.src = "/Photos/hide.png";
+            } else {
+                pw.type = "password";
+                img.src = "/Photos/hidepass.png";
             }
+        }
 
 
-        </script>
-    }
-}
+        @* For toggle show and hide password *@
+
+        function checkPasswords() {
+            var password = document.getElementById("password").value;
+            var confirmPassword = document.getElementById("confirmPassword").value;
+            var errorSpan = document.getElementById("confirmPasswordError");
+
+            if(password !== confirmPassword){
+                errorSpan.textContent = "Passwords do not match!";
+                return false;
+            } else {
+                errorSpan.textContent = "";
+                return true;
+            }
+        }
+
+
+    </script>
+
+
+</body>
+</html>
+
+   
+    
+    
+

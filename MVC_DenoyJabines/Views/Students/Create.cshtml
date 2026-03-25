@@ -1,0 +1,188 @@
+﻿@model MVC_DenoyJabines.Models.Students
+
+@{
+    ViewData["Title"] = "Create Student";
+}
+
+<div class="container mt-4">
+    <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">➕ Add New Student</h4>
+        </div>
+
+        <div class="card-body">
+
+            <form asp-action="Create">
+
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <!-- 📋 BASIC INFO -->
+                <h5 class="text-primary">📋 Basic Information</h5>
+                <hr />
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="StuLRN"></label>
+                        <input asp-for="StuLRN" class="form-control" />
+                        <span asp-validation-for="StuLRN" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="StuFName"></label>
+                        <input asp-for="StuFName" class="form-control" />
+                        <span asp-validation-for="StuFName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="StuLName"></label>
+                        <input asp-for="StuLName" class="form-control" />
+                        <span asp-validation-for="StuLName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="StuMName"></label>
+                        <input asp-for="StuMName" class="form-control" />
+                        <span asp-validation-for="StuMName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Gender"></label>
+                        <select asp-for="Gender" class="form-control">
+                            <option value="">-- Select Gender --</option>
+                            <option>Male</option>
+                            <option>Female</option>
+                        </select>
+                        <span asp-validation-for="Gender" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Birthdate"></label>
+                        <input asp-for="Birthdate" type="date" class="form-control" />
+                        <span asp-validation-for="Birthdate" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- 📬 CONTACT -->
+                <h5 class="text-success mt-4">📬 Contact</h5>
+                <hr />
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="Address"></label>
+                        <input asp-for="Address" class="form-control" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label asp-for="Contact"></label>
+                        <input asp-for="Contact" class="form-control" />
+                        <span asp-validation-for="Contact" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-3 mb-3">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- 🎓 ACADEMIC -->
+                <h5 class="text-warning mt-4">🎓 Academic Info</h5>
+                <hr />
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Department"></label>
+                        <input asp-for="Department" class="form-control" />
+                        <span asp-validation-for="Department" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+                        <label asp-for="YearLevel"></label>
+                        <input asp-for="YearLevel" class="form-control" />
+                        <span asp-validation-for="YearLevel" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-2 mb-3">
+                        <label asp-for="Section"></label>
+                        <input asp-for="Section" class="form-control" />
+                        <span asp-validation-for="Section" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Adviser"></label>
+                        <input asp-for="Adviser" class="form-control" />
+                        <span asp-validation-for="Adviser" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- 👨‍👩‍👧 GUARDIAN -->
+                <h5 class="text-info mt-4">👨‍👩‍👧 Guardian Info</h5>
+                <hr />
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="GuardianName"></label>
+                        <input asp-for="GuardianName" class="form-control" />
+                        <span asp-validation-for="GuardianName" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="Relationship"></label>
+                        <input asp-for="Relationship" class="form-control" />
+                        <span asp-validation-for="Relationship" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="GuardianContact"></label>
+                        <input asp-for="GuardianContact" class="form-control" />
+                        <span asp-validation-for="GuardianContact" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="GuardianAddress"></label>
+                        <input asp-for="GuardianAddress" class="form-control" />
+                        <span asp-validation-for="GuardianAddress" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- 🧠 GUIDANCE -->
+                <h5 class="text-danger mt-4">🧠 Guidance Info</h5>
+                <hr />
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="CaseType"></label>
+                        <input asp-for="CaseType" class="form-control" />
+                        <span asp-validation-for="CaseType" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="CounselingStatus"></label>
+                        <input asp-for="CounselingStatus" class="form-control" />
+                        <span asp-validation-for="CounselingStatus" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="Reason"></label>
+                        <textarea asp-for="Reason" class="form-control"></textarea>
+                        <span asp-validation-for="Reason" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="Remarks"></label>
+                        <textarea asp-for="Remarks" class="form-control"></textarea>
+                        <span asp-validation-for="Remarks" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- BUTTONS -->
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-secondary">⬅ Back</a>
+                    <button type="submit" class="btn btn-success">💾 Save Student</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>

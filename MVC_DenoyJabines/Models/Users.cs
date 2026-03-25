@@ -19,8 +19,8 @@ namespace MVC_DenoyJabines.Models
         [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
         [StringLength(100, MinimumLength = 8, ErrorMessage = "Password must be at least 8 characters long")]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).+$",
-            ErrorMessage = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*]).+$",
+    ErrorMessage = "Password must contain at least one uppercase letter, one lowercase letter, one number, and one special character")]
         [ScaffoldColumn(false)]
         public string Password { get; set; }
 
@@ -39,5 +39,7 @@ namespace MVC_DenoyJabines.Models
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Passwords do not match")]
         public string ConfirmPassword { get; set; }
+
+        public bool IsActive { get; set; } = true;
     }
 }

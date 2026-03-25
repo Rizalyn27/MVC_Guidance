@@ -1,19 +1,77 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
-public class Appointment
+namespace MVC_DenoyJabines.Models
 {
-    [Key]
-    public int Id { get; set; }
+    public class Appointment
+    {
+            [Key]
+            [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+            [HiddenInput(DisplayValue = false)]
+            public int AppointmentID { get; set; }
 
-    [Required]
-    public string Name { get; set; }
+            // Patient / Client Info
+            [Required(ErrorMessage = "First name is required")]
+            [StringLength(100)]
+            public string FirstName { get; set; } = string.Empty;
 
-    [Required]
-    public string Email { get; set; }
+            [Required(ErrorMessage = "Last name is required")]
+            [StringLength(100)]
+            public string LastName { get; set; } = string.Empty;
 
-    [Required]
-    public DateTime AppointmentDate { get; set; }
+            [StringLength(100)]
+            public string? MiddleName { get; set; }
 
-    
+            [Required(ErrorMessage = "Email is required")]
+            [EmailAddress]
+            public string Email { get; set; } = string.Empty;
+
+            [Phone]
+            [StringLength(20)]
+            public string ContactNumber { get; set; } = string.Empty;
+
+            // Appointment Details
+            [Required(ErrorMessage = "Appointment date is required")]
+            [DataType(DataType.DateTime)]
+            [FutureDate(ErrorMessage = "Appointment date and time must be in the future.")]
+            public DateTime AppointmentDate { get; set; } = DateTime.Now;
+
+            [Required(ErrorMessage = "Appointment type is required")]
+            [StringLength(100)]
+            public string AppointmentType { get; set; } = string.Empty;
+
+            [StringLength(500)]
+            public string? Notes { get; set; }
+
+            // Status (Pending, Confirmed, Cancelled, Completed)
+            [Required]
+            [StringLength(50)]
+            public string Status { get; set; }
+
+            // Audit Fields
+            public DateTime CreatedAt { get; set; } 
+
+            public DateTime? UpdatedAt { get; set; } 
+
+        // User ID
+        [Required]
+            public int UserId { get; set; }  // FK to Users table
+
+            [ForeignKey("UserId")]
+            public Users? User { get; set; }
+    }
+
+    public class FutureDateAttribute : ValidationAttribute
+    {
+        protected override ValidationResult IsValid(object value, ValidationContext context)
+        {
+            if (value is DateTime date)
+            {
+                if (date <= DateTime.Now)
+                    return new ValidationResult("Appointment date and time must be in the future.");
+            }
+            return ValidationResult.Success;
+        }
+    }
 }
