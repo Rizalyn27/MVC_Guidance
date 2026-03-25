@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVC_DenoyJabines.Data;
 using MVC_DenoyJabines.Models;
 
 namespace MVC_DenoyJabines.Controllers
-{ 
+{
     public class AppointmentsController : Controller
     {
         private readonly AppDbContext _context;
@@ -30,6 +31,7 @@ namespace MVC_DenoyJabines.Controllers
         // GET: Create
         public IActionResult Create()
         {
+            PopulateDropdowns();
             return View();
         }
 
@@ -38,6 +40,10 @@ namespace MVC_DenoyJabines.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("FirstName,LastName,MiddleName,Email,ContactNumber,AppointmentDate,AppointmentType,Notes,Status")] Appointment appointment)
         {
+            ModelState.Remove("Student");
+            ModelState.Remove("Counselor");
+            ModelState.Remove("Status");
+
             if (ModelState.IsValid)
             {
                 // Get current logged-in user's ID from claims
@@ -72,9 +78,15 @@ namespace MVC_DenoyJabines.Controllers
         // GET: Edit
         public async Task<IActionResult> Edit(int? id)
         {
+            if (!IsCounselorOrAdmin())
+                return RedirectToAction(nameof(Index));
+
             if (id == null) return NotFound();
+
             var appointment = await _context.Appointments.FindAsync(id);
             if (appointment == null) return NotFound();
+
+            PopulateDropdowns(appointment.StudentID, appointment.CounselorID);
             return View(appointment);
         }
 
@@ -83,7 +95,13 @@ namespace MVC_DenoyJabines.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("AppointmentID,FirstName,LastName,MiddleName,Email,ContactNumber,AppointmentDate,AppointmentType,Notes,Status,UserId,CreatedAt")] Appointment appointment)
         {
+            if (!IsCounselorOrAdmin())
+                return RedirectToAction(nameof(Index));
+
             if (id != appointment.AppointmentID) return NotFound();
+
+            ModelState.Remove("Student");
+            ModelState.Remove("Counselor");
 
             if (ModelState.IsValid)
             {
@@ -101,16 +119,23 @@ namespace MVC_DenoyJabines.Controllers
                 }
                 return RedirectToAction(nameof(StudentAppointments));
             }
+
+            PopulateDropdowns(appointment.StudentID, appointment.CounselorID);
             return View(appointment);
         }
 
         // GET: Delete
         public async Task<IActionResult> Delete(int? id)
         {
+            if (!IsCounselorOrAdmin())
+                return RedirectToAction(nameof(Index));
+
             if (id == null) return NotFound();
             var appointment = await _context.Appointments.Include(a => a.User)
                 .FirstOrDefaultAsync(a => a.AppointmentID == id);
+
             if (appointment == null) return NotFound();
+
             return View(appointment);
         }
 
@@ -119,6 +144,9 @@ namespace MVC_DenoyJabines.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            if (!IsCounselorOrAdmin())
+                return RedirectToAction(nameof(Index));
+
             var appointment = await _context.Appointments.FindAsync(id);
             if (appointment != null)
             {
@@ -130,9 +158,13 @@ namespace MVC_DenoyJabines.Controllers
 
         [Authorize(Roles = "Counselor,Admin")]
         public IActionResult Index()
-        {
+            {
             return View();
         }
 
+        private bool AppointmentExists(int id)
+        {
+            return _context.Appointments.Any(e => e.AppointmentID == id);
+        }
     }
 }

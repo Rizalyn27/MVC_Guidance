@@ -1,7 +1,110 @@
 ﻿@{
     Layout = "_StudentLayout";
 }
-<h1>@ViewData["Title"]</h1>
+        <div class="row g-3 mb-3">
+            <div class="col-md-6">
+                <div class="sp-card">
+                    <div class="sp-card-icon sp-icon-blue">P</div>
+                    <div class="sp-section-title">Personal Information</div>
+                    <div class="sp-field">
+                        <div class="sp-field-label">Full Name</div>
+                        <div class="sp-field-value">@s.StuFName @s.StuMName @s.StuLName</div>
+                    </div>
+                    <hr class="sp-divider" />
+                    <div class="sp-field">
+                        <div class="sp-field-label">Gender</div>
+                        <div class="sp-field-value">@s.Gender</div>
+                    </div>
+                    <div class="sp-field">
+                        <div class="sp-field-label">Birthdate</div>
+                        <div class="sp-field-value">@s.Birthdate.ToString("MMMM dd, yyyy")</div>
+                    </div>
+                    <div class="sp-field">
+                        <div class="sp-field-label">Address</div>
+                        <div class="sp-field-value">@s.Address</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="sp-card">
+                    <div class="sp-card-icon sp-icon-green">A</div>
+                    <div class="sp-section-title">Academic Information</div>
+                    <div class="sp-field">
+                        <div class="sp-field-label">Department</div>
+                        <div class="sp-field-value">@s.Department</div>
+                    </div>
+                    <hr class="sp-divider" />
+                    <div class="sp-field">
+                        <div class="sp-field-label">Grade & Section</div>
+                        <div class="sp-field-value">@s.GradeSec</div>
+                    </div>
+                    <div class="sp-field">
+                        <div class="sp-field-label">Adviser</div>
+                        <div class="sp-field-value">@(string.IsNullOrEmpty(s.Adviser) ? "—" : s.Adviser)</div>
+                    </div>
+                    <div class="sp-field">
+                        <div class="sp-field-label">Enrollment Status</div>
+                        <div class="sp-field-value">
+                            @if (s.StuStatus)
+                            {
+                                <span class="sp-status-active">Active</span>
+                            }
+                            else
+                            {
+                                <span class="sp-status-inactive">Inactive</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="sp-card">
+                    <div class="sp-card-icon sp-icon-amber">C</div>
+                    <div class="sp-section-title">Contact Information</div>
+                    <div class="sp-field">
+                        <div class="sp-field-label">Email</div>
+                        <div class="sp-field-value">@s.Email</div>
+                    </div>
+                    <hr class="sp-divider" />
+                    <div class="sp-field">
+                        <div class="sp-field-label">Contact Number</div>
+                        <div class="sp-field-value">@s.Contact</div>
+                    </div>
+                    <div class="sp-field">
+                        <div class="sp-field-label">Home Address</div>
+                        <div class="sp-field-value">@s.Address</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="sp-card">
+                    <div class="sp-card-icon sp-icon-pink">G</div>
+                    <div class="sp-section-title">Guardian Information</div>
+                    <div class="sp-field">
+                        <div class="sp-field-label">Guardian Name</div>
+                        <div class="sp-field-value">@s.GuardianName</div>
+                    </div>
+                    <hr class="sp-divider" />
+                    <div class="sp-field">
+                        <div class="sp-field-label">Relationship</div>
+                        <div class="sp-field-value">@s.Relationship</div>
+                    </div>
+                    <div class="sp-field">
+                        <div class="sp-field-label">Guardian Contact</div>
+                        <div class="sp-field-value">@s.GuardianContact</div>
+                    </div>
+                    <div class="sp-field">
+                        <div class="sp-field-label">Guardian Address</div>
+                        <div class="sp-field-value">@s.GuardianAddress</div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 <h1>Hello Student</h1>
 <p>Use this page to detail your site's privacy policy.</p>

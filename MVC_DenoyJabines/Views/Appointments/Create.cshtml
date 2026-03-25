@@ -51,14 +51,14 @@
                         <label asp-for="Email"></label>
                         <input asp-for="Email" class="form-control @(ViewData.ModelState["Email"]?.Errors.Count > 0 ? "is-invalid" : "")" />
                         <span asp-validation-for="Email" class="invalid-feedback"></span>
-                    </div>
+            </div>
 
                     <div class="col-md-6 mb-3">
                         <label asp-for="ContactNumber"></label>
                         <input asp-for="ContactNumber" class="form-control @(ViewData.ModelState["ContactNumber"]?.Errors.Count > 0 ? "is-invalid" : "")" />
                         <span asp-validation-for="ContactNumber" class="invalid-feedback"></span>
-                    </div>
-                </div>
+            </div>
+        </div>
 
                 <!-- 📅 APPOINTMENT DETAILS -->
                 <h5 class="text-warning mt-4">📅 Appointment Details</h5>
@@ -68,15 +68,15 @@
                         <label asp-for="AppointmentDate"></label>
                         <input asp-for="AppointmentDate" type="datetime-local" class="form-control @(ViewData.ModelState["AppointmentDate"]?.Errors.Count > 0 ? "is-invalid" : "")" />
                         <span asp-validation-for="AppointmentDate" class="invalid-feedback"></span>
-                    </div>
+                </div>
 
                     <div class="col-md-4 mb-3">
                         <label asp-for="AppointmentType"></label>
                         <input asp-for="AppointmentType" class="form-control @(ViewData.ModelState["AppointmentType"]?.Errors.Count > 0 ? "is-invalid" : "")" />
                         <span asp-validation-for="AppointmentType" class="invalid-feedback"></span>
-                    </div>
-
                 </div>
+
+            </div>
 
                 <!-- 📝 NOTES -->
                 <h5 class="text-info mt-4">📝 Notes</h5>
@@ -86,20 +86,20 @@
                         <label asp-for="Notes"></label>
                         <textarea asp-for="Notes" class="form-control @(ViewData.ModelState["Notes"]?.Errors.Count > 0 ? "is-invalid" : "")"></textarea>
                         <span asp-validation-for="Notes" class="invalid-feedback"></span>
-                    </div>
-                </div>
+            </div>
+        </div>
 
                 <!-- BUTTONS -->
-                <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between">
                     @{
                         var roleClaim = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
                         var backAction = roleClaim == "Student" ? "StudentAppointments" : "Index";
                     }
                     <a asp-action="@backAction" class="btn btn-secondary">⬅ Back</a>
                     <button type="submit" class="btn btn-success">💾 Save Appointment</button>
-                </div>
-            </form>
         </div>
+    </form>
+</div>
     </div>
 </div>
 
