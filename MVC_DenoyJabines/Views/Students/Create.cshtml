@@ -4,185 +4,518 @@
     ViewData["Title"] = "Create Student";
 }
 
-<div class="container mt-4">
-    <div class="card shadow-lg border-0">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">➕ Add New Student</h4>
+<style>
+    :root {
+        --indigo: #3b5bdb;
+        --indigo-soft: #eef1fd;
+        --emerald: #0f9d74;
+        --emerald-soft: #e6f7f2;
+        --amber: #d97706;
+        --amber-soft: #fef3e2;
+        --cyan: #0891b2;
+        --cyan-soft: #e0f5fa;
+        --rose: #e5344a;
+        --rose-soft: #fdeef0;
+        --ink: #0e1523;
+        --muted: #6b7696;
+        --faint: #a8b0c8;
+        --border: #e4e8f4;
+        --surface: #ffffff;
+        --bg: #f0f2f8;
+        --radius: 14px;
+        --radius-sm: 9px;
+        --shadow: 0 2px 16px rgba(14,21,35,0.07);
+    }
+
+    .stu-form-page {
+        font-family: Arial, Helvetica, sans-serif;
+        background: var(--bg);
+        min-height: 100vh;
+        padding: 32px 24px 48px;
+    }
+
+    /* ── Page Header ── */
+    .stu-page-header {
+        margin-bottom: 24px;
+    }
+
+        .stu-page-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin: 0 0 4px;
+        }
+
+        .stu-page-header p {
+            font-size: 0.82rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+    /* ── Form Card ── */
+    .stu-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+    }
+
+    .stu-card-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 18px 24px;
+        background: var(--indigo);
+        color: #fff;
+    }
+
+        .stu-card-header h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+    .stu-card-body {
+        padding: 28px 28px 24px;
+    }
+
+        /* ── Validation ── */
+        .stu-card-body .alert-danger {
+            border-radius: var(--radius-sm);
+            font-size: 0.82rem;
+            padding: 10px 14px;
+            margin-bottom: 20px;
+        }
+
+    /* ── Section Header ── */
+    .form-section {
+        margin-bottom: 28px;
+    }
+
+    .form-section-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 8px 12px;
+        border-radius: var(--radius-sm);
+        margin-bottom: 18px;
+    }
+
+    .fst-indigo {
+        background: var(--indigo-soft);
+        color: var(--indigo);
+    }
+
+    .fst-emerald {
+        background: var(--emerald-soft);
+        color: var(--emerald);
+    }
+
+    .fst-amber {
+        background: var(--amber-soft);
+        color: var(--amber);
+    }
+
+    .fst-cyan {
+        background: var(--cyan-soft);
+        color: var(--cyan);
+    }
+
+    .fst-rose {
+        background: var(--rose-soft);
+        color: var(--rose);
+    }
+
+    /* ── Fields ── */
+    .form-row {
+        display: grid;
+        gap: 16px;
+        margin-bottom: 0;
+    }
+
+    .form-row-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .form-row-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .form-row-4 {
+        grid-template-columns: 2fr 1fr 1fr 2fr;
+    }
+
+    .form-row-contact {
+        grid-template-columns: 2fr 1fr 1fr;
+    }
+
+    .form-row-guardian {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .form-row-guidance {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+        .form-field.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-field label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--muted);
+            letter-spacing: 0.04em;
+        }
+
+        .form-field input,
+        .form-field select,
+        .form-field textarea {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 0.875rem;
+            color: var(--ink);
+            background: var(--bg);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 9px 12px;
+            transition: border-color .15s, background .15s;
+            width: 100%;
+            outline: none;
+        }
+
+            .form-field input:focus,
+            .form-field select:focus,
+            .form-field textarea:focus {
+                border-color: var(--indigo);
+                background: #fff;
+            }
+
+        .form-field textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        .form-field .text-danger {
+            font-size: 0.72rem;
+            color: var(--rose);
+        }
+
+    /* ── Status checkbox ── */
+    .form-check-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 12px;
+        background: var(--bg);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        margin-top: 2px;
+    }
+
+        .form-check-row input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--emerald);
+            cursor: pointer;
+        }
+
+        .form-check-row label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--ink);
+            cursor: pointer;
+            margin: 0;
+        }
+
+    /* ── Buttons ── */
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 32px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+    }
+
+    .btn-back {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 10px 20px;
+        border-radius: var(--radius-sm);
+        background: var(--bg);
+        color: var(--muted);
+        border: 1.5px solid var(--border);
+        text-decoration: none;
+        transition: all .15s;
+    }
+
+        .btn-back:hover {
+            background: #e4e8f4;
+            color: var(--ink);
+            text-decoration: none;
+        }
+
+    .btn-save {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        padding: 10px 24px;
+        border-radius: var(--radius-sm);
+        background: var(--emerald);
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        transition: background .15s;
+    }
+
+        .btn-save:hover {
+            background: #0c8562;
+        }
+
+    /* ── Responsive ── */
+    @@media (max-width: 860px) {
+        .form-row-3,
+        .form-row-4,
+        .form-row-contact,
+        .form-row-guardian,
+        .form-row-guidance {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @@media (max-width: 560px) {
+        .stu-form-page {
+            padding: 20px 14px 40px;
+        }
+
+        .stu-card-body {
+            padding: 20px 16px;
+        }
+
+        .form-row-3,
+        .form-row-4,
+        .form-row-2,
+        .form-row-contact,
+        .form-row-guardian,
+        .form-row-guidance {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="stu-form-page">
+
+    <div class="stu-page-header">
+        <h1>➕ Add New Student</h1>
+        <p>Fill in the details below to register a new student record.</p>
+    </div>
+
+    <div class="stu-card">
+        <div class="stu-card-header">
+            <h4>Create Student Profile</h4>
         </div>
 
-        <div class="card-body">
-
+        <div class="stu-card-body">
             <form asp-action="Create">
 
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
                 <!-- 📋 BASIC INFO -->
-                <h5 class="text-primary">📋 Basic Information</h5>
-                <hr />
-
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label asp-for="StuLRN"></label>
-                        <input asp-for="StuLRN" class="form-control" />
-                        <span asp-validation-for="StuLRN" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label asp-for="StuFName"></label>
-                        <input asp-for="StuFName" class="form-control" />
-                        <span asp-validation-for="StuFName" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label asp-for="StuLName"></label>
-                        <input asp-for="StuLName" class="form-control" />
-                        <span asp-validation-for="StuLName" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label asp-for="StuMName"></label>
-                        <input asp-for="StuMName" class="form-control" />
-                        <span asp-validation-for="StuMName" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label asp-for="Gender"></label>
-                        <select asp-for="Gender" class="form-control">
-                            <option value="">-- Select Gender --</option>
-                            <option>Male</option>
-                            <option>Female</option>
-                        </select>
-                        <span asp-validation-for="Gender" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label asp-for="Birthdate"></label>
-                        <input asp-for="Birthdate" type="date" class="form-control" />
-                        <span asp-validation-for="Birthdate" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="form-section-title fst-indigo">📋 Basic Information</div>
+                    <div class="form-row form-row-3">
+                        <div class="form-field">
+                            <label asp-for="StuLRN"></label>
+                            <input asp-for="StuLRN" />
+                            <span asp-validation-for="StuLRN" class="text-danger"></span>
+                        </div>
+                        <div class="form-field">
+                            <label asp-for="StuFName"></label>
+                            <input asp-for="StuFName" />
+                            <span asp-validation-for="StuFName" class="text-danger"></span>
+                        </div>
+                        <div class="form-field">
+                            <label asp-for="StuLName"></label>
+                            <input asp-for="StuLName" />
+                            <span asp-validation-for="StuLName" class="text-danger"></span>
+                        </div>
+                        <div class="form-field">
+                            <label asp-for="StuMName"></label>
+                            <input asp-for="StuMName" />
+                            <span asp-validation-for="StuMName" class="text-danger"></span>
+                        </div>
+                        <div class="form-field">
+                            <label asp-for="Gender"></label>
+                            <select asp-for="Gender">
+                                <option value="">-- Select Gender --</option>
+                                <option>Male</option>
+                                <option>Female</option>
+                            </select>
+                            <span asp-validation-for="Gender" class="text-danger"></span>
+                        </div>
+                        <div class="form-field">
+                            <label asp-for="Birthdate"></label>
+                            <input asp-for="Birthdate" type="date" />
+                            <span asp-validation-for="Birthdate" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
 
                 <!-- 📬 CONTACT -->
-                <h5 class="text-success mt-4">📬 Contact</h5>
-                <hr />
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label asp-for="Address"></label>
-                        <input asp-for="Address" class="form-control" />
-                        <span asp-validation-for="Address" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-3 mb-3">
-                        <label asp-for="Contact"></label>
-                        <input asp-for="Contact" class="form-control" />
-                        <span asp-validation-for="Contact" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-3 mb-3">
-                        <label asp-for="Email"></label>
-                        <input asp-for="Email" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="form-section-title fst-emerald">📬 Contact</div>
+                    <div class="form-row form-row-contact">
+                        <div class="form-field">
+                            <label asp-for="Address"></label>
+                            <input asp-for="Address" />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                        <div class="form-field">
+                            <label asp-for="Contact"></label>
+                            <input asp-for="Contact" />
+                            <span asp-validation-for="Contact" class="text-danger"></span>
+                        </div>
+                        <div class="form-field">
+                            <label asp-for="Email"></label>
+                            <input asp-for="Email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
 
                 <!-- 🎓 ACADEMIC -->
-                <h5 class="text-warning mt-4">🎓 Academic Info</h5>
-                <hr />
+                <div class="form-section">
+                    <div class="form-section-title fst-amber">🎓 Academic Info</div>
+                    <div class="form-row form-row-4">
+                        <div class="form-field">
+                            <label asp-for="Department"></label>
+                            <select asp-for="Department" id="departmentSelect">
+                                <option value="">-- Select Department --</option>
+                                <option value="Junior High School">Junior High School</option>
+                                <option value="Senior High School">Senior High School</option>
+                            </select>
+                            <span asp-validation-for="Department" class="text-danger"></span>
+                        </div>
 
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label asp-for="Department"></label>
-                        <input asp-for="Department" class="form-control" />
-                        <span asp-validation-for="Department" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-2 mb-3">
-                        <label asp-for="YearLevel"></label>
-                        <input asp-for="YearLevel" class="form-control" />
-                        <span asp-validation-for="YearLevel" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-2 mb-3">
-                        <label asp-for="Section"></label>
-                        <input asp-for="Section" class="form-control" />
-                        <span asp-validation-for="Section" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label asp-for="Adviser"></label>
-                        <input asp-for="Adviser" class="form-control" />
-                        <span asp-validation-for="Adviser" class="text-danger"></span>
+                        <div class="form-field">
+                            <label asp-for="YearLevel"></label>
+                            <select asp-for="YearLevel" id="yearLevelSelect">
+                                <option value="">-- Select Year Level --</option>
+                            </select>
+                            <span asp-validation-for="YearLevel" class="text-danger"></span>
+                        </div>
+                        <div class="form-field">
+                            <label asp-for="Section"></label>
+                            <input asp-for="Section" />
+                            <span asp-validation-for="Section" class="text-danger"></span>
+                        </div>
+                        <div class="form-field">
+                            <label asp-for="Adviser"></label>
+                            <input asp-for="Adviser" />
+                            <span asp-validation-for="Adviser" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
 
                 <!-- 👨‍👩‍👧 GUARDIAN -->
-                <h5 class="text-info mt-4">👨‍👩‍👧 Guardian Info</h5>
-                <hr />
-
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label asp-for="GuardianName"></label>
-                        <input asp-for="GuardianName" class="form-control" />
-                        <span asp-validation-for="GuardianName" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label asp-for="Relationship"></label>
-                        <input asp-for="Relationship" class="form-control" />
-                        <span asp-validation-for="Relationship" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label asp-for="GuardianContact"></label>
-                        <input asp-for="GuardianContact" class="form-control" />
-                        <span asp-validation-for="GuardianContact" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-12 mb-3">
-                        <label asp-for="GuardianAddress"></label>
-                        <input asp-for="GuardianAddress" class="form-control" />
-                        <span asp-validation-for="GuardianAddress" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="form-section-title fst-cyan">👨‍👩‍👧 Guardian Info</div>
+                    <div class="form-row form-row-guardian">
+                        <div class="form-field">
+                            <label asp-for="GuardianName"></label>
+                            <input asp-for="GuardianName" />
+                            <span asp-validation-for="GuardianName" class="text-danger"></span>
+                        </div>
+                        <div class="form-field">
+                            <label asp-for="Relationship"></label>
+                            <input asp-for="Relationship" />
+                            <span asp-validation-for="Relationship" class="text-danger"></span>
+                        </div>
+                        <div class="form-field">
+                            <label asp-for="GuardianContact"></label>
+                            <input asp-for="GuardianContact" />
+                            <span asp-validation-for="GuardianContact" class="text-danger"></span>
+                        </div>
+                        <div class="form-field full">
+                            <label asp-for="GuardianAddress"></label>
+                            <input asp-for="GuardianAddress" />
+                            <span asp-validation-for="GuardianAddress" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
 
                 <!-- 🧠 GUIDANCE -->
-                <h5 class="text-danger mt-4">🧠 Guidance Info</h5>
-                <hr />
-
-                <div class="row">
-                    <div class="col-md-4 mb-3">
-                        <label asp-for="CaseType"></label>
-                        <input asp-for="CaseType" class="form-control" />
-                        <span asp-validation-for="CaseType" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-4 mb-3">
-                        <label asp-for="CounselingStatus"></label>
-                        <input asp-for="CounselingStatus" class="form-control" />
-                        <span asp-validation-for="CounselingStatus" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-12 mb-3">
-                        <label asp-for="Reason"></label>
-                        <textarea asp-for="Reason" class="form-control"></textarea>
-                        <span asp-validation-for="Reason" class="text-danger"></span>
-                    </div>
-
-                    <div class="col-md-12 mb-3">
-                        <label asp-for="Remarks"></label>
-                        <textarea asp-for="Remarks" class="form-control"></textarea>
-                        <span asp-validation-for="Remarks" class="text-danger"></span>
+                <div class="form-section">
+                    <div class="form-section-title fst-rose">🧠 Guidance Info</div>
+                    <div class="form-row form-row-guidance">
+                        <div class="form-field">
+                            <label asp-for="CaseType"></label>
+                            <input asp-for="CaseType" />
+                            <span asp-validation-for="CaseType" class="text-danger"></span>
+                        </div>
+                        <div class="form-field">
+                            <label asp-for="CounselingStatus"></label>
+                            <input asp-for="CounselingStatus" />
+                            <span asp-validation-for="CounselingStatus" class="text-danger"></span>
+                        </div>
+                        <div class="form-field full">
+                            <label asp-for="Reason"></label>
+                            <textarea asp-for="Reason"></textarea>
+                            <span asp-validation-for="Reason" class="text-danger"></span>
+                        </div>
+                        <div class="form-field full">
+                            <label asp-for="Remarks"></label>
+                            <textarea asp-for="Remarks"></textarea>
+                            <span asp-validation-for="Remarks" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
 
                 <!-- BUTTONS -->
-                <div class="d-flex justify-content-between">
-                    <a asp-action="Index" class="btn btn-secondary">⬅ Back</a>
-                    <button type="submit" class="btn btn-success">💾 Save Student</button>
+                <div class="form-actions">
+                    <a asp-action="Index" class="btn-back">⬅ Back</a>
+                    <button type="submit" class="btn-save">💾 Save Student</button>
                 </div>
 
             </form>
         </div>
     </div>
 </div>
+
+<script>
+    const departmentSelect = document.getElementById('departmentSelect');
+    const yearLevelSelect = document.getElementById('yearLevelSelect');
+
+    const yearLevels = {
+        "Junior High School": ["7", "8", "9", "10"],
+        "Senior High School": ["11", "12"]
+    };
+
+    departmentSelect.addEventListener('change', function() {
+        const dept = this.value;
+        // Clear existing year level options
+        yearLevelSelect.innerHTML = '<option value="">-- Select Year Level --</option>';
+
+        if (dept && yearLevels[dept]) {
+            yearLevels[dept].forEach(level => {
+                const option = document.createElement('option');
+                option.value = level;
+                option.text = level;
+                yearLevelSelect.appendChild(option);
+            });
+        }
+    });
+</script>

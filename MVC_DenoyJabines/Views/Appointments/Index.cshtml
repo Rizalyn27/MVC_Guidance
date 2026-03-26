@@ -3,94 +3,426 @@
     ViewData["Title"] = "Appointments";
 }
 
-<div class="container mt-4">
-    <div class="card shadow-lg border-0">
-        <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-            <h4 class="mb-0">📅 All Appointments</h4>
-            <a asp-action="Create" class="btn btn-light btn-sm">➕ New Appointment</a>
-        </div>
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap');
 
-        <div class="card-body">
-            @if (!Model.Any())
-            {
-                <div class="alert alert-info">No appointments found.</div>
+    :root {
+        --teal: #0d9488;
+        --teal-dark: #0f766e;
+        --teal-light: #ccfbf1;
+        --surface: #f0fdfa;
+        --card: #ffffff;
+        --border: #d1fae5;
+        --border-muted: #e2e8f0;
+        --text: #0f172a;
+        --muted: #64748b;
+        --radius: 16px;
+    }
+
+    body {
+        background: var(--surface);
+        font-family: 'DM Sans', sans-serif;
+        color: var(--text);
+    }
+
+    .list-page {
+        padding: 32px 16px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .page-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+        gap: 14px;
+    }
+
+    .page-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 1.3px;
+        text-transform: uppercase;
+        color: var(--teal);
+        margin-bottom: 5px;
+    }
+
+        .page-eyebrow::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 2px;
+            background: var(--teal);
+        }
+
+    .page-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+        font-weight: 800;
+        color: var(--text);
+        margin: 0;
+    }
+
+    .btn-new {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 11px 22px;
+        border-radius: 10px;
+        background: var(--teal);
+        color: #fff;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.88rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background .18s;
+        box-shadow: 0 2px 8px rgba(13,148,136,.25);
+        white-space: nowrap;
+    }
+
+        .btn-new:hover {
+            background: var(--teal-dark);
+            color: #fff;
+        }
+
+    .table-card {
+        background: var(--card);
+        border-radius: var(--radius);
+        border: 1px solid var(--border-muted);
+        box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        overflow: hidden;
+    }
+
+    .empty-box {
+        padding: 52px 24px;
+        text-align: center;
+        color: var(--muted);
+        font-family: 'Outfit', sans-serif;
+        font-size: 1rem;
+    }
+
+        .empty-box .e-icon {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+    .appt-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .appt-table thead tr {
+            background: #f0fdfa;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .appt-table thead th {
+            padding: 14px 18px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--teal-dark);
+            text-transform: uppercase;
+            letter-spacing: 0.7px;
+            white-space: nowrap;
+        }
+
+        .appt-table tbody tr {
+            border-bottom: 1px solid #f1f5f9;
+            transition: background .15s;
+        }
+
+            .appt-table tbody tr:last-child {
+                border-bottom: none;
             }
-            else
-            {
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-primary">
-                            <tr>
-                                <th>Full Name</th>
-                                <th>Email</th>
-                                <th>Contact</th>
-                                <th>Date & Time</th>
-                                <th>Type</th>
-                                <th>Status</th>
-                                <th class="text-center">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model)
-                            {
-                                <tr>
-                                    <td>@item.FirstName @item.MiddleName @item.LastName</td>
-                                    <td>@item.Email</td>
-                                    <td>@item.ContactNumber</td>
-                                    <td>@item.AppointmentDate.ToString("MMM dd, yyyy hh:mm tt")</td>
-                                    <td>@item.AppointmentType</td>
-                                    <td>
-                                        @if (User.IsInRole("Counselor") || User.IsInRole("Admin"))
-                                        {
-                                            <form asp-action="UpdateStatus" method="post" class="d-flex gap-1">
-                                                @Html.AntiForgeryToken()
-                                                <input type="hidden" name="id" value="@item.AppointmentID" />
-                                                <select name="status" class="form-select form-select-sm" style="min-width:130px">
-                                                    <option value="Pending" selected="@(item.Status == "Pending" ? "selected" : null)">⏳ Pending</option>
-                                                    <option value="Confirmed" selected="@(item.Status == "Confirmed" ? "selected" : null)">✅ Confirmed</option>
-                                                    <option value="Cancelled" selected="@(item.Status == "Cancelled" ? "selected" : null)">❌ Cancelled</option>
-                                                    <option value="Completed" selected="@(item.Status == "Completed" ? "selected" : null)">🎓 Completed</option>
-                                                    <option value="Missed" selected="@(item.Status == "Missed" ? "selected" : null)">🚫 Missed</option>
-                                                </select>
-                                                <button type="submit" class="btn btn-sm btn-outline-primary">💾</button>
-                                            </form>
-                                        }
-                                        else
-                                        {
-                                            @switch (item.Status)
-                                            {
-                                                case "Pending":
-                                                    <span class="badge bg-warning text-dark">⏳ Pending</span>
-                                                    break;
-                                                case "Confirmed":
-                                                    <span class="badge bg-success">✅ Confirmed</span>
-                                                    break;
-                                                case "Cancelled":
-                                                    <span class="badge bg-danger">❌ Cancelled</span>
-                                                    break;
-                                                case "Completed":
-                                                    <span class="badge bg-primary">🎓 Completed</span>
-                                                    break;
-                                                case "Missed":
-                                                    <span class="badge bg-secondary">🚫 Missed</span>
-                                                    break;
-                                                default:
-                                                    <span class="badge bg-secondary">@item.Status</span>
-                                                    break;
-                                            }
-                                        }
-                                    </td>
-                                    <td class="text-center">
-                                        <a asp-action="Edit" asp-route-id="@item.AppointmentID" class="btn btn-warning btn-sm">✏️</a>
-                                        <a asp-action="Details" asp-route-id="@item.AppointmentID" class="btn btn-info btn-sm">🔍</a>
-                                        <a asp-action="Delete" asp-route-id="@item.AppointmentID" class="btn btn-danger btn-sm">🗑️</a>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                </div>
+
+            .appt-table tbody tr:hover {
+                background: #f0fdfa;
             }
+
+    .btn-act.book {
+        background: #f0fdf4;
+        color: #166534;
+        border-color: #bbf7d0;
+    }
+
+        .btn-act.book:hover {
+            background: #bbf7d0;
+        }
+        .appt-table td {
+            padding: 14px 18px;
+            font-size: 0.875rem;
+            color: var(--text);
+            vertical-align: middle;
+        }
+
+    .name-cell {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .sub-text {
+        font-size: 0.78rem;
+        color: var(--muted);
+    }
+
+    /* Status Badges */
+    .sbadge {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 11px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+
+    .sbadge-pending {
+        background: #fef3c7;
+        color: #92400e;
+        border: 1px solid #fde68a;
+    }
+
+    .sbadge-confirmed {
+        background: #d1fae5;
+        color: #064e3b;
+        border: 1px solid #6ee7b7;
+    }
+
+    .sbadge-cancelled {
+        background: #fee2e2;
+        color: #7f1d1d;
+        border: 1px solid #fca5a5;
+    }
+
+    .sbadge-completed {
+        background: #eef2ff;
+        color: #3730a3;
+        border: 1px solid #c7d2fe;
+    }
+
+    .sbadge-missed {
+        background: #f1f5f9;
+        color: var(--muted);
+        border: 1px solid var(--border-muted);
+    }
+
+    /* Inline Status Select */
+    .status-form {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+    }
+
+    .status-select {
+        padding: 6px 10px;
+        border: 1.5px solid var(--border-muted);
+        border-radius: 8px;
+        font-family: 'DM Sans', sans-serif;
+        font-size: 0.8rem;
+        color: var(--text);
+        background: #fafafa;
+        min-width: 130px;
+        cursor: pointer;
+        transition: border-color .18s;
+    }
+
+        .status-select:focus {
+            outline: none;
+            border-color: var(--teal);
+        }
+
+    .btn-save-status {
+        padding: 6px 11px;
+        border-radius: 8px;
+        border: 1.5px solid var(--border);
+        background: #f1f5f9;
+        color: var(--muted);
+        font-size: 0.82rem;
+        cursor: pointer;
+        transition: all .15s;
+    }
+
+        .btn-save-status:hover {
+            background: var(--teal);
+            color: #fff;
+            border-color: var(--teal);
+        }
+
+    /* Action Buttons */
+    .action-cell {
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-act {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: all .15s;
+        border: 1.5px solid transparent;
+    }
+
+        .btn-act.edit {
+            background: #fef3c7;
+            color: #92400e;
+            border-color: #fde68a;
+        }
+
+            .btn-act.edit:hover {
+                background: #fde68a;
+            }
+
+        .btn-act.info {
+            background: var(--teal-light);
+            color: var(--teal-dark);
+            border-color: #99f6e4;
+        }
+
+            .btn-act.info:hover {
+                background: #99f6e4;
+            }
+
+        .btn-act.del {
+            background: #fee2e2;
+            color: #9f1239;
+            border-color: #fca5a5;
+        }
+
+            .btn-act.del:hover {
+                background: #fca5a5;
+            }
+
+    @@media (max-width: 768px) {
+        .list-page {
+            padding: 20px 12px;
+        }
+
+        .appt-table thead th:nth-child(2),
+        .appt-table td:nth-child(2),
+        .appt-table thead th:nth-child(3),
+        .appt-table td:nth-child(3) {
+            display: none;
+        }
+    }
+</style>
+
+<div class="list-page">
+    <div class="page-top">
+        <div>
+            <div class="page-eyebrow">Management</div>
+            <h1 class="page-title">📅 All Appointments</h1>
         </div>
+        <a asp-action="Create" class="btn-new">➕ New Appointment</a>
+    </div>
+
+    <div class="table-card">
+        @if (!Model.Any())
+        {
+            <div class="empty-box">
+                <span class="e-icon">📭</span>
+                No appointments found.
+            </div>
+        }
+        else
+        {
+            <div style="overflow-x:auto;">
+                <table class="appt-table">
+                    <thead>
+                        <tr>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Contact</th>
+                            <th>Date & Time</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="name-cell">@item.FirstName @item.MiddleName @item.LastName</div>
+                                </td>
+                                <td><span class="sub-text">@item.Email</span></td>
+                                <td><span class="sub-text">@item.ContactNumber</span></td>
+                                <td>
+                                    <div style="font-weight:600;">@item.AppointmentDate.ToString("MMM dd, yyyy")</div>
+                                    <div class="sub-text">@item.AppointmentDate.ToString("hh:mm tt")</div>
+                                </td>
+                                <td>@item.AppointmentType</td>
+                                <td>
+                                    @if (User.IsInRole("Counselor") || User.IsInRole("Admin"))
+                                    {
+                                        <form asp-action="UpdateStatus" method="post" class="status-form">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@item.AppointmentID" />
+                                            <select name="status" class="status-select">
+                                                <option value="Pending" selected="@(item.Status == "Pending" ? "selected" : null)">⏳ Pending</option>
+                                                <option value="Confirmed" selected="@(item.Status == "Confirmed" ? "selected" : null)">✅ Confirmed</option>
+                                                <option value="Cancelled" selected="@(item.Status == "Cancelled" ? "selected" : null)">❌ Cancelled</option>
+                                                <option value="Completed" selected="@(item.Status == "Completed" ? "selected" : null)">🎓 Completed</option>
+                                                <option value="Missed" selected="@(item.Status == "Missed" ? "selected" : null)">🚫 Missed</option>
+                                            </select>
+                                            <button type="submit" class="btn-save-status">💾</button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        @switch (item.Status)
+                                        {
+                                            case "Pending":
+                                                <span class="sbadge sbadge-pending">⏳ Pending</span>
+                                                break;
+                                            case "Confirmed":
+                                                <span class="sbadge sbadge-confirmed">✅ Confirmed</span>
+                                                break;
+                                            case "Cancelled":
+                                                <span class="sbadge sbadge-cancelled">❌ Cancelled</span>
+                                                break;
+                                            case "Completed":
+                                                <span class="sbadge sbadge-completed">🎓 Completed</span>
+                                                break;
+                                            case "Missed":
+                                                <span class="sbadge sbadge-missed">🚫 Missed</span>
+                                                break;
+                                            default:
+                                                <span class="sbadge sbadge-missed">@item.Status</span>
+                                                break;
+                                        }
+                                    }
+                                </td>
+                                <td>
+                                    <div class="action-cell">
+                                        <a asp-controller="Appointments" asp-action="Create"
+                                           asp-route-userId="@item.UserId"
+                                           class="sp-btn sp-btn-view" title="Book Appointment">📝</a>
+                                           <a asp-action="Edit" asp-route-id="@item.AppointmentID" class="btn-act edit" title="Edit">✏️</a>
+                                        <a asp-action="Details" asp-route-id="@item.AppointmentID" class="btn-act info" title="Details">🔍</a>
+                                        <a asp-action="Delete" asp-route-id="@item.AppointmentID" class="btn-act del" title="Delete">🗑️</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
     </div>
 </div>

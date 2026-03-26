@@ -4,104 +4,438 @@
     ViewData["Title"] = "Delete Student";
 }
 
-<div class="container mt-4">
-    <div class="card shadow-lg border-0">
-        <div class="card-header bg-danger text-white">
-            <h4 class="mb-0">🗑️ Delete Student</h4>
-        </div>
+<style>
+    :root {
+        --indigo: #3b5bdb;
+        --indigo-soft: #eef1fd;
+        --emerald: #0f9d74;
+        --emerald-soft: #e6f7f2;
+        --amber: #d97706;
+        --amber-soft: #fef3e2;
+        --cyan: #0891b2;
+        --cyan-soft: #e0f5fa;
+        --rose: #e5344a;
+        --rose-soft: #fdeef0;
+        --rose-border: #f5c0c8;
+        --ink: #0e1523;
+        --muted: #6b7696;
+        --faint: #a8b0c8;
+        --border: #e4e8f4;
+        --surface: #ffffff;
+        --bg: #f0f2f8;
+        --radius: 14px;
+        --radius-sm: 9px;
+        --shadow: 0 2px 16px rgba(14,21,35,0.07);
+    }
 
-        <div class="card-body">
-            <h5 class="text-warning">⚠️ Are you sure you want to delete this student?</h5>
-            <hr />
+    .del-page {
+        font-family: Arial, Helvetica, sans-serif;
+        background: var(--bg);
+        min-height: 100vh;
+        padding: 32px 24px 48px;
+    }
+
+    .del-page-header {
+        margin-bottom: 22px;
+    }
+
+        .del-page-header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--ink);
+            margin: 0 0 4px;
+        }
+
+        .del-page-header p {
+            font-size: 0.82rem;
+            color: var(--muted);
+            margin: 0;
+        }
+
+    /* ── Warning Banner ── */
+    .del-warning {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        background: var(--rose-soft);
+        border: 1px solid var(--rose-border);
+        border-radius: var(--radius-sm);
+        padding: 14px 18px;
+        margin-bottom: 24px;
+    }
+
+    .del-warning-icon {
+        font-size: 1.3rem;
+        flex-shrink: 0;
+    }
+
+    .del-warning-text {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--rose);
+        margin: 0;
+    }
+
+    /* ── Card ── */
+    .del-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+
+    .del-card-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 14px 20px;
+        background: var(--rose);
+        color: #fff;
+    }
+
+        .del-card-header h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+    .del-card-body {
+        padding: 24px;
+    }
+
+    /* ── Section titles ── */
+    .del-section-title {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 7px 11px;
+        border-radius: var(--radius-sm);
+        margin-bottom: 14px;
+        margin-top: 20px;
+    }
+
+        .del-section-title:first-child {
+            margin-top: 0;
+        }
+
+    .dst-indigo {
+        background: var(--indigo-soft);
+        color: var(--indigo);
+    }
+
+    .dst-emerald {
+        background: var(--emerald-soft);
+        color: var(--emerald);
+    }
+
+    .dst-amber {
+        background: var(--amber-soft);
+        color: var(--amber);
+    }
+
+    .dst-cyan {
+        background: var(--cyan-soft);
+        color: var(--cyan);
+    }
+
+    .dst-rose {
+        background: var(--rose-soft);
+        color: var(--rose);
+    }
+
+    /* ── Detail Grid ── */
+    .del-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        margin-bottom: 4px;
+    }
+
+    .del-grid-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .del-grid-4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .del-field {
+    }
+
+    .del-field-label {
+        font-size: 0.68rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--faint);
+        margin: 0 0 4px;
+    }
+
+    .del-field-value {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--ink);
+        margin: 0;
+    }
+
+        .del-field-value.muted {
+            color: var(--faint);
+            font-style: italic;
+            font-weight: 400;
+        }
+
+    /* Status badge */
+    .del-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 700;
+    }
+
+    .del-badge-active {
+        background: var(--emerald-soft);
+        color: var(--emerald);
+    }
+
+    .del-badge-inactive {
+        background: #f0f0f0;
+        color: #888;
+    }
+
+    /* ── Divider ── */
+    .del-divider {
+        height: 1px;
+        background: var(--border);
+        margin: 18px 0;
+    }
+
+    /* ── Action Buttons ── */
+    .del-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+        margin-top: 24px;
+    }
+
+    .btn-back {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 0.85rem;
+        font-weight: 600;
+        padding: 10px 20px;
+        border-radius: var(--radius-sm);
+        background: var(--bg);
+        color: var(--muted);
+        border: 1.5px solid var(--border);
+        text-decoration: none;
+        transition: all .15s;
+    }
+
+        .btn-back:hover {
+            background: #e4e8f4;
+            color: var(--ink);
+            text-decoration: none;
+        }
+
+    .btn-delete {
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        padding: 10px 24px;
+        border-radius: var(--radius-sm);
+        background: var(--rose);
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        transition: background .15s;
+    }
+
+        .btn-delete:hover {
+            background: #c42a3e;
+        }
+
+    /* ── Responsive ── */
+    @@media (max-width: 860px) {
+        .del-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .del-grid-4 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @@media (max-width: 500px) {
+        .del-page {
+            padding: 20px 14px 40px;
+        }
+
+        .del-card-body {
+            padding: 18px 16px;
+        }
+
+        .del-grid,
+        .del-grid-2,
+        .del-grid-4 {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="del-page">
+
+    <div class="del-page-header">
+        <h1>🗑️ Delete Student</h1>
+        <p>Review the student's information before confirming deletion.</p>
+    </div>
+
+    <!-- Warning Banner -->
+    <div class="del-warning">
+        <span class="del-warning-icon">⚠️</span>
+        <p class="del-warning-text">Are you sure you want to delete this student? This action cannot be undone.</p>
+    </div>
+
+    <div class="del-card">
+        <div class="del-card-header">
+            <h4>🗑️ Delete Student</h4>
+        </div>
+        <div class="del-card-body">
 
             <!-- 📋 BASIC INFO -->
-            <h5 class="text-primary">📋 Basic Information</h5>
-            <hr />
-            <dl class="row">
-                <dt class="col-sm-3">Student ID</dt>
-                <dd class="col-sm-9">@Model.StuLRN</dd>
+            <div class="del-section-title dst-indigo">📋 Basic Information</div>
+            <div class="del-grid">
+                <div class="del-field">
+                    <p class="del-field-label">Student ID</p>
+                    <p class="del-field-value">@Model.StuLRN</p>
+                </div>
+                <div class="del-field">
+                    <p class="del-field-label">Full Name</p>
+                    <p class="del-field-value">@Model.StuFullName</p>
+                </div>
+                <div class="del-field">
+                    <p class="del-field-label">Status</p>
+                    <p class="del-field-value">
+                        @if (Model.StuStatus)
+                        {
+                            <span class="del-badge del-badge-active">● Active</span>
+                        }
+                        else
+                        {
+                            <span class="del-badge del-badge-inactive">● Inactive</span>
+                        }
+                    </p>
+                </div>
+                <div class="del-field">
+                    <p class="del-field-label">Gender</p>
+                    <p class="del-field-value">@Model.Gender</p>
+                </div>
+                <div class="del-field">
+                    <p class="del-field-label">Birthdate</p>
+                    <p class="del-field-value">@Model.Birthdate.ToString("yyyy-MM-dd")</p>
+                </div>
+            </div>
 
-                <dt class="col-sm-3">Full Name</dt>
-                <dd class="col-sm-9">@Model.StuFullName</dd>
-
-                <dt class="col-sm-3">Status</dt>
-                <dd class="col-sm-9">@((Model.StuStatus) ? "Active" : "Inactive")</dd>
-
-                <dt class="col-sm-3">Gender</dt>
-                <dd class="col-sm-9">@Model.Gender</dd>
-
-                <dt class="col-sm-3">Birthdate</dt>
-                <dd class="col-sm-9">@Model.Birthdate.ToString("yyyy-MM-dd")</dd>
-            </dl>
+            <div class="del-divider"></div>
 
             <!-- 📬 CONTACT -->
-            <h5 class="text-success mt-4">📬 Contact</h5>
-            <hr />
-            <dl class="row">
-                <dt class="col-sm-3">Address</dt>
-                <dd class="col-sm-9">@Model.Address</dd>
+            <div class="del-section-title dst-emerald">📬 Contact</div>
+            <div class="del-grid">
+                <div class="del-field">
+                    <p class="del-field-label">Address</p>
+                    <p class="del-field-value">@Model.Address</p>
+                </div>
+                <div class="del-field">
+                    <p class="del-field-label">Contact</p>
+                    <p class="del-field-value">@Model.Contact</p>
+                </div>
+                <div class="del-field">
+                    <p class="del-field-label">Email</p>
+                    <p class="del-field-value">@Model.Email</p>
+                </div>
+            </div>
 
-                <dt class="col-sm-3">Contact</dt>
-                <dd class="col-sm-9">@Model.Contact</dd>
-
-                <dt class="col-sm-3">Email</dt>
-                <dd class="col-sm-9">@Model.Email</dd>
-            </dl>
+            <div class="del-divider"></div>
 
             <!-- 🎓 ACADEMIC -->
-            <h5 class="text-warning mt-4">🎓 Academic Info</h5>
-            <hr />
-            <dl class="row">
-                <dt class="col-sm-3">Department</dt>
-                <dd class="col-sm-9">@Model.Department</dd>
+            <div class="del-section-title dst-amber">🎓 Academic Info</div>
+            <div class="del-grid">
+                <div class="del-field">
+                    <p class="del-field-label">Department</p>
+                    <p class="del-field-value">@Model.Department</p>
+                </div>
+                <div class="del-field">
+                    <p class="del-field-label">Grade &amp; Section</p>
+                    <p class="del-field-value">@Model.GradeSec</p>
+                </div>
+                <div class="del-field">
+                    <p class="del-field-label">Adviser</p>
+                    <p class="del-field-value">@Model.Adviser</p>
+                </div>
+            </div>
 
-                <dt class="col-sm-3">Grade & Section</dt>
-                <dd class="col-sm-9">@Model.GradeSec</dd>
-
-                <dt class="col-sm-3">Adviser</dt>
-                <dd class="col-sm-9">@Model.Adviser</dd>
-            </dl>
+            <div class="del-divider"></div>
 
             <!-- 👨‍👩‍👧 GUARDIAN -->
-            <h5 class="text-info mt-4">👨‍👩‍👧 Guardian Info</h5>
-            <hr />
-            <dl class="row">
-                <dt class="col-sm-3">Guardian Name</dt>
-                <dd class="col-sm-9">@Model.GuardianName</dd>
+            <div class="del-section-title dst-cyan">👨‍👩‍👧 Guardian Info</div>
+            <div class="del-grid">
+                <div class="del-field">
+                    <p class="del-field-label">Guardian Name</p>
+                    <p class="del-field-value">@Model.GuardianName</p>
+                </div>
+                <div class="del-field">
+                    <p class="del-field-label">Relationship</p>
+                    <p class="del-field-value">@Model.Relationship</p>
+                </div>
+                <div class="del-field">
+                    <p class="del-field-label">Contact</p>
+                    <p class="del-field-value">@Model.GuardianContact</p>
+                </div>
+                <div class="del-field" style="grid-column: 1 / -1;">
+                    <p class="del-field-label">Address</p>
+                    <p class="del-field-value">@Model.GuardianAddress</p>
+                </div>
+            </div>
 
-                <dt class="col-sm-3">Relationship</dt>
-                <dd class="col-sm-9">@Model.Relationship</dd>
-
-                <dt class="col-sm-3">Contact</dt>
-                <dd class="col-sm-9">@Model.GuardianContact</dd>
-
-                <dt class="col-sm-3">Address</dt>
-                <dd class="col-sm-9">@Model.GuardianAddress</dd>
-            </dl>
+            <div class="del-divider"></div>
 
             <!-- 🧠 GUIDANCE -->
-            <h5 class="text-danger mt-4">🧠 Guidance Info</h5>
-            <hr />
-            <dl class="row">
-                <dt class="col-sm-3">Case Type</dt>
-                <dd class="col-sm-9">@Model.CaseType</dd>
-
-                <dt class="col-sm-3">Counseling Status</dt>
-                <dd class="col-sm-9">@Model.CounselingStatus</dd>
-
-                <dt class="col-sm-3">Reason</dt>
-                <dd class="col-sm-9">@Model.Reason</dd>
-
-                <dt class="col-sm-3">Remarks</dt>
-                <dd class="col-sm-9">@Model.Remarks</dd>
-            </dl>
+            <div class="del-section-title dst-rose">🧠 Guidance Info</div>
+            <div class="del-grid del-grid-4">
+                <div class="del-field">
+                    <p class="del-field-label">Case Type</p>
+                    <p class="del-field-value">@Model.CaseType</p>
+                </div>
+                <div class="del-field">
+                    <p class="del-field-label">Counseling Status</p>
+                    <p class="del-field-value">@Model.CounselingStatus</p>
+                </div>
+                <div class="del-field">
+                    <p class="del-field-label">Reason</p>
+                    <p class="del-field-value">@Model.Reason</p>
+                </div>
+                <div class="del-field">
+                    <p class="del-field-label">Remarks</p>
+                    <p class="del-field-value">@Model.Remarks</p>
+                </div>
+            </div>
 
             <!-- DELETE BUTTONS -->
             <form asp-action="Delete">
                 <input type="hidden" asp-for="StuID" />
-                <div class="d-flex justify-content-between mt-4">
-                    <input type="submit" value="🗑️ Delete Student" class="btn btn-danger" />
-                    <a asp-action="Index" class="btn btn-secondary">⬅ Back</a>
+                <div class="del-actions">
+                    <input type="submit" value="🗑️ Delete Student" class="btn-delete" />
+                    <a asp-action="Index" class="btn-back">⬅ Back</a>
                 </div>
             </form>
 

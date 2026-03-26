@@ -51,13 +51,25 @@
                             </div>
 
                             <div class="form-group">
+                            <div class="input-group">
                                 <input type="password"
                                        name="password"
+                                       id="loginPassword"
                                        class="form-control"
                                        placeholder="Password" />
-                                <small class="helper-text">
-                                    Enter your secure password
-                                </small>
+
+                                <button type="button" class="btn btn-light"
+                                        onclick="toggleLoginPassword()" tabindex="-1">
+                                    <img id="loginPasswordToggleImg"
+                                         src="/photos/hidepass.png"
+                                         alt="Toggle password"
+                                         style="height:20px;">
+                                </button>
+                            </div>
+
+                            <small class="helper-text">
+                                Enter your secure password
+                            </small>
                             </div>
 
                             <button type="submit" class="btn-login">
@@ -96,5 +108,22 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js"></script>
+
+
 </body>
 </html>
+
+<script>
+    function toggleLoginPassword() {
+        var pw = document.getElementById("loginPassword");
+        var img = document.getElementById("loginPasswordToggleImg");
+
+        if (pw.type === "password") {
+            pw.type = "text";
+            img.src = "/photos/hide.png";
+        } else {
+            pw.type = "password";
+            img.src = "/photos/hidepass.png";
+        }
+    }
+</script>

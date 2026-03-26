@@ -16,6 +16,7 @@ namespace MVC_DenoyJabines.Data
 
         public DbSet<MVC_DenoyJabines.Models.Appointment> Appointments { get; set; }
 
+        public DbSet<MVC_DenoyJabines.Models.CaseNotes> CaseNotes { get; set; }
 
     }
 }

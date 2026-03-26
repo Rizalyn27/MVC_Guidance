@@ -1,112 +1,586 @@
 ﻿@model IEnumerable<MVC_DenoyJabines.Models.Students>
 
-<div class="container mt-4">
+<style>
+    :root {
+        --emerald: #0f9d74;
+        --emerald-dark: #0b7a5a;
+        --emerald-soft: #e6f7f2;
+        --emerald-border: #b2d8ce;
+        --amber: #d97706;
+        --amber-soft: #fef3e2;
+        --amber-border: #f5d79e;
+        --rose: #e5344a;
+        --rose-soft: #fdeef0;
+        --rose-border: #f5c0c8;
+        --ink: #0e1523;
+        --muted: #6b7696;
+        --faint: #a8b0c8;
+        --border: #e4e8f4;
+        --surface: #ffffff;
+        --bg: #f0f2f8;
+        --radius: 16px;
+        --radius-sm: 9px;
+        --shadow: 0 2px 16px rgba(14,21,35,0.07);
+        --av-teal: #0f9d74;
+        --av-navy: #2c3e6b;
+        --av-amber: #d4860b;
+        --av-rose: #b53030;
+        --av-purple: #6b3fa0;
+        --av-slate: #526070;
+    }
 
-    <div class="d-flex justify-content-between align-items-center mb-3">
+    .sp-wrapper {
+        font-family: Arial, Helvetica, sans-serif;
+        background: var(--bg);
+        min-height: 100vh;
+        padding: 32px 28px 48px;
+    }
 
-        <h3>📋 Student List</h3>
+    /* ── Header ── */
+    .sp-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+        gap: 14px;
+    }
 
-        <div class="d-flex align-items-center gap-3">
+    .sp-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--ink);
+        margin: 0 0 4px;
+    }
 
-            <!-- Add Button -->
-            <a asp-action="Create" class="btn btn-primary btn-sm">
-                Add Student
-            </a>
+    .sp-subtitle {
+        font-size: 0.82rem;
+        color: var(--muted);
+        margin: 0;
+    }
 
-            <!-- Filters -->
-            <div class="btn-group">
-                <a asp-action="Index" asp-route-status="active" class="btn btn-success btn-sm">Active</a>
-                <a asp-action="Index" asp-route-status="inactive" class="btn btn-secondary btn-sm">Inactive</a>
-                <a asp-action="Index" asp-route-status="all" class="btn btn-dark btn-sm">All</a>
-            </div>
+    .btn-add-student {
+        background: var(--emerald);
+        color: #fff;
+        border: none;
+        border-radius: var(--radius-sm);
+        padding: 10px 18px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: background .18s;
+        font-family: Arial, Helvetica, sans-serif;
+    }
 
+        .btn-add-student:hover {
+            background: var(--emerald-dark);
+            color: #fff;
+            text-decoration: none;
+        }
+
+    /* ── Card ── */
+    .sp-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        padding: 24px 24px 8px;
+    }
+
+    /* ── Toolbar ── */
+    .sp-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        gap: 14px;
+        flex-wrap: wrap;
+    }
+
+    .sp-search-wrap {
+        position: relative;
+        flex: 1;
+        min-width: 200px;
+        max-width: 320px;
+    }
+
+    .sp-search-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--faint);
+        font-size: 0.9rem;
+        pointer-events: none;
+    }
+
+    .sp-filter-btn.active {
+        background: var(--emerald);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(15,157,116,0.2);
+    }
+
+    .sp-search {
+        width: 100%;
+        padding: 9px 12px 9px 34px;
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-size: 0.85rem;
+        font-family: Arial, Helvetica, sans-serif;
+        color: var(--ink);
+        background: var(--bg);
+        outline: none;
+        transition: border .15s;
+    }
+
+        .sp-search:focus {
+            border-color: var(--emerald);
+            background: #fff;
+        }
+
+    .sp-filter-group {
+        display: flex;
+        gap: 0;
+        background: var(--bg);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 3px;
+    }
+
+    .sp-filter-btn {
+        border: none;
+        background: transparent;
+        border-radius: 7px;
+        padding: 7px 18px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--muted);
+        cursor: pointer;
+        text-decoration: none;
+        transition: background .15s, color .15s;
+        display: inline-block;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+        .sp-filter-btn:hover {
+            color: var(--ink);
+            text-decoration: none;
+        }
+
+        .sp-filter-btn.active {
+            background: var(--emerald);
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(15,157,116,0.2);
+        }
+
+    /* ── Table ── */
+    .sp-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+
+        .sp-table thead tr {
+            border-bottom: 1.5px solid var(--border);
+        }
+
+        .sp-table thead th {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--faint);
+            padding: 0 14px 12px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+            .sp-table thead th.center {
+                text-align: center;
+            }
+
+        .sp-table tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background .12s;
+        }
+
+            .sp-table tbody tr:last-child {
+                border-bottom: none;
+            }
+
+            .sp-table tbody tr:hover {
+                background: #f7f8fc;
+            }
+
+        .sp-table tbody td {
+            padding: 16px 14px;
+            color: var(--ink);
+            vertical-align: middle;
+        }
+
+            .sp-table tbody td.center {
+                text-align: center;
+            }
+
+    /* ── Avatar ── */
+    .sp-avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.82rem;
+        color: #fff;
+        flex-shrink: 0;
+        margin-right: 10px;
+    }
+
+    .sp-student-cell {
+        display: flex;
+        align-items: center;
+    }
+
+    .sp-student-name {
+        font-weight: 700;
+        font-size: 0.88rem;
+        color: var(--ink);
+        margin: 0;
+    }
+
+    /* ── Status Badge ── */
+    .sp-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        border-radius: 20px;
+        padding: 4px 11px;
+        font-size: 0.75rem;
+        font-weight: 700;
+    }
+
+    .sp-badge-active {
+        background: var(--emerald-soft);
+        color: var(--emerald);
+    }
+
+    .sp-badge-inactive {
+        background: #f0f0f0;
+        color: #888;
+    }
+
+    .sp-badge-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .sp-badge-active .sp-badge-dot {
+        background: var(--emerald);
+    }
+
+    .sp-badge-inactive .sp-badge-dot {
+        background: #aaa;
+    }
+
+    /* ── Action Buttons ── */
+    .sp-actions {
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .sp-btn {
+        border: 1.5px solid var(--border);
+        background: var(--surface);
+        border-radius: 7px;
+        padding: 5px 13px;
+        font-size: 0.78rem;
+        font-weight: 700;
+        color: var(--ink);
+        cursor: pointer;
+        text-decoration: none;
+        transition: all .15s;
+        display: inline-block;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+        .sp-btn:hover {
+            text-decoration: none;
+        }
+
+    .sp-btn-view {
+        color: var(--emerald);
+        border-color: var(--emerald-border);
+    }
+
+        .sp-btn-view:hover {
+            background: var(--emerald-soft);
+            color: var(--emerald-dark);
+        }
+
+    .sp-btn-edit {
+        color: var(--amber);
+        border-color: var(--amber-border);
+    }
+
+        .sp-btn-edit:hover {
+            background: var(--amber-soft);
+            color: #a05c04;
+        }
+
+    .sp-btn-deactivate {
+        color: var(--rose);
+        border-color: var(--rose-border);
+    }
+
+        .sp-btn-deactivate:hover {
+            background: var(--rose-soft);
+            color: #b52438;
+        }
+
+    .sp-btn-restore {
+        color: var(--emerald);
+        border-color: var(--emerald-border);
+        background: var(--emerald-soft);
+    }
+
+        .sp-btn-restore:hover {
+            background: #c0e8dd;
+            color: var(--emerald-dark);
+        }
+
+    .sp-empty {
+        text-align: center;
+        color: var(--faint);
+        font-size: 0.9rem;
+        padding: 48px 0;
+    }
+
+    /* Avatar colors */
+    .av-teal {
+        background: var(--av-teal);
+    }
+
+    .av-navy {
+        background: var(--av-navy);
+    }
+
+    .av-amber {
+        background: var(--av-amber);
+    }
+
+    .av-rose {
+        background: var(--av-rose);
+    }
+
+    .av-purple {
+        background: var(--av-purple);
+    }
+
+    .av-slate {
+        background: var(--av-slate);
+    }
+
+    /* ── Responsive table wrapper ── */
+    .sp-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    @@media (max-width: 700px) {
+        .sp-wrapper {
+            padding: 20px 14px 40px;
+        }
+
+        .sp-card {
+            padding: 18px 14px 8px;
+        }
+
+        .sp-header {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .btn-add-student {
+            justify-content: center;
+        }
+
+        .sp-toolbar {
+            flex-direction: column;
+            align-items: stretch;
+        }
+
+        .sp-search-wrap {
+            max-width: 100%;
+        }
+    }
+</style>
+
+@{
+    var avatarColors = new[] { "av-teal", "av-navy", "av-amber", "av-rose", "av-purple", "av-slate" };
+    int idx = 0;
+
+    string GetInitials(string fullName)
+    {
+        if (string.IsNullOrWhiteSpace(fullName)) return "?";
+        var parts = fullName.Trim().Split(' ', System.StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 1) return parts[0][0].ToString().ToUpper();
+        return (parts[0][0].ToString() + parts[^1][0].ToString()).ToUpper();
+    }
+}
+
+<div class="sp-wrapper">
+
+    <!-- Header -->
+    <div class="sp-header">
+        <div>
+            <h1 class="sp-title">Student List</h1>
+            <p class="sp-subtitle">Manage all student records and information.</p>
+        </div>
+        <div>
+            <a asp-action="Create" class="btn-add-student">+ Add Student</a>
         </div>
     </div>
 
-    <table class="table table-bordered table-hover align-middle text-center shadow-sm">
-        <thead class="table-dark">
-            <tr>
-                <th class="text-start">Full Name</th>
-                <th>Grade & Section</th>
-                <th>LRN</th>
-                <th>Status</th>
-                <th style="width: 230px;">Actions</th>
-            </tr>
-        </thead>
+    <!-- Card -->
+    <div class="sp-card">
 
-        <tbody>
-            @if (!Model.Any())
-            {
-                <tr>
-                    <td colspan="5" class="text-muted">No students found.</td>
-                </tr>
-            }
-            else
-            {
-                @foreach (var item in Model)
-                {
+        <!-- Toolbar -->
+        <div class="sp-toolbar">
+            <div class="sp-search-wrap">
+                <span class="sp-search-icon">🔍</span>
+                <input type="text" class="sp-search" placeholder="Search by name or LRN..." id="studentSearch" />
+            </div>
+
+            <div class="sp-filter-group">
+                <button type="button" class="sp-filter-btn active" onclick="filterStatus(this, 'all')">All</button>
+                <button type="button" class="sp-filter-btn" onclick="filterStatus(this, 'active')">Active</button>
+                <button type="button" class="sp-filter-btn" onclick="filterStatus(this, 'inactive')">Inactive</button>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <div class="sp-table-wrap">
+            <table class="sp-table" id="studentTable">
+                <thead>
                     <tr>
-                        <td class="text-start">@item.StuFullName</td>
-
-                        <td>@item.GradeSec</td>
-
-                        <td>@item.StuLRN</td>
-
-                        <td>
-                            @if (item.StuStatus)
-                            {
-                                <span class="badge bg-success">● Active</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-secondary">● Inactive</span>
-                            }
-                        </td>
-
-                        <td>
-                            <div class="d-flex justify-content-center gap-2 flex-wrap">
-
-                                <!-- Edit -->
-                                <a asp-action="Edit"
-                                   asp-route-id="@item.StuID"
-                                   class="btn btn-sm btn-warning">
-                                    ✏️
-                                </a>
-
-                                <!-- Details -->
-                                <a asp-action="Details"
-                                   asp-route-id="@item.StuID"
-                                   class="btn btn-sm btn-info text-white">
-                                    👁
-                                </a>
-
-                                @if (item.StuStatus)
-                                {
-                                    <!-- Deactivate -->
-                                    <a asp-action="Delete"
-                                       asp-route-id="@item.StuID"
-                                       class="btn btn-sm btn-danger"
-                                       onclick="return confirm('Deactivate this student?');">
-                                        🚫
-                                    </a>
-                                }
-                                else
-                                {
-                                    <!-- Restore -->
-                                    <a asp-action="Restore"
-                                       asp-route-id="@item.StuID"
-                                       class="btn btn-sm btn-success"
-                                       onclick="return confirm('Restore this student?');">
-                                        ♻️
-                                    </a>
-                                }
-
-                            </div>
-                        </td>
+                        <th colspan="2">Basic Information</th>
+                        <th>Grade &amp; Section</th>
+                        <th>LRN</th>
+                        <th class="center">Status</th>
+                        <th class="center">Actions</th>
                     </tr>
-                }
-            }
-        </tbody>
-    </table>
+                </thead>
+                <tbody>
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="sp-empty">No students found.</td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var item in Model)
+                        {
+                            var colorClass = avatarColors[idx % avatarColors.Length];
+                            idx++;
+                            var initials = GetInitials(item.StuFullName);
 
+                            <tr>
+                                <td colspan="2">
+                                    <div class="sp-student-cell">
+                                        <div class="sp-avatar @colorClass">@initials</div>
+                                        <div>
+                                            <p class="sp-student-name">@item.StuFullName</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>@item.GradeSec</td>
+                                <td>@item.StuLRN</td>
+                                <td class="center">
+                                    @if (item.StuStatus)
+                                    {
+                                        <span class="sp-badge sp-badge-active">
+                                            <span class="sp-badge-dot"></span> Active
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="sp-badge sp-badge-inactive">
+                                            <span class="sp-badge-dot"></span> Inactive
+                                        </span>
+                                    }
+                                </td>
+                                <td class="center">
+                                    <div class="sp-actions">
+                                        <a asp-action="Details" asp-route-id="@item.StuID" class="sp-btn sp-btn-view">View</a>
+                                        <a asp-action="Edit" asp-route-id="@item.StuID" class="sp-btn sp-btn-edit">Edit</a>
+                                        @if (item.StuStatus)
+                                        {
+                                            <a asp-action="Delete" asp-route-id="@item.StuID"
+                                               class="sp-btn sp-btn-deactivate"
+                                               onclick="return confirm('Deactivate this student?');">
+                                                Deactivate
+                                            </a>
+                                        }
+                                        else
+                                        {
+                                            <a asp-action="Restore" asp-route-id="@item.StuID"
+                                               class="sp-btn sp-btn-restore"
+                                               onclick="return confirm('Restore this student?');">
+                                                Restore
+                                            </a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+
+    </div>
 </div>
+
+<script>
+    document.getElementById('studentSearch').addEventListener('input', function () {
+        const query = this.value.toLowerCase();
+        const rows = document.querySelectorAll('#studentTable tbody tr');
+        rows.forEach(row => {
+            const text = row.innerText.toLowerCase();
+            row.style.display = text.includes(query) ? '' : 'none';
+        });
+    });
+</script>
+
+<script>
+    function filterStatus(button, status) {
+        // Remove active from all buttons
+        document.querySelectorAll('.sp-filter-btn').forEach(btn => btn.classList.remove('active'));
+
+        // Add active to the clicked button
+        button.classList.add('active');
+
+        // Optional: filter the table by status (UI-only)
+        const rows = document.querySelectorAll('#studentTable tbody tr');
+        rows.forEach(row => {
+            if (status === 'all') {
+                row.style.display = '';
+            } else if (status === 'active') {
+                row.style.display = row.querySelector('.sp-badge-active') ? '' : 'none';
+            } else if (status === 'inactive') {
+                row.style.display = row.querySelector('.sp-badge-inactive') ? '' : 'none';
+            }
+        });
+    }
+</script>

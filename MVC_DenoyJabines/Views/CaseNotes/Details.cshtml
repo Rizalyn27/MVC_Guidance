@@ -1,0 +1,453 @@
+﻿@model MVC_DenoyJabines.Models.CaseNotes
+@{
+    ViewData["Title"] = "Case Note Details";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500&display=swap');
+
+    :root {
+        --slate: #1e293b;
+        --slate-light: #f1f5f9;
+        --blue: #3b82f6;
+        --blue-light: #eff6ff;
+        --blue-border: #bfdbfe;
+        --green: #10b981;
+        --green-light: #ecfdf5;
+        --green-border: #6ee7b7;
+        --amber: #f59e0b;
+        --amber-light: #fef3c7;
+        --amber-border: #fde68a;
+        --rose: #f43f5e;
+        --rose-light: #fff1f2;
+        --rose-border: #fecdd3;
+        --surface: #f8fafc;
+        --card: #ffffff;
+        --border: #e2e8f0;
+        --text: #0f172a;
+        --muted: #64748b;
+        --radius: 16px;
+    }
+
+    body {
+        background: var(--surface);
+        font-family: 'DM Sans', sans-serif;
+        color: var(--text);
+    }
+
+    .cn-page {
+        padding: 32px 16px;
+        max-width: 860px;
+        margin: 0 auto;
+    }
+
+    .page-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 1.3px;
+        text-transform: uppercase;
+        color: var(--slate);
+        margin-bottom: 6px;
+    }
+
+        .page-eyebrow::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 2px;
+            background: var(--slate);
+        }
+
+    .page-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: clamp(1.5rem, 4vw, 2rem);
+        font-weight: 800;
+        color: var(--text);
+        margin: 0 0 24px;
+    }
+
+    .detail-card {
+        background: var(--card);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        overflow: hidden;
+    }
+
+    /* Student chip at top */
+    .student-bar {
+        padding: 20px 28px;
+        background: var(--slate);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .student-avatar {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: rgba(255,255,255,.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem;
+        flex-shrink: 0;
+    }
+
+    .student-name {
+        font-family: 'Outfit', sans-serif;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #fff;
+    }
+
+    .student-sub {
+        font-size: 0.78rem;
+        color: rgba(255,255,255,.6);
+        margin-top: 1px;
+    }
+
+    /* Section blocks */
+    .cn-section {
+        border-bottom: 1px solid var(--border);
+    }
+
+        .cn-section:last-of-type {
+            border-bottom: none;
+        }
+
+    .cn-section-header {
+        padding: 18px 28px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .section-icon {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        flex-shrink: 0;
+    }
+
+        .section-icon.blue {
+            background: var(--blue-light);
+        }
+
+        .section-icon.green {
+            background: var(--green-light);
+        }
+
+        .section-icon.amber {
+            background: var(--amber-light);
+        }
+
+        .section-icon.rose {
+            background: var(--rose-light);
+        }
+
+    .section-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .section-badge {
+        margin-left: auto;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.65rem;
+        font-weight: 800;
+        padding: 2px 8px;
+        border-radius: 6px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .badge-blue {
+        background: var(--blue-light);
+        color: var(--blue);
+        border: 1px solid var(--blue-border);
+    }
+
+    .badge-green {
+        background: var(--green-light);
+        color: var(--green);
+        border: 1px solid var(--green-border);
+    }
+
+    .badge-amber {
+        background: var(--amber-light);
+        color: #92400e;
+        border: 1px solid var(--amber-border);
+    }
+
+    .badge-rose {
+        background: var(--rose-light);
+        color: #9f1239;
+        border: 1px solid var(--rose-border);
+    }
+
+    .cn-section-body {
+        padding: 14px 28px 22px;
+    }
+
+    .content-block {
+        font-size: 0.9rem;
+        line-height: 1.7;
+        color: var(--text);
+        background: #fafafa;
+        border-radius: 10px;
+        padding: 14px 16px;
+        border: 1px solid var(--border);
+        white-space: pre-wrap;
+    }
+
+        .content-block.muted-text {
+            color: var(--muted);
+            font-style: italic;
+        }
+
+    .detail-pair {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+    }
+
+    .dp-label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        margin-bottom: 5px;
+    }
+
+    .dp-val {
+        font-size: 0.9rem;
+        color: var(--text);
+        padding: 9px 14px;
+        background: #fafafa;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+    }
+
+    /* Audit strip */
+    .audit-strip {
+        padding: 14px 28px;
+        background: var(--slate-light);
+        border-top: 1px solid var(--border);
+        display: flex;
+        gap: 24px;
+        flex-wrap: wrap;
+    }
+
+    .audit-item {
+        font-size: 0.78rem;
+        color: var(--muted);
+    }
+
+        .audit-item strong {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 28px;
+        border-top: 1px solid var(--border);
+        background: #fafafa;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 22px;
+        border-radius: 10px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.88rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: all .18s;
+        white-space: nowrap;
+    }
+
+    .btn-back {
+        background: #f1f5f9;
+        color: var(--muted);
+        border: 1.5px solid var(--border);
+    }
+
+        .btn-back:hover {
+            background: #e2e8f0;
+            color: var(--text);
+        }
+
+    .btn-edit {
+        background: var(--amber);
+        color: #1c1917;
+        font-weight: 700;
+        box-shadow: 0 2px 8px rgba(245,158,11,.2);
+    }
+
+        .btn-edit:hover {
+            background: #d97706;
+            color: #fff;
+        }
+
+    @@media (max-width: 640px) {
+        .cn-page {
+            padding: 20px 12px;
+        }
+
+        .cn-section-header {
+            padding: 14px 18px 0;
+        }
+
+        .cn-section-body {
+            padding: 12px 18px 18px;
+        }
+
+        .student-bar {
+            padding: 16px 18px;
+        }
+
+        .form-actions, .audit-strip {
+            padding: 14px 18px;
+        }
+
+        .detail-pair {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="cn-page">
+    <div class="page-eyebrow">Case Notes</div>
+    <h1 class="page-title">📋 Case Note Details</h1>
+
+    <div class="detail-card">
+
+        <!-- Student Bar -->
+        <div class="student-bar">
+            <div class="student-avatar">👤</div>
+            <div>
+                <div class="student-name">@Model.Student?.StuFullName</div>
+                <div class="student-sub">Student</div>
+            </div>
+        </div>
+
+        <!-- I. Background -->
+        <div class="cn-section">
+            <div class="cn-section-header">
+                <div class="section-icon blue">📌</div>
+                <span class="section-title">Background of the Case</span>
+                <span class="section-badge badge-blue">I</span>
+            </div>
+            <div class="cn-section-body">
+                @if (string.IsNullOrEmpty(Model.BackgroundOfCase))
+                {
+                    <div class="content-block muted-text">No background provided.</div>
+                }
+                else
+                {
+                    <div class="content-block">@Model.BackgroundOfCase</div>
+                }
+            </div>
+        </div>
+
+        <!-- II. Counseling Plan -->
+        <div class="cn-section">
+            <div class="cn-section-header">
+                <div class="section-icon green">🧩</div>
+                <span class="section-title">Counseling Plan</span>
+                <span class="section-badge badge-green">II</span>
+            </div>
+            <div class="cn-section-body">
+                <div class="detail-pair" style="margin-bottom:12px;">
+                    <div>
+                        <div class="dp-label">a. Counseling Approach</div>
+                        <div class="dp-val">@(string.IsNullOrEmpty(Model.CounselingApproach) ? "—" : Model.CounselingApproach)</div>
+                    </div>
+                </div>
+                <div class="dp-label" style="margin-bottom:5px;">b. Counseling Goals</div>
+                @if (string.IsNullOrEmpty(Model.CounselingGoals))
+                {
+                    <div class="content-block muted-text">No goals specified.</div>
+                }
+                else
+                {
+                    <div class="content-block">@Model.CounselingGoals</div>
+                }
+            </div>
+        </div>
+
+        <!-- III. Comments -->
+        <div class="cn-section">
+            <div class="cn-section-header">
+                <div class="section-icon amber">💬</div>
+                <span class="section-title">Comments</span>
+                <span class="section-badge badge-amber">III</span>
+            </div>
+            <div class="cn-section-body">
+                @if (string.IsNullOrEmpty(Model.Comments))
+                {
+                    <div class="content-block muted-text">No comments added.</div>
+                }
+                else
+                {
+                    <div class="content-block">@Model.Comments</div>
+                }
+            </div>
+        </div>
+
+        <!-- IV. Recommendations -->
+        <div class="cn-section">
+            <div class="cn-section-header">
+                <div class="section-icon rose">📝</div>
+                <span class="section-title">Recommendations</span>
+                <span class="section-badge badge-rose">IV</span>
+            </div>
+            <div class="cn-section-body">
+                @if (string.IsNullOrEmpty(Model.Recommendations))
+                {
+                    <div class="content-block muted-text">No recommendations provided.</div>
+                }
+                else
+                {
+                    <div class="content-block">@Model.Recommendations</div>
+                }
+            </div>
+        </div>
+
+        <!-- Audit Strip -->
+        <div class="audit-strip">
+            <div class="audit-item">🕓 Created: <strong>@Model.CreatedAt.ToString("MMMM dd, yyyy hh:mm tt")</strong></div>
+            @if (Model.UpdatedAt.HasValue)
+            {
+                <div class="audit-item">✏️ Last Updated: <strong>@Model.UpdatedAt.Value.ToString("MMMM dd, yyyy hh:mm tt")</strong></div>
+            }
+        </div>
+
+        <div class="form-actions">
+            <a asp-action="Index" class="btn btn-back">⬅ Back</a>
+            <a asp-action="Edit" asp-route-id="@Model.CaseNoteId" class="btn btn-edit">✏️ Edit</a>
+        </div>
+    </div>
+</div>

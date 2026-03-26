@@ -3,117 +3,364 @@
     ViewData["Title"] = "Appointment Details";
 }
 
-<div class="container mt-4">
-    <div class="card shadow-lg border-0">
-        <div class="card-header bg-info text-white">
-            <h4 class="mb-0">📋 Appointment Details</h4>
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap');
+
+    :root {
+        --teal: #0d9488;
+        --teal-light: #ccfbf1;
+        --teal-dark: #0f766e;
+        --amber: #f59e0b;
+        --amber-light: #fef3c7;
+        --indigo: #4f46e5;
+        --indigo-light: #eef2ff;
+        --surface: #f8fafc;
+        --card: #ffffff;
+        --border: #e2e8f0;
+        --text: #0f172a;
+        --muted: #64748b;
+        --radius: 16px;
+    }
+
+    body {
+        background: var(--surface);
+        font-family: 'DM Sans', sans-serif;
+        color: var(--text);
+    }
+
+    .appt-page {
+        padding: 32px 16px;
+        max-width: 860px;
+        margin: 0 auto;
+    }
+
+    .page-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        color: var(--teal);
+        margin-bottom: 6px;
+    }
+
+        .page-eyebrow::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 2px;
+            background: var(--teal);
+        }
+
+    .page-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: clamp(1.5rem, 4vw, 2rem);
+        font-weight: 800;
+        color: var(--text);
+        margin: 0 0 24px;
+    }
+
+    .detail-card {
+        background: var(--card);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+
+    .section-header {
+        padding: 20px 28px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .section-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+        .section-icon.teal {
+            background: var(--teal-light);
+        }
+
+        .section-icon.amber {
+            background: var(--amber-light);
+        }
+
+        .section-icon.indigo {
+            background: var(--indigo-light);
+        }
+
+    .section-label {
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .section-divider {
+        height: 1px;
+        background: var(--border);
+        margin: 14px 28px 0;
+    }
+
+    .detail-body {
+        padding: 20px 28px 24px;
+    }
+
+    .detail-grid {
+        display: grid;
+        gap: 18px;
+    }
+
+        .detail-grid.cols-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .detail-grid.cols-2 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .detail-grid.cols-1 {
+            grid-template-columns: 1fr;
+        }
+
+    .detail-field label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        margin-bottom: 5px;
+    }
+
+    .detail-value {
+        font-size: 0.92rem;
+        color: var(--text);
+        padding: 9px 14px;
+        background: #f8fafc;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        min-height: 38px;
+    }
+
+    /* Status Badges */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.78rem;
+        font-weight: 700;
+    }
+
+    .status-pending {
+        background: #fef3c7;
+        color: #92400e;
+        border: 1px solid #fde68a;
+    }
+
+    .status-confirmed {
+        background: #d1fae5;
+        color: #064e3b;
+        border: 1px solid #6ee7b7;
+    }
+
+    .status-cancelled {
+        background: #fee2e2;
+        color: #7f1d1d;
+        border: 1px solid #fca5a5;
+    }
+
+    .status-completed {
+        background: var(--indigo-light);
+        color: var(--indigo);
+        border: 1px solid #c7d2fe;
+    }
+
+    .status-default {
+        background: #f1f5f9;
+        color: var(--muted);
+        border: 1px solid var(--border);
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 28px;
+        border-top: 1px solid var(--border);
+        background: #fafafa;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 22px;
+        border-radius: 10px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.88rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: all .18s;
+        white-space: nowrap;
+    }
+
+    .btn-back {
+        background: #f1f5f9;
+        color: var(--muted);
+        border: 1.5px solid var(--border);
+    }
+
+        .btn-back:hover {
+            background: #e2e8f0;
+            color: var(--text);
+        }
+
+    .btn-edit {
+        background: var(--teal);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(13,148,136,.22);
+    }
+
+        .btn-edit:hover {
+            background: var(--teal-dark);
+        }
+
+    @@media (max-width: 768px) {
+        .detail-grid.cols-3, .detail-grid.cols-2 {
+            grid-template-columns: 1fr;
+        }
+
+        .appt-page {
+            padding: 20px 12px;
+        }
+
+        .detail-body {
+            padding: 16px 18px 20px;
+        }
+
+        .section-header {
+            padding: 16px 18px 0;
+        }
+
+        .section-divider {
+            margin: 12px 18px 0;
+        }
+
+        .form-actions {
+            padding: 16px 18px;
+        }
+    }
+</style>
+
+<div class="appt-page">
+    <div class="page-eyebrow">Appointments</div>
+    <h1 class="page-title">📋 Appointment Details</h1>
+
+    <div class="detail-card">
+        <!-- Personal Information -->
+        <div class="section-header">
+            <div class="section-icon teal">👤</div>
+            <span class="section-label">Personal Information</span>
+        </div>
+        <div class="section-divider"></div>
+        <div class="detail-body">
+            <div class="detail-grid cols-3">
+                <div class="detail-field"><label>First Name</label><div class="detail-value">@Model.FirstName</div></div>
+                <div class="detail-field"><label>Last Name</label><div class="detail-value">@Model.LastName</div></div>
+                <div class="detail-field"><label>Middle Name</label><div class="detail-value">@(string.IsNullOrEmpty(Model.MiddleName) ? "—" : Model.MiddleName)</div></div>
+            </div>
+            <div class="detail-grid cols-2" style="margin-top:18px;">
+                <div class="detail-field"><label>Email</label><div class="detail-value">@Model.Email</div></div>
+                <div class="detail-field"><label>Contact Number</label><div class="detail-value">@Model.ContactNumber</div></div>
+            </div>
         </div>
 
-        <div class="card-body">
-
-            <!-- 👤 PERSONAL INFO -->
-            <h5 class="text-primary">👤 Personal Information</h5>
-            <hr />
-
-            <div class="row">
-                <div class="col-md-4 mb-3">
-                    <label class="form-label fw-bold">First Name</label>
-                    <p class="form-control-plaintext">@Model.FirstName</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label class="form-label fw-bold">Last Name</label>
-                    <p class="form-control-plaintext">@Model.LastName</p>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <label class="form-label fw-bold">Middle Name</label>
-                    <p class="form-control-plaintext">@(string.IsNullOrEmpty(Model.MiddleName) ? "—" : Model.MiddleName)</p>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label fw-bold">Email</label>
-                    <p class="form-control-plaintext">@Model.Email</p>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label fw-bold">Contact Number</label>
-                    <p class="form-control-plaintext">@Model.ContactNumber</p>
-                </div>
-            </div>
-
-            <!-- 📅 APPOINTMENT DETAILS -->
-            <h5 class="text-warning mt-4">📅 Appointment Details</h5>
-            <hr />
-
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="form-label fw-bold">Appointment Date</label>
-                    <p class="form-control-plaintext">@Model.AppointmentDate.ToString("MMMM dd, yyyy hh:mm tt")</p>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label fw-bold">Appointment Type</label>
-                    <p class="form-control-plaintext">@Model.AppointmentType</p>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label fw-bold">Status</label>
-                    <p class="form-control-plaintext">
+        <!-- Appointment Details -->
+        <div class="section-header">
+            <div class="section-icon amber">📅</div>
+            <span class="section-label">Appointment Details</span>
+        </div>
+        <div class="section-divider"></div>
+        <div class="detail-body">
+            <div class="detail-grid cols-2">
+                <div class="detail-field"><label>Appointment Date</label><div class="detail-value">@Model.AppointmentDate.ToString("MMMM dd, yyyy hh:mm tt")</div></div>
+                <div class="detail-field"><label>Appointment Type</label><div class="detail-value">@Model.AppointmentType</div></div>
+                <div class="detail-field">
+                    <label>Status</label>
+                    <div class="detail-value" style="background:transparent; border:none; padding:6px 0;">
                         @switch (Model.Status)
                         {
                             case "Pending":
-                                <span class="badge bg-warning text-dark">⏳ Pending</span>
+                                <span class="status-badge status-pending">⏳ Pending</span>
                                 break;
                             case "Confirmed":
-                                <span class="badge bg-success">✅ Confirmed</span>
+                                <span class="status-badge status-confirmed">✅ Confirmed</span>
                                 break;
                             case "Cancelled":
-                                <span class="badge bg-danger">❌ Cancelled</span>
+                                <span class="status-badge status-cancelled">❌ Cancelled</span>
                                 break;
                             case "Completed":
-                                <span class="badge bg-primary">🎓 Completed</span>
+                                <span class="status-badge status-completed">🎓 Completed</span>
                                 break;
                             default:
-                                <span class="badge bg-secondary">@Model.Status</span>
+                                <span class="status-badge status-default">@Model.Status</span>
                                 break;
                         }
-                    </p>
+                    </div>
                 </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label fw-bold">Submitted By</label>
-                    <p class="form-control-plaintext">@(Model.User?.Username ?? "—")</p>
-                </div>
-                <div class="col-md-12 mb-3">
-                    <label class="form-label fw-bold">Notes</label>
-                    <p class="form-control-plaintext">@(string.IsNullOrEmpty(Model.Notes) ? "—" : Model.Notes)</p>
+                <div class="detail-field"><label>Submitted By</label><div class="detail-value">@(Model.User?.Username ?? "—")</div></div>
+            </div>
+            <div class="detail-grid cols-1" style="margin-top:18px;">
+                <div class="detail-field"><label>Notes</label><div class="detail-value">@(string.IsNullOrEmpty(Model.Notes) ? "—" : Model.Notes)</div></div>
+            </div>
+        </div>
+
+        <!-- Record Info -->
+        <div class="section-header">
+            <div class="section-icon indigo">🕓</div>
+            <span class="section-label">Record Info</span>
+        </div>
+        <div class="section-divider"></div>
+        <div class="detail-body">
+            <div class="detail-grid cols-2">
+                <div class="detail-field"><label>Created At</label><div class="detail-value">@Model.CreatedAt.ToString("MMMM dd, yyyy hh:mm tt")</div></div>
+                <div class="detail-field">
+                    <label>Last Updated</label>
+                    <div class="detail-value">@(Model.UpdatedAt.HasValue ? Model.UpdatedAt.Value.ToString("MMMM dd, yyyy hh:mm tt") : "—")</div>
                 </div>
             </div>
+        </div>
 
-            <!-- 🕓 AUDIT INFO -->
-            <h5 class="text-secondary mt-4">🕓 Record Info</h5>
-            <hr />
-
-            <div class="row">
-                <div class="col-md-6 mb-3">
-                    <label class="form-label fw-bold">Created At</label>
-                    <p class="form-control-plaintext">@Model.CreatedAt.ToString("MMMM dd, yyyy hh:mm tt")</p>
-                </div>
-                <div class="col-md-6 mb-3">
-                    <label class="form-label fw-bold">Last Updated</label>
-                    <p class="form-control-plaintext">
-                        @(Model.UpdatedAt.HasValue? Model.UpdatedAt.Value.ToString("MMMM dd, yyyy hh:mm tt") : "—")
-                    </p>
-                </div>
-            </div>
-
-            <!-- BUTTONS -->
-            <div class="d-flex justify-content-between mt-3">
-                @if (User.IsInRole("Student"))
-                {
-                    <a asp-action="StudentsAppt" class="btn btn-secondary">⬅ Back</a>
-                }
-                else
-                {
-                    <a asp-action="Index" class="btn btn-secondary">⬅ Back</a>
-                }
-                <a asp-action="Edit" asp-route-id="@Model.AppointmentID" class="btn btn-primary">✏️ Edit</a>
-            </div>
-
+        <div class="form-actions">
+            @if (User.IsInRole("Student"))
+            {
+                <a asp-action="StudentsAppt" class="btn btn-back">⬅ Back</a>
+            }
+            else
+            {
+                <a asp-action="Index" class="btn btn-back">⬅ Back</a>
+            }
+            <a asp-action="Edit" asp-route-id="@Model.AppointmentID" class="btn btn-edit">✏️ Edit</a>
         </div>
     </div>
 </div>

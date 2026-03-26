@@ -1,0 +1,357 @@
+﻿@model IEnumerable<MVC_DenoyJabines.Models.CaseNotes>
+@{
+    ViewData["Title"] = "Case Notes";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500&display=swap');
+
+    :root {
+        --slate: #1e293b;
+        --slate-dark: #0f172a;
+        --slate-mid: #334155;
+        --slate-light: #f1f5f9;
+        --slate-100: #f8fafc;
+        --blue: #3b82f6;
+        --blue-light: #eff6ff;
+        --green: #10b981;
+        --green-light: #ecfdf5;
+        --amber: #f59e0b;
+        --amber-light: #fef3c7;
+        --surface: #f8fafc;
+        --card: #ffffff;
+        --border: #e2e8f0;
+        --text: #0f172a;
+        --muted: #64748b;
+        --radius: 16px;
+    }
+
+    body {
+        background: var(--surface);
+        font-family: 'DM Sans', sans-serif;
+        color: var(--text);
+    }
+
+    .list-page {
+        padding: 32px 16px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .page-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+        gap: 14px;
+    }
+
+    .page-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 1.3px;
+        text-transform: uppercase;
+        color: var(--slate);
+        margin-bottom: 5px;
+    }
+
+        .page-eyebrow::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 2px;
+            background: var(--slate);
+        }
+
+    .page-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+        font-weight: 800;
+        color: var(--text);
+        margin: 0;
+    }
+
+    .btn-new {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 11px 22px;
+        border-radius: 10px;
+        background: var(--slate);
+        color: #fff;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.88rem;
+        font-weight: 600;
+        text-decoration: none;
+        transition: background .18s;
+        box-shadow: 0 2px 8px rgba(30,41,59,.25);
+        white-space: nowrap;
+    }
+
+        .btn-new:hover {
+            background: var(--slate-dark);
+            color: #fff;
+        }
+
+    .table-card {
+        background: var(--card);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        overflow: hidden;
+    }
+
+    .empty-box {
+        padding: 52px 24px;
+        text-align: center;
+        color: var(--muted);
+        font-family: 'Outfit', sans-serif;
+        font-size: 1rem;
+    }
+
+        .empty-box .e-icon {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+    .cn-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .cn-table thead tr {
+            background: var(--slate);
+        }
+
+        .cn-table thead th {
+            padding: 14px 20px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: rgba(255,255,255,.75);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            white-space: nowrap;
+        }
+
+            .cn-table thead th:last-child {
+                text-align: center;
+            }
+
+        .cn-table tbody tr {
+            border-bottom: 1px solid #f1f5f9;
+            transition: background .12s;
+        }
+
+            .cn-table tbody tr:last-child {
+                border-bottom: none;
+            }
+
+            .cn-table tbody tr:hover {
+                background: var(--slate-100);
+            }
+
+        .cn-table td {
+            padding: 15px 20px;
+            font-size: 0.875rem;
+            color: var(--text);
+            vertical-align: middle;
+        }
+
+    /* Student cell */
+    .student-cell {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .s-avatar {
+        width: 34px;
+        height: 34px;
+        border-radius: 9px;
+        background: var(--slate-light);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.95rem;
+        flex-shrink: 0;
+    }
+
+    .s-name {
+        font-weight: 600;
+        font-family: 'Outfit', sans-serif;
+        color: var(--text);
+    }
+
+    /* Approach pill */
+    .approach-pill {
+        display: inline-block;
+        max-width: 220px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        padding: 4px 10px;
+        border-radius: 6px;
+        background: var(--blue-light);
+        color: var(--blue);
+        border: 1px solid #bfdbfe;
+        font-size: 0.76rem;
+        font-weight: 600;
+        font-family: 'Outfit', sans-serif;
+    }
+
+    /* Date cells */
+    .date-val {
+        font-size: 0.85rem;
+        color: var(--text);
+    }
+
+    .date-dash {
+        color: var(--muted);
+    }
+
+    /* Action Buttons */
+    .action-cell {
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-act {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 34px;
+        height: 34px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        text-decoration: none;
+        transition: all .15s;
+        border: 1.5px solid transparent;
+    }
+
+        .btn-act.info {
+            background: var(--blue-light);
+            color: #1d4ed8;
+            border-color: #bfdbfe;
+        }
+
+            .btn-act.info:hover {
+                background: #bfdbfe;
+            }
+
+        .btn-act.edit {
+            background: var(--amber-light);
+            color: #92400e;
+            border-color: #fde68a;
+        }
+
+            .btn-act.edit:hover {
+                background: #fde68a;
+            }
+
+        .btn-act.del {
+            background: #fff1f2;
+            color: #9f1239;
+            border-color: #fecdd3;
+        }
+
+            .btn-act.del:hover {
+                background: #fecdd3;
+            }
+
+    @@media (max-width: 768px) {
+        .list-page {
+            padding: 20px 12px;
+        }
+
+        .cn-table thead th:nth-child(2),
+        .cn-table td:nth-child(2) {
+            display: none;
+        }
+    }
+</style>
+
+<div class="list-page">
+    <div class="page-top">
+        <div>
+            <div class="page-eyebrow">Management</div>
+            <h1 class="page-title">📋 Case Notes</h1>
+        </div>
+        <a asp-action="Create" class="btn-new">➕ New Case Note</a>
+    </div>
+
+    <div class="table-card">
+        @if (!Model.Any())
+        {
+            <div class="empty-box">
+                <span class="e-icon">📭</span>
+                No case notes found.
+            </div>
+        }
+        else
+        {
+            <div style="overflow-x:auto;">
+                <table class="cn-table">
+                    <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Approach</th>
+                            <th>Created</th>
+                            <th>Last Updated</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="student-cell">
+                                        <div class="s-avatar">👤</div>
+                                        <div class="s-name">@item.Student?.StuFullName</div>
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (string.IsNullOrEmpty(item.CounselingApproach))
+                                    {
+                                        <span class="date-dash">—</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="approach-pill" title="@item.CounselingApproach">@item.CounselingApproach</span>
+                                    }
+                                </td>
+                                <td><span class="date-val">@item.CreatedAt.ToString("MMM dd, yyyy")</span></td>
+                                <td>
+                                    @if (item.UpdatedAt.HasValue)
+                                    {
+                                        <span class="date-val">@item.UpdatedAt.Value.ToString("MMM dd, yyyy")</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="date-dash">—</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="action-cell">
+                                        <a asp-action="Details" asp-route-id="@item.CaseNoteId" class="btn-act info" title="Details">🔍</a>
+                                        <a asp-action="Edit" asp-route-id="@item.CaseNoteId" class="btn-act edit" title="Edit">✏️</a>
+                                        <a asp-action="Delete" asp-route-id="@item.CaseNoteId" class="btn-act del" title="Delete">🗑️</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+    </div>
+</div>

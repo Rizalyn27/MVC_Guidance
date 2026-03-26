@@ -1,0 +1,422 @@
+﻿@model MVC_DenoyJabines.Models.CaseNotes
+@{
+    ViewData["Title"] = "Edit Case Note";
+}
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500&display=swap');
+
+    :root {
+        --amber: #f59e0b;
+        --amber-dark: #d97706;
+        --amber-light: #fef3c7;
+        --slate: #1e293b;
+        --slate-light: #f1f5f9;
+        --blue: #3b82f6;
+        --blue-light: #eff6ff;
+        --green: #10b981;
+        --green-light: #ecfdf5;
+        --rose: #f43f5e;
+        --rose-light: #fff1f2;
+        --surface: #f8fafc;
+        --card: #ffffff;
+        --border: #e2e8f0;
+        --text: #0f172a;
+        --muted: #64748b;
+        --radius: 16px;
+    }
+
+    body {
+        background: var(--surface);
+        font-family: 'DM Sans', sans-serif;
+        color: var(--text);
+    }
+
+    .cn-page {
+        padding: 32px 16px;
+        max-width: 860px;
+        margin: 0 auto;
+    }
+
+    .page-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 1.3px;
+        text-transform: uppercase;
+        color: var(--amber-dark);
+        margin-bottom: 6px;
+    }
+
+        .page-eyebrow::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 2px;
+            background: var(--amber);
+        }
+
+    .page-title {
+        font-family: 'Outfit', sans-serif;
+        font-size: clamp(1.5rem, 4vw, 2rem);
+        font-weight: 800;
+        color: var(--text);
+        margin: 0 0 28px;
+    }
+
+    .form-card {
+        background: var(--card);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+
+    .section-header {
+        padding: 20px 28px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .section-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+        .section-icon.slate {
+            background: var(--slate-light);
+        }
+
+        .section-icon.blue {
+            background: var(--blue-light);
+        }
+
+        .section-icon.green {
+            background: var(--green-light);
+        }
+
+        .section-icon.amber {
+            background: var(--amber-light);
+        }
+
+        .section-icon.rose {
+            background: var(--rose-light);
+        }
+
+    .section-label {
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .section-num {
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.7rem;
+        font-weight: 800;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        padding: 2px 8px;
+        border-radius: 6px;
+        margin-left: auto;
+    }
+
+    .num-blue {
+        background: var(--blue-light);
+        color: var(--blue);
+    }
+
+    .num-green {
+        background: var(--green-light);
+        color: var(--green);
+    }
+
+    .num-amber {
+        background: var(--amber-light);
+        color: #92400e;
+    }
+
+    .num-rose {
+        background: var(--rose-light);
+        color: #9f1239;
+    }
+
+    .section-divider {
+        height: 1px;
+        background: var(--border);
+        margin: 14px 28px 0;
+    }
+
+    .form-body {
+        padding: 20px 28px 24px;
+    }
+
+    .form-field {
+        margin-bottom: 0;
+    }
+
+        .form-field + .form-field {
+            margin-top: 16px;
+        }
+
+        .form-field label {
+            display: block;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 7px;
+        }
+
+        .form-field input,
+        .form-field select,
+        .form-field textarea {
+            width: 100%;
+            padding: 11px 14px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.9rem;
+            color: var(--text);
+            background: #fafafa;
+            transition: border-color .2s, box-shadow .2s;
+            box-sizing: border-box;
+            appearance: none;
+            -webkit-appearance: none;
+        }
+
+        .form-field select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2364748b' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+        }
+
+            .form-field input:focus,
+            .form-field select:focus,
+            .form-field textarea:focus {
+                outline: none;
+                border-color: var(--amber);
+                box-shadow: 0 0 0 3px rgba(245,158,11,.14);
+                background: #fff;
+            }
+
+        .form-field input[readonly] {
+            background: #f1f5f9;
+            color: var(--muted);
+            cursor: default;
+        }
+
+        .form-field textarea {
+            resize: vertical;
+        }
+
+    .validation-summary {
+        background: #fff1f2;
+        border: 1px solid #fecdd3;
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin: 16px 28px 0;
+        font-size: 0.85rem;
+        color: #9f1239;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 28px;
+        border-top: 1px solid var(--border);
+        background: #fafafa;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 22px;
+        border-radius: 10px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.88rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: all .18s;
+        white-space: nowrap;
+    }
+
+    .btn-back {
+        background: #f1f5f9;
+        color: var(--muted);
+        border: 1.5px solid var(--border);
+    }
+
+        .btn-back:hover {
+            background: #e2e8f0;
+            color: var(--text);
+        }
+
+    .btn-save {
+        background: var(--amber);
+        color: #1c1917;
+        font-weight: 700;
+        box-shadow: 0 2px 8px rgba(245,158,11,.25);
+    }
+
+        .btn-save:hover {
+            background: var(--amber-dark);
+            color: #fff;
+        }
+
+    @@media (max-width: 640px) {
+        .cn-page {
+            padding: 20px 12px;
+        }
+
+        .form-body {
+            padding: 16px 18px 20px;
+        }
+
+        .section-header {
+            padding: 16px 18px 0;
+        }
+
+        .section-divider {
+            margin: 12px 18px 0;
+        }
+
+        .form-actions {
+            padding: 16px 18px;
+        }
+
+        .validation-summary {
+            margin: 14px 18px 0;
+        }
+    }
+</style>
+
+<div class="cn-page">
+    <div class="page-eyebrow">Case Notes</div>
+    <h1 class="page-title">✏️ Edit Case Note</h1>
+
+    <div class="form-card">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+            <input type="hidden" asp-for="CaseNoteId" />
+            <input type="hidden" asp-for="StuID" />
+            <input type="hidden" asp-for="CreatedAt" />
+
+            <!-- Student (read-only) -->
+            <div class="section-header">
+                <div class="section-icon slate">👤</div>
+                <span class="section-label">Student</span>
+            </div>
+            <div class="section-divider"></div>
+            <div class="form-body">
+                <div class="form-field">
+                    <label>Student Name</label>
+                    <input type="text" value="@Model.Student?.StuFullName" readonly />
+                </div>
+            </div>
+
+            <!-- I. Background -->
+            <div class="section-header">
+                <div class="section-icon blue">📌</div>
+                <span class="section-label">Background of the Case</span>
+                <span class="section-num num-blue">I</span>
+            </div>
+            <div class="section-divider"></div>
+            <div class="form-body">
+                <div class="form-field">
+                    <label>Case Background</label>
+                    <textarea name="BackgroundOfCase" rows="5">@Model.BackgroundOfCase</textarea>
+                </div>
+            </div>
+
+            <!-- II. Counseling Plan -->
+            <div class="section-header">
+                <div class="section-icon green">🧩</div>
+                <span class="section-label">Counseling Plan</span>
+                <span class="section-num num-green">II</span>
+            </div>
+            <div class="section-divider"></div>
+            <div class="form-body">
+                <div class="form-field">
+                    <label>a. Counseling Approach</label>
+                    <select name="CounselingApproach">
+                        <option value="">-- Select Approach --</option>
+                        @foreach (var approach in new[] {
+                        "Cognitive Behavioral Therapy (CBT)",
+                        "Person-Centered Therapy",
+                        "Solution-Focused Brief Therapy",
+                        "Psychodynamic Therapy",
+                        "Behavioral Therapy",
+                        "Motivational Interviewing",
+                        "Crisis Intervention",
+                        "Group Counseling",
+                        "Play Therapy",
+                        "Other"
+                        })
+                        {
+                            <option value="@approach" selected="@(Model.CounselingApproach == approach ? "selected" : null)">
+                                @approach
+                            </option>
+                        }
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label>b. Counseling Goals</label>
+                    <textarea name="CounselingGoals" rows="3">@Model.CounselingGoals</textarea>
+                </div>
+            </div>
+
+            <!-- III. Comments -->
+            <div class="section-header">
+                <div class="section-icon amber">💬</div>
+                <span class="section-label">Comments</span>
+                <span class="section-num num-amber">III</span>
+            </div>
+            <div class="section-divider"></div>
+            <div class="form-body">
+                <div class="form-field">
+                    <label>Additional Comments</label>
+                    <textarea name="Comments" rows="4">@Model.Comments</textarea>
+                </div>
+            </div>
+
+            <!-- IV. Recommendations -->
+            <div class="section-header">
+                <div class="section-icon rose">📝</div>
+                <span class="section-label">Recommendations</span>
+                <span class="section-num num-rose">IV</span>
+            </div>
+            <div class="section-divider"></div>
+            <div class="form-body">
+                <div class="form-field">
+                    <label>Recommendations for the Student</label>
+                    <textarea name="Recommendations" rows="4">@Model.Recommendations</textarea>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <a asp-action="Index" class="btn btn-back">⬅ Back</a>
+                <button type="submit" class="btn btn-save">💾 Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>

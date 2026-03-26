@@ -1,59 +1,564 @@
 ﻿@model IEnumerable<MVC_DenoyJabines.Models.Users>
-
 @{
     ViewData["Title"] = "User Management";
+
+    string GetInitials(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name)) return "?";
+        var parts = name.Trim().Split(' ', System.StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 1) return parts[0][0].ToString().ToUpper();
+        return (parts[0][0].ToString() + parts[^1][0].ToString()).ToUpper();
+    }
+
+    var avatarColors = new[] { "av-teal", "av-navy", "av-amber", "av-rose", "av-purple", "av-slate" };
+    int idx = 0;
 }
 
-<div class="container mt-4">
-    <h2>📋 User Management</h2>
-    <div class="mb-3">
-        <a asp-action="UsersIndex" asp-route-status="all" class="btn btn-outline-secondary btn-sm">All</a>
-        <a asp-action="UsersIndex" asp-route-status="active" class="btn btn-outline-success btn-sm">Active</a>
-        <a asp-action="UsersIndex" asp-route-status="inactive" class="btn btn-outline-danger btn-sm">Inactive</a>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+    * {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        box-sizing: border-box;
+    }
+
+    .um-btn-reactivate {
+        color: #1a6b5a;
+        border-color: #a8d5cb;
+    }
+
+        .um-btn-reactivate:hover {
+            background: #e6f4f1;
+            color: #154f42;
+            border-color: #1a6b5a;
+            text-decoration: none;
+        }
+
+    .um-wrapper {
+        background: #f5f3ee;
+        min-height: 100vh;
+        padding: 36px 40px;
+    }
+
+    /* Header */
+    .um-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 28px;
+    }
+
+    .um-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin: 0 0 4px 0;
+    }
+
+    .um-subtitle {
+        font-size: 13.5px;
+        color: #7a7a7a;
+        margin: 0;
+    }
+
+    .um-header-actions {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .btn-add-user {
+        background: #1a6b5a;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 18px;
+        font-size: 13.5px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: background 0.18s;
+    }
+
+        .btn-add-user:hover {
+            background: #154f42;
+            color: #fff;
+            text-decoration: none;
+        }
+
+    /* Card */
+    .um-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+        padding: 28px 28px 8px 28px;
+    }
+
+    /* Toolbar */
+    .um-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .um-search-wrap {
+        position: relative;
+        flex: 1;
+        min-width: 200px;
+        max-width: 340px;
+    }
+
+    .um-search-icon {
+        position: absolute;
+        left: 13px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #aaa;
+        font-size: 15px;
+    }
+
+    .um-search {
+        width: 100%;
+        padding: 10px 14px 10px 36px;
+        border: 1.5px solid #e5e5e5;
+        border-radius: 9px;
+        font-size: 13.5px;
+        color: #333;
+        background: #fafafa;
+        outline: none;
+        transition: border 0.15s;
+    }
+
+        .um-search:focus {
+            border-color: #1a6b5a;
+            background: #fff;
+        }
+
+    .um-filter-group {
+        display: flex;
+        gap: 0;
+        background: #f0ede7;
+        border-radius: 10px;
+        padding: 4px;
+    }
+
+    .um-filter-btn {
+        border: none;
+        background: transparent;
+        border-radius: 7px;
+        padding: 8px 20px;
+        font-size: 13px;
+        font-weight: 600;
+        color: #666;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background 0.15s, color 0.15s;
+        display: inline-block;
+    }
+
+        .um-filter-btn:hover {
+            color: #1a1a1a;
+            text-decoration: none;
+        }
+
+        .um-filter-btn.active {
+            background: #1a6b5a;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(26,107,90,0.13);
+        }
+
+    /* Table */
+    .um-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .um-table thead tr {
+            border-bottom: 1.5px solid #ececec;
+        }
+
+        .um-table thead th {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #a0a0a0;
+            padding: 0 16px 14px 16px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+            .um-table thead th.center {
+                text-align: center;
+            }
+
+        .um-table tbody tr {
+            border-bottom: 1px solid #f2f2f2;
+            transition: background 0.12s;
+        }
+
+            .um-table tbody tr:last-child {
+                border-bottom: none;
+            }
+
+            .um-table tbody tr:hover {
+                background: #faf9f7;
+            }
+
+        .um-table tbody td {
+            padding: 18px 16px;
+            font-size: 13.5px;
+            color: #2a2a2a;
+            vertical-align: middle;
+        }
+
+            .um-table tbody td.center {
+                text-align: center;
+            }
+
+    /* Avatar */
+    .um-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 14px;
+        color: #fff;
+        flex-shrink: 0;
+        margin-right: 12px;
+    }
+
+    .um-user-cell {
+        display: flex;
+        align-items: center;
+    }
+
+    .um-user-info .um-user-name {
+        font-weight: 700;
+        font-size: 14px;
+        color: #1a1a1a;
+        margin: 0 0 2px 0;
+    }
+
+    .um-user-info .um-user-sub {
+        font-size: 12px;
+        color: #9a9a9a;
+        margin: 0;
+    }
+
+    /* Role badge */
+    .um-role {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 20px;
+        padding: 4px 12px;
+        font-size: 12.5px;
+        font-weight: 600;
+    }
+
+    .um-role-admin {
+        background: #e8f0fe;
+        color: #3b5bdb;
+    }
+
+    .um-role-counselor {
+        background: #e6f4f1;
+        color: #1a6b5a;
+    }
+
+    .um-role-teacher {
+        background: #fff3e0;
+        color: #b86e00;
+    }
+
+    .um-role-default {
+        background: #f0f0f0;
+        color: #666;
+    }
+
+    /* Status toggle-style badge */
+    .um-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        border-radius: 20px;
+        padding: 4px 12px;
+        font-size: 12.5px;
+        font-weight: 600;
+    }
+
+    .um-status-active {
+        background: #e6f4f1;
+        color: #1a6b5a;
+    }
+
+    .um-status-inactive {
+        background: #f0f0f0;
+        color: #888;
+    }
+
+    .um-status-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .um-status-active .um-status-dot {
+        background: #1a6b5a;
+    }
+
+    .um-status-inactive .um-status-dot {
+        background: #aaa;
+    }
+
+    /* Action buttons */
+    .um-actions {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .um-btn {
+        border: 1.5px solid #e0e0e0;
+        background: #fff;
+        border-radius: 7px;
+        padding: 6px 16px;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: #333;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.15s;
+        display: inline-block;
+    }
+
+    .um-btn-edit {
+        color: #e6900a;
+        border-color: #f5d79e;
+    }
+
+        .um-btn-edit:hover {
+            background: #fff8ec;
+            color: #c47a06;
+            border-color: #e6900a;
+            text-decoration: none;
+        }
+
+    .um-btn-delete {
+        color: #c0392b;
+        border-color: #f5b7b1;
+    }
+
+        .um-btn-delete:hover {
+            background: #fdf0ee;
+            color: #a93226;
+            border-color: #c0392b;
+            text-decoration: none;
+        }
+
+    .um-empty {
+        text-align: center;
+        color: #bbb;
+        font-size: 14px;
+        padding: 48px 0;
+    }
+
+    /* Avatar colors */
+    .av-teal {
+        background: #1a6b5a;
+    }
+
+    .av-navy {
+        background: #2c3e6b;
+    }
+
+    .av-amber {
+        background: #d4860b;
+    }
+
+    .av-rose {
+        background: #b53030;
+    }
+
+    .av-purple {
+        background: #6b3fa0;
+    }
+
+    .av-slate {
+        background: #526070;
+    }
+</style>
+
+<div class="um-wrapper">
+
+    <!-- Header -->
+    <div class="um-header">
+        <div>
+            <h1 class="um-title">User Management</h1>
+            <p class="um-subtitle">Manage all system users and their access roles.</p>
+        </div>
     </div>
 
-    <table class="table table-striped table-bordered table-hover align-middle text-center shadow-sm mt-3">
-        <thead class="table-dark">
-            <tr>
-                <th class="text-start">Username</th>
-                <th class="text-start">Email</th>
-                <th>Role</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (!Model.Any())
-            {
+    <!-- Card -->
+    <div class="um-card">
+
+        <!-- Toolbar -->
+        <div class="um-toolbar">
+            <div class="um-search-wrap">
+                <span class="um-search-icon">🔍</span>
+                <input type="text" class="um-search" placeholder="Search by username or email..." id="userSearch" />
+            </div>
+
+            <div class="um-filter-group">
+                <button type="button" class="um-filter-btn active" onclick="filterStatus(this, 'all')">All</button>
+                <button type="button" class="um-filter-btn" onclick="filterStatus(this, 'active')">Active</button>
+                <button type="button" class="um-filter-btn" onclick="filterStatus(this, 'inactive')">Inactive</button>
+            </div>
+        </div>
+
+        <!-- Table -->
+        <table class="um-table" id="userTable">
+            <thead>
                 <tr>
-                    <td colspan="5" class="text-muted">No users found.</td>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th class="center">Role</th>
+                    <th class="center">Status</th>
+                    <th class="center">Actions</th>
                 </tr>
-            }
-            else
-            {
-                @foreach (var item in Model)
+            </thead>
+            <tbody>
+                @if (!Model.Any())
                 {
                     <tr>
-                        <td class="text-start">@item.Username</td>
-                        <td class="text-start">@item.Email</td>
-                        <td>@item.Role</td>
-                        <td>
-                            @if (item.IsActive)
-                            {
-                                <span class="badge bg-success">Active</span>
-                            }
-                            else
-                            {
-                                <span class="badge bg-danger">Inactive</span>
-                            }
-                        </td>
-                        <td>
-                            <a asp-action="Edit" asp-route-id="@item.UserId" class="btn btn-sm btn-primary">✏️ Edit</a>
-                            <a asp-action="Delete" asp-route-id="@item.UserId" class="btn btn-sm btn-danger">🗑 Delete</a>
-                        </td>
+                        <td colspan="5" class="um-empty">No users found.</td>
                     </tr>
                 }
-            }
-        </tbody>
-    </table>
+                else
+                {
+                    @foreach (var item in Model)
+                    {
+                        var colorClass = avatarColors[idx % avatarColors.Length];
+                        idx++;
+                        var initials = GetInitials(item.Username);
+
+                        var roleClass = (item.Role?.ToLower()) switch
+                        {
+                            "admin" => "um-role-admin",
+                            "counselor" => "um-role-counselor",
+                            "teacher" => "um-role-teacher",
+                            _ => "um-role-default"
+                        };
+
+                        <tr>
+                            <!-- Username with avatar -->
+                            <td>
+                                <div class="um-user-cell">
+                                    <div class="um-avatar @colorClass">@initials</div>
+                                    <div class="um-user-info">
+                                        <p class="um-user-name">@item.Username</p>
+                                    </div>
+                                </div>
+                            </td>
+
+                            <!-- Email -->
+                            <td>@item.Email</td>
+
+                            <!-- Role -->
+                            <td class="center">
+                                <span class="um-role @roleClass">@item.Role</span>
+                            </td>
+
+                            <!-- Status -->
+                            <td class="center">
+                                @if (item.IsActive)
+                                {
+                                    <span class="um-status um-status-active">
+                                        <span class="um-status-dot"></span> Active
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="um-status um-status-inactive">
+                                        <span class="um-status-dot"></span> Inactive
+                                    </span>
+                                }
+                            </td>
+
+                            <!-- Actions -->
+                            <td class="center">
+                                <div class="um-actions">
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.UserId"
+                                       class="um-btn um-btn-edit">
+                                        Edit
+                                    </a>
+                                    @if (item.IsActive)
+                                    {
+                                        <form asp-action="Delete" asp-route-id="@item.UserId"
+                                              method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="um-btn um-btn-delete"
+                                                    onclick="return confirm('Deactivate this user?');">
+                                                Deactivate
+                                            </button>
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form asp-action="Reactivate" asp-route-id="@item.UserId"
+                                              method="post" style="display:inline;">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="um-btn um-btn-reactivate"
+                                                    onclick="return confirm('Reactivate this user?');">
+                                                Reactivate
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+    </div>
 </div>
+
+<script>
+    document.getElementById('userSearch').addEventListener('input', function () {
+        const query = this.value.toLowerCase();
+        const rows = document.querySelectorAll('#userTable tbody tr');
+        rows.forEach(row => {
+            row.style.display = row.innerText.toLowerCase().includes(query) ? '' : 'none';
+        });
+    });
+
+    function filterStatus(button, status) {
+        document.querySelectorAll('.um-filter-btn').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+
+        const rows = document.querySelectorAll('#userTable tbody tr');
+        rows.forEach(row => {
+            if (status === 'all') {
+                row.style.display = '';
+            } else if (status === 'active') {
+                row.style.display = row.querySelector('.um-status-active') ? '' : 'none';
+            } else if (status === 'inactive') {
+                row.style.display = row.querySelector('.um-status-inactive') ? '' : 'none';
+            }
+        });
+    }
+</script>

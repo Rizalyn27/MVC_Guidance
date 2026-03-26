@@ -3,17 +3,306 @@
     ViewData["Title"] = "Student Dashboard";
 }
 
-<div class="container mt-4">
-    <div class="card shadow-lg border-0">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">👋 Welcome, @User.Identity.Name!</h4>
-        </div>
-        <div class="card-body text-center py-5">
-            <h5>Student Dashboard</h5>
-            <p class="text-muted">Use the navigation to manage your appointments.</p>
-            <a asp-controller="Appointments" asp-action="StudentsAppt" class="btn btn-primary mt-3">
-                📅 View My Appointments
-            </a>
-        </div>
+<style>
+    :root {
+        --green-dark: #0d5c40;
+        --green-mid: #1a7a58;
+        --green-soft: #e8f5ef;
+        --green-border: #b6dfc9;
+        --green-btn: #1a7a58;f
+        --amber: #f59e0b;
+        --amber-soft: #fef3c7;
+        --blue-soft: #eff6ff;
+        --page-bg: #f0f7f4;
+        --white: #ffffff;
+        --gray-50: #f9fafb;
+        --gray-100: #f3f4f6;
+        --gray-200: #e5e7eb;
+        --gray-300: #d1d5db;
+        --gray-400: #9ca3af;
+        --gray-500: #6b7280;
+        --gray-700: #374151;
+        --gray-900: #111827;
+        --red: #dc2626;
+        --radius-sm: 10px;
+        --radius-md: 16px;
+        --radius-lg: 22px;
+        --shadow-card: 0 2px 14px rgba(0,0,0,0.06);
+        --shadow-hover: 0 8px 28px rgba(0,0,0,0.11);
+    }
+
+    .std-page {
+        font-family: 'Sora', sans-serif;
+        background: var(--page-bg);
+        min-height: 100vh;
+        padding: 36px 32px;
+        color: var(--gray-900);
+    }
+
+    /* ── GREETING ── */
+    .dash-greeting {
+        margin-bottom: 30px;
+    }
+
+        .dash-greeting h1 {
+            font-family: Arial, Helvetica, sans-serif,;
+            font-size: 2rem;
+            font-weight: 400;
+            color: var(--gray-900);
+            letter-spacing: -0.02em;
+            margin-bottom: 4px;
+        }
+
+        .dash-greeting p {
+            font-size: 0.85rem;
+            color: var(--gray-500);
+        }
+
+    /* ── LAYOUT ── */
+    .dash-grid {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 20px;
+        align-items: start;
+    }
+
+    /* ── CARD ── */
+    .dash-card {
+        background: var(--white);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--gray-200);
+        box-shadow: var(--shadow-card);
+        padding: 26px;
+    }
+
+    .card-title {
+        font-family: Arial, Helvetica, sans-serif,;
+        font-size: 1.25rem;
+        font-weight: 400;
+        color: var(--gray-900);
+        margin-bottom: 4px;
+    }
+
+    .card-subtitle {
+        font-size: 0.8rem;
+        color: var(--gray-400);
+        margin-bottom: 22px;
+    }
+
+    /* ── MOOD GRID ── */
+    .mood-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+    }
+
+    .mood-item {
+        background: var(--gray-50);
+        border: 1.5px solid var(--gray-200);
+        border-radius: var(--radius-md);
+        padding: 20px 10px;
+        text-align: center;
+        cursor: pointer;
+        transition: all .2s ease;
+        text-decoration: none;
+        display: block;
+    }
+
+        .mood-item:hover {
+            border-color: var(--green-border);
+            background: var(--green-soft);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+    .mood-emoji {
+        font-size: 2.1rem;
+        display: block;
+        margin-bottom: 8px;
+        line-height: 1;
+    }
+
+    .mood-label {
+        font-size: 0.83rem;
+        font-weight: 600;
+        color: var(--gray-700);
+        display: block;
+        margin-bottom: 3px;
+    }
+
+    .mood-desc {
+        font-size: 0.72rem;
+        color: var(--gray-400);
+        display: block;
+    }
+
+    /* ── BOOK BTN ── */
+    .book-btn {
+        display: block;
+        width: 100%;
+        margin-top: 18px;
+        background: var(--green-soft);
+        color: var(--green-dark);
+        font-family: Arial, Helvetica, sans-serif,;
+        font-size: 0.85rem;
+        font-weight: 700;
+        padding: 13px;
+        border-radius: var(--radius-sm);
+        border: 1.5px solid var(--green-border);
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        transition: all .18s ease;
+        letter-spacing: 0.01em;
+    }
+
+        .book-btn:hover {
+            background: var(--green-dark);
+            color: var(--white);
+            border-color: var(--green-dark);
+        }
+
+    /* ── SIDE CARD ── */
+    .side-card {
+        background: var(--white);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--gray-200);
+        box-shadow: var(--shadow-card);
+        padding: 22px;
+    }
+
+    .side-card-title {
+        font-family: Arial, Helvetica, sans-serif,;
+        font-size: 1.1rem;
+        font-weight: 400;
+        color: var(--gray-900);
+        margin-bottom: 16px;
+    }
+
+    .tip-box {
+        background: var(--green-soft);
+        border-radius: 12px;
+        padding: 14px 16px;
+        border-left: 3px solid var(--green-mid);
+        margin-bottom: 14px;
+    }
+
+        .tip-box p {
+            font-size: 0.82rem;
+            color: var(--green-dark);
+            line-height: 1.55;
+            margin: 0;
+        }
+
+    /* ── RESPONSIVE ── */
+    @@media (max-width: 900px) {
+        .dash-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .mood-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @@media (max-width: 500px) {
+        .std-page {
+            padding: 20px 16px;
+        }
+
+        .mood-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    .mood-item {
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+        .mood-item:hover {
+            transform: scale(1.05);
+        }
+
+        .mood-item.active {
+            background-color: #0d6efd;
+            color: white;
+            border-radius: 10px;
+        }
+</style>
+
+<div class="std-page">
+
+    <!-- GREETING -->
+    <div class="dash-greeting">
+        <h1>Good morning, @User.Identity?.Name 🌤️</h1>
+        <p>Here's what's happening today</p>
     </div>
+
+    <div class="dash-grid">
+
+        <div>
+            <!-- MOOD CHECK -->
+            <div class="dash-card">
+                <div class="card-title">How are you feeling today?</div>
+                <div class="card-subtitle">Select a mood to start a guided conversation.</div>
+                <div class="mood-grid">
+                    <div class="mood-item" onclick="selectMood(this)">
+                        <span class="mood-emoji">😊</span>
+                        <span class="mood-label">Good</span>
+                        <span class="mood-desc">Feeling positive</span>
+                    </div>
+
+                    <div class="mood-item" onclick="selectMood(this)">
+                        <span class="mood-emoji">😔</span>
+                        <span class="mood-label">Not Great</span>
+                        <span class="mood-desc">A bit down today</span>
+                    </div>
+
+                    <div class="mood-item" onclick="selectMood(this)">
+                        <span class="mood-emoji">😰</span>
+                        <span class="mood-label">Stressed</span>
+                        <span class="mood-desc">Under pressure</span>
+                    </div>
+
+                    <div class="mood-item" onclick="selectMood(this)">
+                        <span class="mood-emoji">🤔</span>
+                        <span class="mood-label">Unsure</span>
+                        <span class="mood-desc">Hard to tell</span>
+                    </div>
+                </div>
+
+                <a asp-controller="Appointments" asp-action="Create" class="book-btn">+ Book Appointment</a>
+            </div>
+        </div>
+
+        <!-- SIDE PANEL -->
+        <div>
+            <div class="side-card">
+                <div class="side-card-title">💡 Quick Tip</div>
+                <div class="tip-box">
+                    <p>Talking to a counselor is a sign of strength. You're not alone — support is always here.</p>
+                </div>
+                <div style="font-size:0.78rem;color:var(--gray-400);line-height:1.6;">
+                    Your guidance counselor is available Mon–Fri, 8 AM–5 PM. Walk-ins welcome.
+                </div>
+            </div>
+        </div>
+
+    </div>
+
 </div>
+
+
+
+<script>
+    function selectMood(element) {
+        // remove active from all
+        document.querySelectorAll('.mood-item').forEach(item => {
+            item.classList.remove('active');
+        });
+
+        // add active to clicked one
+        element.classList.add('active');
+    }
+</script>

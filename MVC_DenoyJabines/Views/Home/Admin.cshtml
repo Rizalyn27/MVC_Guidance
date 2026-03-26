@@ -1,89 +1,344 @@
 ﻿@{
-    Layout = "_Layout";
+    Layout = "_AdminLayout";
     ViewData["Title"] = "Admin Dashboard";
 }
 
-<div class="container mt-4">
-    <h4 class="mb-4">👋 Welcome, <strong>@User.Identity.Name</strong>!</h4>
+<style>
+
+    :root {
+        --bg: #f0f2f8;
+        --surface: #ffffff;
+        --surface2: #f7f8fc;
+        --border: #e4e8f4;
+        --ink: #0e1523;
+        --muted: #6b7696;
+        --faint: #a8b0c8;
+        --indigo: #3b5bdb;
+        --indigo-soft: #eef1fd;
+        --emerald: #0f9d74;
+        --emerald-soft: #e6f7f2;
+        --rose: #e5344a;
+        --rose-soft: #fdeef0;
+        --amber: #d97706;
+        --amber-soft: #fef3e2;
+        --violet: #7c3aed;
+        --violet-soft: #f3eefe;
+        --slate: #475569;
+        --slate-soft: #eef0f4;
+        --radius: 16px;
+        --radius-sm: 10px;
+        --shadow: 0 2px 16px rgba(14,21,35,0.06);
+        --shadow-md: 0 4px 24px rgba(14,21,35,0.10);
+    }
+
+    .adm-page {
+        font-family: Arial, Helvetica, sans-serif,;
+        background: var(--bg);
+        min-height: 100vh;
+        padding: 36px 32px;
+        color: var(--ink);
+    }
+
+    /* ── Greeting ── */
+    .adm-greeting {
+        margin-bottom: 36px;
+    }
+
+        .adm-greeting h2 {
+            font-family: Arial, Helvetica, sans-serif,;
+            font-size: 2rem;
+            font-weight: 400;
+            color: var(--ink);
+            margin-bottom: 4px;
+            letter-spacing: -0.01em;
+        }
+
+        .adm-greeting p {
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+    /* ── Section Label ── */
+    .section-label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--faint);
+        margin-bottom: 14px;
+    }
+
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+    /* ── Stat Grid ── */
+    .stat-row {
+        display: grid;
+        gap: 14px;
+        margin-bottom: 32px;
+    }
+
+    .stat-row-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .stat-row-2 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .stat-row-6 {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    /* ── Stat Card ── */
+    .stat-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        padding: 20px 22px;
+        position: relative;
+        overflow: hidden;
+        transition: box-shadow .2s, transform .2s;
+    }
+
+        .stat-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            border-radius: var(--radius) var(--radius) 0 0;
+        }
+
+        .stat-card.c-indigo::before {
+            background: var(--indigo);
+        }
+
+        .stat-card.c-emerald::before {
+            background: var(--emerald);
+        }
+
+        .stat-card.c-rose::before {
+            background: var(--rose);
+        }
+
+        .stat-card.c-amber::before {
+            background: var(--amber);
+        }
+
+        .stat-card.c-violet::before {
+            background: var(--violet);
+        }
+
+        .stat-card.c-slate::before {
+            background: var(--slate);
+        }
+
+    .stat-pill {
+        display: inline-block;
+        font-size: 0.68rem;
+        font-weight: 600;
+        padding: 3px 10px;
+        border-radius: 20px;
+        margin-bottom: 14px;
+    }
+
+    .c-indigo .stat-pill {
+        background: var(--indigo-soft);
+        color: var(--indigo);
+    }
+
+    .c-emerald .stat-pill {
+        background: var(--emerald-soft);
+        color: var(--emerald);
+    }
+
+    .c-rose .stat-pill {
+        background: var(--rose-soft);
+        color: var(--rose);
+    }
+
+    .c-amber .stat-pill {
+        background: var(--amber-soft);
+        color: var(--amber);
+    }
+
+    .c-violet .stat-pill {
+        background: var(--violet-soft);
+        color: var(--violet);
+    }
+
+    .c-slate .stat-pill {
+        background: var(--slate-soft);
+        color: var(--slate);
+    }
+
+    .stat-value {
+        font-family: Arial, Helvetica, sans-serif,;
+        font-size: 2.8rem;
+        font-weight: 400;
+        line-height: 1;
+        margin-bottom: 6px;
+    }
+
+    .c-indigo .stat-value {
+        color: var(--indigo);
+    }
+
+    .c-emerald .stat-value {
+        color: var(--emerald);
+    }
+
+    .c-rose .stat-value {
+        color: var(--rose);
+    }
+
+    .c-amber .stat-value {
+        color: var(--amber);
+    }
+
+    .c-violet .stat-value {
+        color: var(--violet);
+    }
+
+    .c-slate .stat-value {
+        color: var(--slate);
+    }
+
+    .stat-name {
+        font-size: 0.82rem;
+        color: var(--muted);
+        font-weight: 500;
+    }
+
+    /* ── Responsive ── */
+    @@media (max-width: 1100px) {
+        .stat-row-6 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @@media (max-width: 860px) {
+        .stat-row-3 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .stat-row-6 {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @@media (max-width: 600px) {
+        .adm-page {
+            padding: 20px 16px;
+        }
+
+        .stat-row-3,
+        .stat-row-2,
+        .stat-row-6 {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @@media (max-width: 400px) {
+        .stat-row-3,
+        .stat-row-2,
+        .stat-row-6 {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="adm-page">
+
+    <!-- Greeting -->
+    <div class="adm-greeting">
+        <h2>👋 Welcome back, @User.Identity.Name</h2>
+        <p>Here's a snapshot of your system today.</p>
+    </div>
 
     <!-- STUDENTS -->
-    <h6 class="text-secondary text-uppercase mb-2">🎓 Students</h6>
-    <div class="row g-3 mb-4">
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm text-center p-3">
-                <div class="display-6 fw-bold text-primary">@ViewBag.TotalStudents</div>
-                <div class="text-muted">Total Students</div>
-            </div>
+    <div class="section-label">🎓 Students</div>
+    <div class="stat-row stat-row-3">
+        <div class="stat-card c-indigo">
+            <div class="stat-pill">Total</div>
+            <div class="stat-value">@ViewBag.TotalStudents</div>
+            <div class="stat-name">Total Students</div>
         </div>
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm text-center p-3">
-                <div class="display-6 fw-bold text-success">@ViewBag.ActiveStudents</div>
-                <div class="text-muted">Active</div>
-            </div>
+        <div class="stat-card c-emerald">
+            <div class="stat-pill">Active</div>
+            <div class="stat-value">@ViewBag.ActiveStudents</div>
+            <div class="stat-name">Active</div>
         </div>
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm text-center p-3">
-                <div class="display-6 fw-bold text-danger">@ViewBag.InactiveStudents</div>
-                <div class="text-muted">Inactive</div>
-            </div>
+        <div class="stat-card c-rose">
+            <div class="stat-pill">Inactive</div>
+            <div class="stat-value">@ViewBag.InactiveStudents</div>
+            <div class="stat-name">Inactive</div>
         </div>
     </div>
 
     <!-- USERS -->
-    <h6 class="text-secondary text-uppercase mb-2">👤 Users</h6>
-    <div class="row g-3 mb-4">
-        <div class="col-md-6">
-            <div class="card border-0 shadow-sm text-center p-3">
-                <div class="display-6 fw-bold text-primary">@ViewBag.TotalUsers</div>
-                <div class="text-muted">Total Users</div>
-            </div>
+    <div class="section-label">👤 Users</div>
+    <div class="stat-row stat-row-2">
+        <div class="stat-card c-indigo">
+            <div class="stat-pill">Total</div>
+            <div class="stat-value">@ViewBag.TotalUsers</div>
+            <div class="stat-name">Total Users</div>
         </div>
-        <div class="col-md-6">
-            <div class="card border-0 shadow-sm text-center p-3">
-                <div class="display-6 fw-bold text-success">@ViewBag.ActiveUsers</div>
-                <div class="text-muted">Active Users</div>
-            </div>
+        <div class="stat-card c-emerald">
+            <div class="stat-pill">Active</div>
+            <div class="stat-value">@ViewBag.ActiveUsers</div>
+            <div class="stat-name">Active Users</div>
         </div>
     </div>
 
     <!-- APPOINTMENTS -->
-    <h6 class="text-secondary text-uppercase mb-2">📅 Appointments</h6>
-    <div class="row g-3">
-        <div class="col-md-2">
-            <div class="card border-0 shadow-sm text-center p-3">
-                <div class="display-6 fw-bold text-primary">@ViewBag.TotalAppts</div>
-                <div class="text-muted">Total</div>
-            </div>
+    <div class="section-label">📅 Appointments</div>
+    <div class="stat-row stat-row-6">
+        <div class="stat-card c-indigo">
+            <div class="stat-pill">All</div>
+            <div class="stat-value">@ViewBag.TotalAppts</div>
+            <div class="stat-name">Total</div>
         </div>
-        <div class="col-md-2">
-            <div class="card border-0 shadow-sm text-center p-3">
-                <div class="display-6 fw-bold text-warning">@ViewBag.PendingAppts</div>
-                <div class="text-muted">Pending</div>
-            </div>
+        <div class="stat-card c-amber">
+            <div class="stat-pill">Pending</div>
+            <div class="stat-value">@ViewBag.PendingAppts</div>
+            <div class="stat-name">Pending</div>
         </div>
-        <div class="col-md-2">
-            <div class="card border-0 shadow-sm text-center p-3">
-                <div class="display-6 fw-bold text-success">@ViewBag.ConfirmedAppts</div>
-                <div class="text-muted">Confirmed</div>
-            </div>
+        <div class="stat-card c-emerald">
+            <div class="stat-pill">Confirmed</div>
+            <div class="stat-value">@ViewBag.ConfirmedAppts</div>
+            <div class="stat-name">Confirmed</div>
         </div>
-        <div class="col-md-2">
-            <div class="card border-0 shadow-sm text-center p-3">
-                <div class="display-6 fw-bold text-primary">@ViewBag.CompletedAppts</div>
-                <div class="text-muted">Completed</div>
-            </div>
+        <div class="stat-card c-indigo">
+            <div class="stat-pill">Done</div>
+            <div class="stat-value">@ViewBag.CompletedAppts</div>
+            <div class="stat-name">Completed</div>
         </div>
-        <div class="col-md-2">
-            <div class="card border-0 shadow-sm text-center p-3">
-                <div class="display-6 fw-bold text-danger">@ViewBag.CancelledAppts</div>
-                <div class="text-muted">Cancelled</div>
-            </div>
+        <div class="stat-card c-rose">
+            <div class="stat-pill">Cancelled</div>
+            <div class="stat-value">@ViewBag.CancelledAppts</div>
+            <div class="stat-name">Cancelled</div>
         </div>
-        <div class="col-md-2">
-            <div class="card border-0 shadow-sm text-center p-3">
-                <div class="display-6 fw-bold text-secondary">@ViewBag.MissedAppts</div>
-                <div class="text-muted">Missed</div>
-            </div>
+        <div class="stat-card c-slate">
+            <div class="stat-pill">Missed</div>
+            <div class="stat-value">@ViewBag.MissedAppts</div>
+            <div class="stat-name">Missed</div>
         </div>
     </div>
+
 </div>

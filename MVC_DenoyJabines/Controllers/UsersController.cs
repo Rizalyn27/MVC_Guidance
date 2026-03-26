@@ -9,29 +9,19 @@ namespace MVC_DenoyJabines.Controllers
     {
         private readonly AppDbContext _context;
 
+        // Inject database context
         public UsersController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: Users list with filter
-        public async Task<IActionResult> UsersIndex(string status)
+        // GET: Display list of all users
+        public async Task<IActionResult> UsersIndex()
         {
-            var users = _context.User.AsQueryable();
-
-            if (!string.IsNullOrEmpty(status))
-            {
-                if (status.ToLower() == "active")
-                    users = users.Where(u => u.IsActive);
-                else if (status.ToLower() == "inactive")
-                    users = users.Where(u => !u.IsActive);
-                // "all" = no filter
-            }
-
-            return View(await users.ToListAsync());
+            return View(await _context.User.ToListAsync());
         }
 
-        // GET: Users/Edit/5
+        // GET: Edit user page
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null) return NotFound();
@@ -42,17 +32,19 @@ namespace MVC_DenoyJabines.Controllers
             return View(user);
         }
 
-        // POST: Users/Edit/5
+        // POST: Save edited user details
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,Username,Email")] Users updatedUser)
+        public async Task<IActionResult> Edit(int id, [Bind(
+            "UserId,FirstName,MiddleName,LastName,Username,Email,ContactNumber,Role")] Users updatedUser)
         {
             if (id != updatedUser.UserId)
                 return NotFound();
 
-            ModelState.Remove("Role");
+            // Exclude fields not editable here
             ModelState.Remove("Password");
             ModelState.Remove("ConfirmPassword");
+            ModelState.Remove("IsActive");
 
             if (!ModelState.IsValid)
                 return View(updatedUser);
@@ -60,14 +52,20 @@ namespace MVC_DenoyJabines.Controllers
             var user = await _context.User.FindAsync(id);
             if (user == null) return NotFound();
 
+            // Update editable fields only; IsActive is untouched
+            user.FirstName = updatedUser.FirstName;
+            user.MiddleName = updatedUser.MiddleName;
+            user.LastName = updatedUser.LastName;
             user.Username = updatedUser.Username;
             user.Email = updatedUser.Email;
+            user.ContactNumber = updatedUser.ContactNumber;
+            user.Role = updatedUser.Role;
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(UsersIndex));
         }
 
-        // GET: Users/Delete/5 — confirmation page
+        // GET: Delete confirmation page
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();
@@ -78,7 +76,7 @@ namespace MVC_DenoyJabines.Controllers
             return View(user);
         }
 
-        // POST: Users/Delete/5 — soft delete
+        // POST: Soft delete user (set IsActive to false)
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -87,7 +85,7 @@ namespace MVC_DenoyJabines.Controllers
 
             if (user != null)
             {
-                user.IsActive = false;
+                user.IsActive = false; // Soft delete
                 _context.Update(user);
             }
 
@@ -95,9 +93,25 @@ namespace MVC_DenoyJabines.Controllers
             return RedirectToAction(nameof(UsersIndex));
         }
 
+        // Helper: Check if user exists
         private bool UserExists(int id)
         {
             return _context.User.Any(e => e.UserId == id);
+        }
+
+        // POST: Reactivate a soft-deleted user
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Reactivate(int id)
+        {
+            var user = await _context.User.FindAsync(id);
+            if (user == null) return NotFound();
+
+            user.IsActive = true; // Reactivate user
+            _context.Update(user);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(UsersIndex));
         }
     }
 }

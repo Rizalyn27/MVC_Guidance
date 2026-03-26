@@ -3,96 +3,507 @@
     ViewData["Title"] = "Create Appointment";
 }
 
-<div class="container mt-4">
-    <div class="card shadow-lg border-0">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">➕ New Appointment</h4>
-        </div>
+<style>
+    /* --- Styles (unchanged from your original, kept for brevity) --- */
+    @@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap');
 
-        <div class="card-body">
-            <form asp-action="Create">
-                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+    :root {
+        --teal: #0d9488;
+        --teal-light: #ccfbf1;
+        --teal-dark: #0f766e;
+        --amber: #f59e0b;
+        --amber-light: #fef3c7;
+        --surface: #f8fafc;
+        --card: #ffffff;
+        --border: #e2e8f0;
+        --text: #0f172a;
+        --muted: #64748b;
+        --radius: 16px;
+    }
 
-                <!-- 👤 PERSONAL INFO -->
-                <h5 class="text-primary">👤 Personal Information</h5>
-                <hr />
+    body {
+        background: var(--surface);
+        font-family: 'DM Sans', sans-serif;
+        color: var(--text);
+    }
 
-                <div class="row">
-                    <div class="col-md-4 mb-3">
+    .appt-page {
+        padding: 32px 16px;
+        max-width: 860px;
+        margin: 0 auto;
+    }
+
+    .page-eyebrow {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'Outfit';
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        color: var(--teal);
+        margin-bottom: 6px;
+    }
+
+        .page-eyebrow::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 2px;
+            background: var(--teal);
+        }
+
+    .page-title {
+        font-family: 'Outfit';
+        font-size: clamp(1.5rem,4vw,2rem);
+        font-weight: 800;
+        color: var(--text);
+        margin: 0 0 28px;
+    }
+
+    .form-card {
+        background: var(--card);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        overflow: hidden;
+        margin-bottom: 20px;
+    }
+
+    .section-header {
+        padding: 20px 28px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .section-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+        .section-icon.teal {
+            background: var(--teal-light);
+        }
+
+        .section-icon.amber {
+            background: var(--amber-light);
+        }
+
+        .section-icon.green {
+            background: #dcfce7;
+        }
+
+    .section-label {
+        font-family: 'Outfit';
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: var(--text);
+    }
+
+    .section-divider {
+        height: 1px;
+        background: var(--border);
+        margin: 14px 28px 0;
+    }
+
+    .form-body {
+        padding: 20px 28px 28px;
+    }
+
+    .form-grid {
+        display: grid;
+        gap: 18px;
+    }
+
+        .form-grid.cols-3 {
+            grid-template-columns: repeat(3,1fr);
+        }
+
+        .form-grid.cols-2 {
+            grid-template-columns: repeat(2,1fr);
+        }
+
+        .form-grid.cols-1 {
+            grid-template-columns: 1fr;
+        }
+
+    .form-field label {
+        display: block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        margin-bottom: 7px;
+    }
+
+    .form-field input, .form-field textarea, .form-field select {
+        width: 100%;
+        padding: 11px 14px;
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        font-family: 'DM Sans';
+        font-size: 0.9rem;
+        color: var(--text);
+        background: #fafafa;
+        transition: border-color .2s, box-shadow .2s;
+        box-sizing: border-box;
+    }
+
+        .form-field input:focus, .form-field textarea:focus, .form-field select:focus {
+            outline: none;
+            border-color: var(--teal);
+            box-shadow: 0 0 0 3px rgba(13,148,136,.12);
+            background: #fff;
+        }
+
+        .form-field input[readonly] {
+            background: #f1f5f9;
+            color: var(--muted);
+            cursor: default;
+        }
+
+    .form-field textarea {
+        resize: vertical;
+        min-height: 90px;
+    }
+
+    .field-error {
+        font-size: 0.78rem;
+        color: #ef4444;
+        margin-top: 5px;
+    }
+
+    .validation-summary {
+        background: #fff1f2;
+        border: 1px solid #fecdd3;
+        border-radius: 10px;
+        padding: 12px 16px;
+        margin-bottom: 20px;
+        font-size: 0.85rem;
+        color: #9f1239;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 28px;
+        border-top: 1px solid var(--border);
+        background: #fafafa;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 22px;
+        border-radius: 10px;
+        font-family: 'Outfit';
+        font-size: 0.88rem;
+        font-weight: 600;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: all .18s;
+        white-space: nowrap;
+    }
+
+    .btn-back {
+        background: #f1f5f9;
+        color: var(--muted);
+        border: 1.5px solid var(--border);
+    }
+
+        .btn-back:hover {
+            background: #e2e8f0;
+            color: var(--text);
+        }
+
+    .btn-save {
+        background: var(--teal);
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(13,148,136,.25);
+    }
+
+        .btn-save:hover {
+            background: var(--teal-dark);
+        }
+
+    .student-search-wrap {
+        position: relative;
+    }
+
+    .student-results {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 1.5px solid var(--border);
+        border-radius: 10px;
+        box-shadow: 0 4px 16px rgba(0,0,0,.1);
+        list-style: none;
+        margin: 4px 0 0;
+        padding: 4px 0;
+        z-index: 999;
+        max-height: 220px;
+        overflow-y: auto;
+    }
+
+        .student-results li {
+            padding: 10px 14px;
+            cursor: pointer;
+            font-size: 0.88rem;
+            color: var(--text);
+            transition: background .12s;
+        }
+
+            .student-results li:hover {
+                background: #f0fdfa;
+            }
+
+        .student-results .no-results {
+            padding: 10px 14px;
+            font-size: 0.85rem;
+            color: var(--muted);
+            cursor: default;
+        }
+
+    @@media (max-width:768px) {
+        .form-grid.cols-3, .form-grid.cols-2 {
+            grid-template-columns: 1fr;
+        }
+
+        .appt-page {
+            padding: 20px 12px;
+        }
+
+        .form-body {
+            padding: 16px 18px 20px;
+        }
+
+        .section-header {
+            padding: 16px 18px 0;
+        }
+
+        .section-divider {
+            margin: 12px 18px 0;
+        }
+
+        .form-actions {
+            padding: 16px 18px;
+        }
+    }
+</style>
+
+<div class="appt-page">
+    <div class="page-eyebrow">Appointments</div>
+    <h1 class="page-title">➕ New Appointment</h1>
+
+    <div class="form-card">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+            <div style="padding:20px 28px 0;">
+                <div asp-validation-summary="ModelOnly" class="validation-summary"></div>
+            </div>
+
+            <!-- Student Search (Admin/Counselor only) -->
+            @if (User.IsInRole("Admin") || User.IsInRole("Counselor"))
+            {
+                <div class="section-header">
+                    <div class="section-icon green">🔎</div>
+                    <span class="section-label">Search Student</span>
+                </div>
+                <div class="section-divider"></div>
+                <div class="form-body">
+                    <div class="form-field student-search-wrap">
+                        <label>Type student name to auto-fill</label>
+                        <input type="text" id="studentSearch" placeholder="e.g. Juan dela Cruz" autocomplete="off" />
+                        <ul class="student-results" id="studentResults"></ul>
+                    </div>
+                </div>
+            }
+
+            <!-- Personal Information -->
+            <div class="section-header">
+                <div class="section-icon teal">👤</div>
+                <span class="section-label">Personal Information</span>
+            </div>
+            <div class="section-divider"></div>
+            <div class="form-body">
+                <input type="hidden" asp-for="UserId" id="UserId" />
+                <div class="form-grid cols-3">
+                    <div class="form-field">
                         <label asp-for="FirstName"></label>
-                        <input asp-for="FirstName" class="form-control" />
-                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                        <input asp-for="FirstName" id="FirstName" />
+                        <div class="field-error"><span asp-validation-for="FirstName"></span></div>
                     </div>
-
-                    <div class="col-md-4 mb-3">
+                    <div class="form-field">
                         <label asp-for="LastName"></label>
-                        <input asp-for="LastName" class="form-control" />
-                        <span asp-validation-for="LastName" class="text-danger"></span>
+                        <input asp-for="LastName" id="LastName" />
+                        <div class="field-error"><span asp-validation-for="LastName"></span></div>
                     </div>
-
-                    <div class="col-md-4 mb-3">
+                    <div class="form-field">
                         <label asp-for="MiddleName"></label>
-                        <input asp-for="MiddleName" class="form-control" />
-                        <span asp-validation-for="MiddleName" class="text-danger"></span>
+                        <input asp-for="MiddleName" id="MiddleName" />
+                        <div class="field-error"><span asp-validation-for="MiddleName"></span></div>
                     </div>
-
-                    <div class="col-md-6 mb-3">
+                    <div class="form-field">
                         <label asp-for="Email"></label>
-                        <input asp-for="Email" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
+                        <input asp-for="Email" id="Email" />
+                        <div class="field-error"><span asp-validation-for="Email"></span></div>
                     </div>
-
-                    <div class="col-md-6 mb-3">
+                    <div class="form-field">
                         <label asp-for="ContactNumber"></label>
-                        <input asp-for="ContactNumber" class="form-control" />
-                        <span asp-validation-for="ContactNumber" class="text-danger"></span>
+                        <input asp-for="ContactNumber" id="ContactNumber" />
+                        <div class="field-error"><span asp-validation-for="ContactNumber"></span></div>
                     </div>
                 </div>
+            </div>
 
-                <!-- 📅 APPOINTMENT DETAILS -->
-                <h5 class="text-warning mt-4">📅 Appointment Details</h5>
-                <hr />
-
-                <div class="row">
-                    <div class="col-md-6 mb-3">
+            <!-- Appointment Details -->
+            <div class="section-header">
+                <div class="section-icon amber">📅</div>
+                <span class="section-label">Appointment Details</span>
+            </div>
+            <div class="section-divider"></div>
+            <div class="form-body">
+                <div class="form-grid cols-2">
+                    <div class="form-field">
                         <label asp-for="AppointmentDate"></label>
-                        <input asp-for="AppointmentDate" class="form-control" type="datetime-local"
-                               min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
-                        <span asp-validation-for="AppointmentDate" class="text-danger"></span>
+                        <input asp-for="AppointmentDate" type="datetime-local" id="AppointmentDate" />
+                        <div class="field-error"><span asp-validation-for="AppointmentDate"></span></div>
                     </div>
-
-                    <div class="col-md-6 mb-3">
+                    <div class="form-field">
                         <label asp-for="AppointmentType"></label>
-                        <input asp-for="AppointmentType" class="form-control" />
-                        <span asp-validation-for="AppointmentType" class="text-danger"></span>
+                        <select id="appointmentTypeSelect" onchange="toggleOtherInput(this)">
+                            <option value="">-- Select Type --</option>
+                            <option>Career Counseling</option>
+                            <option>Academic Counseling</option>
+                            <option>Consultation</option>
+                            <option>Follow-up Session</option>
+                            <option>Parent Consultation</option>
+                            <option>Other</option>
+                        </select>
+                        <input asp-for="AppointmentType" id="appointmentTypeOther" placeholder="Please specify..." style="display:none; margin-top:10px;" />
+                        <div class="field-error"><span asp-validation-for="AppointmentType"></span></div>
                     </div>
-
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Submitted By</label>
-                        <input type="text" class="form-control" value="@User.Identity.Name" readonly />
+                    <div class="form-field">
+                        <label>Submitted By</label>
+                        <input type="text" value="@User.Identity.Name" readonly />
                     </div>
-
-                    <div class="col-md-12 mb-3">
+                </div>
+                <div class="form-grid cols-1" style="margin-top:18px;">
+                    <div class="form-field">
                         <label asp-for="Notes"></label>
-                        <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
-                        <span asp-validation-for="Notes" class="text-danger"></span>
+                        <textarea asp-for="Notes" rows="3"></textarea>
+                        <div class="field-error"><span asp-validation-for="Notes"></span></div>
                     </div>
                 </div>
+            </div>
 
-                <!-- BUTTONS -->
-                <div class="d-flex justify-content-between">
-                    @if (User.IsInRole("Student"))
-                    {
-                        <a asp-action="StudentsAppt" class="btn btn-secondary">⬅ Back</a>
-                    }
-                    else
-                    {
-                        <a asp-action="Index" class="btn btn-secondary">⬅ Back</a>
-                    }
-                    <button type="submit" class="btn btn-success">💾 Save Appointment</button>
-                </div>
-
-            </form>
-        </div>
+            <div class="form-actions">
+                @if (User.IsInRole("Student"))
+                {
+                    <a asp-action="StudentsAppt" class="btn btn-back">⬅ Back</a>
+                }
+                else
+                {
+                    <a asp-action="Index" class="btn btn-back">⬅ Back</a>
+                }
+                <button type="submit" class="btn btn-save">💾 Save Appointment</button>
+            </div>
+        </form>
     </div>
 </div>
+
+<script>
+    // --- Populate datetime min
+    const dateInput = document.getElementById('AppointmentDate');
+    if(dateInput){
+        const now = new Date();
+        dateInput.min = now.toISOString().slice(0,16);
+    }
+
+    // --- Appointment type toggle
+    function toggleOtherInput(select){
+        const other = document.getElementById('appointmentTypeOther');
+        if(select.value === 'Other'){
+            other.style.display = 'block';
+            other.required = true;
+            other.value = '';
+        } else {
+            other.style.display = 'none';
+            other.required = false;
+            other.value = select.value;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function(){
+        const select = document.getElementById('appointmentTypeSelect');
+        const otherInput = document.getElementById('appointmentTypeOther');
+        otherInput.value = select.value;
+        select.addEventListener('change', function(){
+            if(this.value !== 'Other'){
+                otherInput.value = this.value;
+            }
+        });
+    });
+
+    // --- Student search autofill (Admin/Counselor only)
+    const students = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewBag.StudentUsers ?? new List<object>()));
+
+    const searchInput = document.getElementById('studentSearch');
+    const resultsList = document.getElementById('studentResults');
+
+    if(searchInput){
+        searchInput.addEventListener('input', function(){
+            const query = this.value.toLowerCase().trim();
+            resultsList.innerHTML = '';
+            if(!query){ resultsList.style.display='none'; return; }
+
+            const matches = students.filter(s => (s.FirstName+' '+s.LastName).toLowerCase().includes(query));
+
+            if(matches.length === 0){
+                resultsList.innerHTML = '<li class="no-results">No students found</li>';
+                resultsList.style.display = 'block';
+                return;
+            }
+
+            matches.forEach(s => {
+                const li = document.createElement('li');
+                li.textContent = s.FirstName + ' ' + s.LastName;
+                li.addEventListener('click', () => {
+                    searchInput.value = s.FirstName + ' ' + s.LastName;
+                    resultsList.style.display = 'none';
+                    document.getElementById('FirstName').value = s.FirstName || '';
+                    document.getElementById('LastName').value = s.LastName || '';
+                    document.getElementById('MiddleName').value = s.MiddleName || '';
+                    document.getElementById('Email').value = s.Email || '';
+                    document.getElementById('ContactNumber').value = s.ContactNumber || '';
+                    document.getElementById('UserId').value = s.UserId || '';
+                });
+                resultsList.appendChild(li);
+            });
+            resultsList.style.display = 'block';
+        });
+
+        document.addEventListener('click', function(e){
+            if(!searchInput.contains(e.target) && !resultsList.contains(e.target)){
+                resultsList.style.display = 'none';
+            }
+        });
+    }
+</script>

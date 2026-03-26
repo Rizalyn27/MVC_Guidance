@@ -17,6 +17,18 @@ html {
     min-height: 100%;
 }
 
+.um-btn-reactivate {
+    color: #1a6b5a;
+    border-color: #a8d8cc;
+}
+
+    .um-btn-reactivate:hover {
+        background: #e6f4f1;
+        color: #154f42;
+        border-color: #1a6b5a;
+        text-decoration: none;
+    }
+
 body {
     margin-bottom: 60px;
 }

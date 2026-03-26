@@ -10,6 +10,25 @@
     <form asp-action="Edit" method="post">
         @Html.AntiForgeryToken()
         <input type="hidden" asp-for="UserId" />
+        <input type="hidden" asp-for="Password" />
+
+        <div class="mb-3">
+            <label asp-for="FirstName" class="form-label"></label>
+            <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="MiddleName" class="form-label"></label>
+            <input asp-for="MiddleName" class="form-control" />
+            <span asp-validation-for="MiddleName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="LastName" class="form-label"></label>
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
 
         <div class="mb-3">
             <label asp-for="Username" class="form-label"></label>
@@ -21,6 +40,22 @@
             <label asp-for="Email" class="form-label"></label>
             <input asp-for="Email" class="form-control" />
             <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ContactNumber" class="form-label"></label>
+            <input asp-for="ContactNumber" class="form-control" />
+            <span asp-validation-for="ContactNumber" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Role" class="form-label"></label>
+            <select asp-for="Role" class="form-select">
+                <option value="Student">Student</option>
+                <option value="Counselor">Counselor</option>
+                <option value="Admin">Admin</option>
+            </select>
+            <span asp-validation-for="Role" class="text-danger"></span>
         </div>
 
         <div class="d-flex justify-content-between">

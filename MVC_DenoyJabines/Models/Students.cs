@@ -6,130 +6,133 @@ namespace MVC_DenoyJabines.Models
 {
     public class Students
     {
-        // Basic Info
-
-        //ID
+        // ID
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [HiddenInput(DisplayValue = false)]
         public int StuID { get; set; }
 
-        //Student ID
+        // Student ID
         [Required(ErrorMessage = "Student ID is required")]
-        [StringLength(20, MinimumLength = 4, ErrorMessage = "Student ID must be between 4 and 20 characters")]
+        [StringLength(20, MinimumLength = 4)]
+        [Display(Name = "Student ID (LRN)")]
         public string StuLRN { get; set; }
 
-        //First Name, Last Name, Middle Name
-        [Required(ErrorMessage = "First name is required")]
-        [StringLength(50, ErrorMessage = "First name must not exceed 50 characters")]
-        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "First name can only contain letters")]
+        // Name
+        [Required]
+        [StringLength(50)]
+        [RegularExpression(@"^[a-zA-Z\s]+$")]
+        [Display(Name = "First Name")]
         public string StuFName { get; set; }
 
-        [Required(ErrorMessage = "Last name is required")]
-        [StringLength(50, ErrorMessage = "Last name must not exceed 50 characters")]
-        [RegularExpression(@"^[a-zA-Z\s]+$", ErrorMessage = "Last name can only contain letters")]
+        [Required]
+        [StringLength(50)]
+        [RegularExpression(@"^[a-zA-Z\s]+$")]
+        [Display(Name = "Last Name")]
         public string StuLName { get; set; }
 
-
-        [StringLength(50, ErrorMessage = "Middle name must not exceed 50 characters")]
-        [RegularExpression(@"^[a-zA-Z\s]*$", ErrorMessage = "Middle name can only contain letters")]
+        [StringLength(50)]
+        [RegularExpression(@"^[a-zA-Z\s]*$")]
+        [Display(Name = "Middle Name")]
         public string StuMName { get; set; }
 
+        [Display(Name = "Active Status")]
         public bool StuStatus { get; set; }
 
-        public string StuFullName => $"{StuFName} {StuMName} {StuLName}".Trim();
+        [Display(Name = "Full Name")]
+        public string StuFullName => $"{StuFName} {StuMName} {StuLName}".Replace("  ", " ").Trim();
 
-
-        //Gender
-        [Required(ErrorMessage = "Gender is required")]
+        // Gender
+        [Required]
+        [Display(Name = "Gender")]
         public string Gender { get; set; }
 
-        //Birthdate
-        [Required(ErrorMessage = "Birthdate is required")]
+        // Birthdate
+        [Required]
         [DataType(DataType.Date)]
+        [Display(Name = "Birthdate")]
         public DateTime Birthdate { get; set; }
 
-        //Address
-        [Required(ErrorMessage = "Student address is required")]
-        [StringLength(200, ErrorMessage = "Address must not exceed 200 characters")]
+        // Address
+        [Required]
+        [StringLength(200)]
+        [Display(Name = "Address")]
         public string Address { get; set; }
 
-        //Student Contact Number
-        [Required(ErrorMessage = "Contact number is required")]
-        [RegularExpression(@"^\d{11}$", ErrorMessage = "Contact number must be exactly 11 digits")]
-        [StringLength(11, MinimumLength = 11, ErrorMessage = "Contact number must be exactly 11 digits")]
+        // Contact
+        [Required]
+        [RegularExpression(@"^\d{11}$")]
+        [StringLength(11)]
+        [Display(Name = "Contact Number")]
         public string Contact { get; set; }
 
-        //Student Email
-        [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Invalid email format")]
-        [StringLength(100, ErrorMessage = "Email must not exceed 100 characters")]
+        // Email
+        [Required]
+        [EmailAddress]
+        [StringLength(100)]
+        [Display(Name = "Email Address")]
         public string Email { get; set; }
 
-
-
         // Academic Info
-        //Department
-        [Required(ErrorMessage = "Department is required")]
-        [StringLength(100, ErrorMessage = "Department must not exceed 100 characters")]
+        [Required]
+        [StringLength(100)]
+        [Display(Name = "Department")]
         public string Department { get; set; }
 
-        //Year level
-        [Required(ErrorMessage = "Year level is required")]
-        [Range(7, 12, ErrorMessage = "Year level must be between 7 and 12")]
+        [Required]
+        [Range(7, 12)]
+        [Display(Name = "Year Level")]
         public int YearLevel { get; set; }
 
-        //Section
-        [Required(ErrorMessage = "Section is required")]
-        [StringLength(20, ErrorMessage = "Section must not exceed 20 characters")]
+        [Required]
+        [StringLength(20)]
+        [Display(Name = "Section")]
         public string Section { get; set; }
 
-        //Adviser
-        [StringLength(100, ErrorMessage = "Adviser name must not exceed 100 characters")]
+        [StringLength(100)]
+        [Display(Name = "Adviser")]
         public string Adviser { get; set; }
 
+        [Display(Name = "Grade & Section")]
         public string GradeSec => $"Grade {YearLevel} - {Section}";
 
-
         // Guardian Info
-        //Guardian Name
-        [Required(ErrorMessage = "Guardian name is required")]
-        [StringLength(100, ErrorMessage = "Guardian name must not exceed 100 characters")]
+        [Required]
+        [StringLength(100)]
+        [Display(Name = "Guardian Name")]
         public string GuardianName { get; set; }
 
-        //Guardian Relationship
-        [Required(ErrorMessage = "Relationship is required")]
-        [StringLength(50, ErrorMessage = "Relationship must not exceed 50 characters")]
+        [Required]
+        [StringLength(50)]
+        [Display(Name = "Relationship")]
         public string Relationship { get; set; }
 
-        //Guardian Contact Number
-        [Required(ErrorMessage = "Guardian contact number is required")]
-        [RegularExpression(@"^\d{11}$", ErrorMessage = "Contact number must be exactly 11 digits")]
-        [StringLength(11, MinimumLength = 11, ErrorMessage = "Contact number must be exactly 11 digits")]
+        [Required]
+        [RegularExpression(@"^\d{11}$")]
+        [StringLength(11)]
+        [Display(Name = "Guardian Contact")]
         public string GuardianContact { get; set; }
 
-        //Guardian Address
-        [Required(ErrorMessage = "Guardian address is required")]
-        [StringLength(200, ErrorMessage = "Guardian address must not exceed 200 characters")]
+        [Required]
+        [StringLength(200)]
+        [Display(Name = "Guardian Address")]
         public string GuardianAddress { get; set; }
 
-
         // Guidance Info
-
-        //Reason for counseling
-        [StringLength(200, ErrorMessage = "Reason must not exceed 200 characters")]
+        [StringLength(200)]
+        [Display(Name = "Reason for Counseling")]
         public string Reason { get; set; }
 
-        //Case type
-        [StringLength(50, ErrorMessage = "Case type must not exceed 50 characters")]
+        [StringLength(50)]
+        [Display(Name = "Case Type")]
         public string CaseType { get; set; }
 
-        //Counseling status
-        [StringLength(50, ErrorMessage = "Status must not exceed 50 characters")]
+        [StringLength(50)]
+        [Display(Name = "Counseling Status")]
         public string CounselingStatus { get; set; }
 
-        //Remarks
-        [StringLength(500, ErrorMessage = "Remarks must not exceed 500 characters")]
+        [StringLength(500)]
+        [Display(Name = "Remarks")]
         public string Remarks { get; set; }
     }
 }

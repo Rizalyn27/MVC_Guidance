@@ -10,13 +10,13 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-
 namespace MVC_DenoyJabines.Controllers
 {
     public class AppointmentsController : Controller
     {
         private readonly AppDbContext _context;
 
+        // Constructor to inject the database context
         public AppointmentsController(AppDbContext context)
         {
             _context = context;
@@ -31,15 +31,17 @@ namespace MVC_DenoyJabines.Controllers
             return View(await appDbContext.ToListAsync());
         }
 
+        // GET: Appointments/StudentsAppt
         // Only Students can see their own appointments
         [Authorize(Roles = "Student")]
         public async Task<IActionResult> StudentsAppt()
         {
             var userIdClaim = User.FindFirstValue("UserId");
-            if (userIdClaim == null) return Unauthorized();
+            if (userIdClaim == null) return Unauthorized(); // Check if user is logged in
 
             int userId = int.Parse(userIdClaim);
 
+            // Fetch appointments only for the logged-in student
             var myAppointments = await _context.Appointments
                 .Include(a => a.User)
                 .Where(a => a.UserId == userId)
@@ -51,18 +53,13 @@ namespace MVC_DenoyJabines.Controllers
         // GET: Appointments/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
+            // Fetch appointment details including the User info
             var appointment = await _context.Appointments
                 .Include(a => a.User)
                 .FirstOrDefaultAsync(m => m.AppointmentID == id);
-            if (appointment == null)
-            {
-                return NotFound();
-            }
+            if (appointment == null) return NotFound();
 
             return View(appointment);
         }
@@ -71,7 +68,43 @@ namespace MVC_DenoyJabines.Controllers
         [Authorize]
         public IActionResult Create()
         {
-            return View();
+            Appointment appointment = new Appointment();
+
+            var userIdClaim = User.FindFirstValue("UserId");
+            if (userIdClaim != null)
+            {
+                int userId = int.Parse(userIdClaim);
+                var currentUser = _context.User.FirstOrDefault(u => u.UserId == userId);
+                if (currentUser != null)
+                {
+                    appointment.FirstName = currentUser.FirstName;
+                    appointment.LastName = currentUser.LastName;
+                    appointment.MiddleName = currentUser.MiddleName;
+                    appointment.Email = currentUser.Email;
+                    appointment.ContactNumber = currentUser.ContactNumber;
+                    appointment.UserId = currentUser.UserId;
+                }
+            }
+
+            if (User.IsInRole("Admin") || User.IsInRole("Counselor"))
+            {
+                ViewBag.StudentUsers = _context.Students
+                    .Where(u => u.StuStatus == true)
+                    .Select(u => new {
+                        UserId = u.StuID,
+                        FirstName = u.StuFName,
+                        LastName = u.StuLName,
+                        MiddleName = u.StuMName,
+                        Email = u.Email,
+                        ContactNumber = u.Contact
+                    })
+                    .ToList();
+            }
+
+            appointment.Status = "Pending";
+            appointment.AppointmentDate = DateTime.Now.AddHours(1);
+
+            return View(appointment);
         }
 
         // POST: Appointments/Create
@@ -86,7 +119,7 @@ namespace MVC_DenoyJabines.Controllers
             appointment.UserId = int.Parse(userIdClaim);
             appointment.CreatedAt = DateTime.Now;
             appointment.UpdatedAt = null;
-            appointment.Status = "Pending"; // Always force Pending on creation
+            appointment.Status = "Pending";
 
             ModelState.Remove("UserId");
             ModelState.Remove("CreatedAt");
@@ -99,10 +132,23 @@ namespace MVC_DenoyJabines.Controllers
                 _context.Add(appointment);
                 await _context.SaveChangesAsync();
 
-                if (User.IsInRole("Student"))
-                    return RedirectToAction(nameof(StudentsAppt));
+                return User.IsInRole("Student") ? RedirectToAction(nameof(StudentsAppt)) : RedirectToAction(nameof(Index));
+            }
 
-                return RedirectToAction(nameof(Index));
+            // Re-populate on validation failure
+            if (User.IsInRole("Admin") || User.IsInRole("Counselor"))
+            {
+                ViewBag.StudentUsers = _context.Students
+                    .Where(u => u.StuStatus == true)
+                    .Select(u => new {
+                        UserId = u.StuID,
+                        FirstName = u.StuFName,
+                        LastName = u.StuLName,
+                        MiddleName = u.StuMName,
+                        Email = u.Email,
+                        ContactNumber = u.Contact
+                    })
+                    .ToList();
             }
 
             return View(appointment);
@@ -128,6 +174,7 @@ namespace MVC_DenoyJabines.Controllers
         {
             if (id != appointment.AppointmentID) return NotFound();
 
+            // Remove properties not handled by form
             ModelState.Remove("UserId");
             ModelState.Remove("CreatedAt");
             ModelState.Remove("UpdatedAt");
@@ -139,6 +186,7 @@ namespace MVC_DenoyJabines.Controllers
                 var existing = await _context.Appointments.FindAsync(id);
                 if (existing == null) return NotFound();
 
+                // Update editable fields
                 existing.FirstName = appointment.FirstName;
                 existing.LastName = appointment.LastName;
                 existing.MiddleName = appointment.MiddleName;
@@ -152,10 +200,7 @@ namespace MVC_DenoyJabines.Controllers
 
                 await _context.SaveChangesAsync();
 
-                if (User.IsInRole("Student"))
-                    return RedirectToAction(nameof(StudentsAppt));
-
-                return RedirectToAction(nameof(Index));
+                return User.IsInRole("Student") ? RedirectToAction(nameof(StudentsAppt)) : RedirectToAction(nameof(Index));
             }
 
             return View(appointment);
@@ -164,18 +209,13 @@ namespace MVC_DenoyJabines.Controllers
         // GET: Appointments/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
+            // Fetch appointment including User info
             var appointment = await _context.Appointments
                 .Include(a => a.User)
                 .FirstOrDefaultAsync(m => m.AppointmentID == id);
-            if (appointment == null)
-            {
-                return NotFound();
-            }
+            if (appointment == null) return NotFound();
 
             return View(appointment);
         }
@@ -195,12 +235,14 @@ namespace MVC_DenoyJabines.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // Helper method to check if appointment exists
         private bool AppointmentExists(int id)
         {
             return _context.Appointments.Any(e => e.AppointmentID == id);
         }
 
         // POST: Appointments/UpdateStatus
+        // Only Counselor and Admin can update appointment status
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Counselor,Admin")]

@@ -1,107 +1,538 @@
 ﻿@model MVC_DenoyJabines.Models.Students
-
 @{
     ViewData["Title"] = "Student Details";
+
+    string GetInitials(string fullName)
+    {
+        if (string.IsNullOrWhiteSpace(fullName)) return "?";
+        var parts = fullName.Trim().Split(' ', System.StringSplitOptions.RemoveEmptyEntries);
+        if (parts.Length == 1) return parts[0][0].ToString().ToUpper();
+        return (parts[0][0].ToString() + parts[^1][0].ToString()).ToUpper();
+    }
+
+    var initials = GetInitials(Model.StuFullName);
 }
 
-<div class="container mt-4">
-    <div class="card shadow-lg border-0">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0">ℹ️ Student Details</h4>
-        </div>
+<style>
+    :root {
+        --indigo: #3b5bdb;
+        --indigo-soft: #eef1fd;
+        --emerald: #0f9d74;
+        --emerald-soft: #e6f7f2;
+        --amber: #d97706;
+        --amber-soft: #fef3e2;
+        --cyan: #0891b2;
+        --cyan-soft: #e0f5fa;
+        --rose: #e5344a;
+        --rose-soft: #fdeef0;
+        --ink: #0e1523;
+        --muted: #6b7696;
+        --faint: #a8b0c8;
+        --border: #e4e8f4;
+        --surface: #ffffff;
+        --bg: #f0f2f8;
+        --radius: 16px;
+        --radius-sm: 10px;
+        --shadow: 0 2px 16px rgba(14,21,35,0.07);
+        --shadow-md: 0 4px 24px rgba(14,21,35,0.10);
+    }
 
-        <div class="card-body">
+    .sd-wrapper {
+        font-family: Arial, Helvetica, sans-serif;
+        background: var(--bg);
+        min-height: 100vh;
+        padding: 28px 32px 48px;
+    }
 
-            <!-- 📋 BASIC INFO -->
-            <h5 class="text-primary">📋 Basic Information</h5>
-            <hr />
-            <dl class="row">
-                <dt class="col-sm-3">Student ID</dt>
-                <dd class="col-sm-9">@Model.StuLRN</dd>
+    /* ── Breadcrumb ── */
+    .sd-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 22px;
+        font-size: 0.82rem;
+        color: var(--faint);
+    }
 
-                <dt class="col-sm-3">Full Name</dt>
-                <dd class="col-sm-9">@Model.StuFullName</dd>
+        .sd-breadcrumb a {
+            color: var(--muted);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
 
-                <dt class="col-sm-3">Status</dt>
-                <dd class="col-sm-9">
-                    @(Model.StuStatus ? "Active" : "Inactive")
-                </dd>
+            .sd-breadcrumb a:hover {
+                color: var(--emerald);
+                text-decoration: none;
+            }
 
-                <dt class="col-sm-3">Gender</dt>
-                <dd class="col-sm-9">@Model.Gender</dd>
+    .sd-breadcrumb-btn {
+        background: var(--surface);
+        border: 1.5px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 5px 14px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--ink);
+        cursor: pointer;
+        text-decoration: none;
+        transition: border-color .15s;
+    }
 
-                <dt class="col-sm-3">Birthdate</dt>
-                <dd class="col-sm-9">@Model.Birthdate.ToString("yyyy-MM-dd")</dd>
-            </dl>
+        .sd-breadcrumb-btn:hover {
+            border-color: var(--emerald);
+            color: var(--emerald);
+            text-decoration: none;
+        }
 
-            <!-- 📬 CONTACT -->
-            <h5 class="text-success mt-4">📬 Contact</h5>
-            <hr />
-            <dl class="row">
-                <dt class="col-sm-3">Address</dt>
-                <dd class="col-sm-9">@Model.Address</dd>
+    .sd-breadcrumb-sep {
+        color: var(--border);
+    }
 
-                <dt class="col-sm-3">Contact</dt>
-                <dd class="col-sm-9">@Model.Contact</dd>
+    .sd-breadcrumb-current {
+        color: var(--ink);
+        font-weight: 700;
+    }
 
-                <dt class="col-sm-3">Email</dt>
-                <dd class="col-sm-9">@Model.Email</dd>
-            </dl>
+    /* ── Hero Card ── */
+    .sd-hero {
+        background: var(--surface);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        padding: 24px 28px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 24px;
+        flex-wrap: wrap;
+    }
 
-            <!-- 🎓 ACADEMIC -->
-            <h5 class="text-warning mt-4">🎓 Academic Info</h5>
-            <hr />
-            <dl class="row">
-                <dt class="col-sm-3">Department</dt>
-                <dd class="col-sm-9">@Model.Department</dd>
+    .sd-avatar {
+        width: 72px;
+        height: 72px;
+        border-radius: 14px;
+        background: var(--emerald);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #fff;
+        flex-shrink: 0;
+        letter-spacing: -0.02em;
+    }
 
-                <dt class="col-sm-3">Grade & Section</dt>
-                <dd class="col-sm-9">@Model.GradeSec</dd>
+    .sd-hero-info {
+        flex: 1;
+        min-width: 180px;
+    }
 
-                <dt class="col-sm-3">Adviser</dt>
-                <dd class="col-sm-9">@Model.Adviser</dd>
-            </dl>
+    .sd-hero-name {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--ink);
+        margin: 0 0 3px;
+        line-height: 1.25;
+    }
 
-            <!-- 👨‍👩‍👧 GUARDIAN -->
-            <h5 class="text-info mt-4">👨‍👩‍👧 Guardian Info</h5>
-            <hr />
-            <dl class="row">
-                <dt class="col-sm-3">Guardian Name</dt>
-                <dd class="col-sm-9">@Model.GuardianName</dd>
+    .sd-hero-meta {
+        font-size: 0.8rem;
+        color: var(--muted);
+        margin: 0 0 12px;
+    }
 
-                <dt class="col-sm-3">Relationship</dt>
-                <dd class="col-sm-9">@Model.Relationship</dd>
+    .sd-hero-contacts {
+        display: flex;
+        gap: 18px;
+        flex-wrap: wrap;
+        font-size: 0.8rem;
+        color: var(--muted);
+    }
 
-                <dt class="col-sm-3">Contact</dt>
-                <dd class="col-sm-9">@Model.GuardianContact</dd>
+    .sd-hero-contact-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
 
-                <dt class="col-sm-3">Address</dt>
-                <dd class="col-sm-9">@Model.GuardianAddress</dd>
-            </dl>
+    .sd-hero-badges {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-left: auto;
+    }
 
-            <!-- 🧠 GUIDANCE -->
-            <h5 class="text-danger mt-4">🧠 Guidance Info</h5>
-            <hr />
-            <dl class="row">
-                <dt class="col-sm-3">Case Type</dt>
-                <dd class="col-sm-9">@Model.CaseType</dd>
+    .sd-badge {
+        border-radius: 20px;
+        padding: 5px 13px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+    }
 
-                <dt class="col-sm-3">Counseling Status</dt>
-                <dd class="col-sm-9">@Model.CounselingStatus</dd>
+    .sd-badge-active {
+        background: var(--emerald-soft);
+        color: var(--emerald);
+    }
 
-                <dt class="col-sm-3">Reason</dt>
-                <dd class="col-sm-9">@Model.Reason</dd>
+    .sd-badge-inactive {
+        background: #f0f0f0;
+        color: #888;
+    }
 
-                <dt class="col-sm-3">Remarks</dt>
-                <dd class="col-sm-9">@Model.Remarks</dd>
-            </dl>
+    .sd-badge-case {
+        background: var(--indigo-soft);
+        color: var(--indigo);
+    }
 
-            <!-- BUTTONS -->
-            <div class="d-flex justify-content-between mt-4">
-                <a asp-action="Edit" asp-route-id="@Model.StuID" class="btn btn-warning">✏️ Edit</a>
-                <a asp-action="Index" class="btn btn-secondary">⬅ Back</a>
+    .sd-hero-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .sd-btn {
+        border-radius: var(--radius-sm);
+        padding: 8px 16px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        transition: all .15s;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .sd-btn-edit {
+        background: var(--surface);
+        border: 1.5px solid var(--border);
+        color: var(--ink);
+    }
+
+        .sd-btn-edit:hover {
+            border-color: var(--emerald);
+            color: var(--emerald);
+            text-decoration: none;
+        }
+
+    /* ── Tabs ── */
+    .sd-tabs {
+        display: flex;
+        gap: 0;
+        border-bottom: 2px solid var(--border);
+        margin-bottom: 22px;
+    }
+
+    .sd-tab {
+        padding: 11px 18px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--faint);
+        cursor: pointer;
+        text-decoration: none;
+        border-bottom: 2.5px solid transparent;
+        margin-bottom: -2px;
+        transition: color .15s, border-color .15s;
+        display: inline-block;
+    }
+
+        .sd-tab:hover {
+            color: var(--emerald);
+            text-decoration: none;
+        }
+
+        .sd-tab.active {
+            color: var(--emerald);
+            border-bottom-color: var(--emerald);
+        }
+
+    /* ── Cards Grid ── */
+    .sd-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 18px;
+    }
+
+    .sd-info-card {
+        background: var(--surface);
+        border-radius: var(--radius);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        padding: 22px;
+    }
+
+        .sd-info-card.full {
+            grid-column: 1 / -1;
+        }
+
+    .sd-info-card-header {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        padding: 6px 10px;
+        border-radius: 7px;
+        margin-bottom: 18px;
+    }
+
+    .sch-indigo {
+        background: var(--indigo-soft);
+        color: var(--indigo);
+    }
+
+    .sch-emerald {
+        background: var(--emerald-soft);
+        color: var(--emerald);
+    }
+
+    .sch-amber {
+        background: var(--amber-soft);
+        color: var(--amber);
+    }
+
+    .sch-cyan {
+        background: var(--cyan-soft);
+        color: var(--cyan);
+    }
+
+    .sch-rose {
+        background: var(--rose-soft);
+        color: var(--rose);
+    }
+
+    .sd-field {
+        margin-bottom: 16px;
+    }
+
+        .sd-field:last-child {
+            margin-bottom: 0;
+        }
+
+    .sd-field-label {
+        font-size: 0.67rem;
+        font-weight: 700;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--faint);
+        margin: 0 0 4px;
+    }
+
+    .sd-field-value {
+        font-size: 0.88rem;
+        font-weight: 600;
+        color: var(--ink);
+        margin: 0;
+    }
+
+        .sd-field-value.muted {
+            color: var(--faint);
+            font-style: italic;
+            font-weight: 400;
+        }
+
+    .sd-guidance-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 18px;
+    }
+
+    /* ── Responsive ── */
+    @@media (max-width: 1000px) {
+        .sd-cards-grid {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .sd-guidance-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @@media (max-width: 640px) {
+        .sd-wrapper {
+            padding: 20px 16px 40px;
+        }
+
+        .sd-cards-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .sd-guidance-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .sd-hero {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .sd-hero-badges {
+            margin-left: 0;
+        }
+    }
+</style>
+
+<div class="sd-wrapper">
+
+    <!-- Breadcrumb -->
+    <div class="sd-breadcrumb">
+        <a asp-action="Index" class="sd-breadcrumb-btn">← Back</a>
+        <span class="sd-breadcrumb-sep">/</span>
+        <a asp-action="Index">Student List</a>
+        <span class="sd-breadcrumb-sep">/</span>
+        <span class="sd-breadcrumb-current">@Model.StuFullName</span>
+    </div>
+
+    <!-- Hero Card -->
+    <div class="sd-hero">
+        <div class="sd-avatar">@initials</div>
+
+        <div class="sd-hero-info">
+            <h2 class="sd-hero-name">@Model.StuFullName</h2>
+            <p class="sd-hero-meta">LRN: @Model.StuLRN · @Model.GradeSec</p>
+            <div class="sd-hero-contacts">
+                @if (!string.IsNullOrEmpty(Model.Email))
+                {
+                    <div class="sd-hero-contact-item">✉️ @Model.Email</div>
+                }
+                @if (!string.IsNullOrEmpty(Model.Contact))
+                {
+                    <div class="sd-hero-contact-item">📞 @Model.Contact</div>
+                }
+                @if (!string.IsNullOrEmpty(Model.Adviser))
+                {
+                    <div class="sd-hero-contact-item">👤 @Model.Adviser</div>
+                }
             </div>
-
         </div>
+
+        <div class="sd-hero-badges">
+            @if (Model.StuStatus)
+            {
+                <span class="sd-badge sd-badge-active">● Active</span>
+            }
+            else
+            {
+                <span class="sd-badge sd-badge-inactive">● Inactive</span>
+            }
+            @if (!string.IsNullOrEmpty(Model.CaseType))
+            {
+                <span class="sd-badge sd-badge-case">@Model.CaseType</span>
+            }
+        </div>
+
+        <div class="sd-hero-actions">
+            <a asp-action="Edit" asp-route-id="@Model.StuID" class="sd-btn sd-btn-edit">
+                ✏️ Edit
+            </a>
+        </div>
+    </div>
+
+    <!-- Tabs (visual only) -->
+    <div class="sd-tabs">
+        <span class="sd-tab active">Student Details</span>
+        <span class="sd-tab">Visit History</span>
+        <span class="sd-tab">Counseling Plan</span>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="sd-cards-grid">
+
+        <!-- Basic Information -->
+        <div class="sd-info-card">
+            <div class="sd-info-card-header sch-indigo">📋 Basic Information</div>
+            <div class="sd-field">
+                <p class="sd-field-label">Gender</p>
+                <p class="sd-field-value">@(string.IsNullOrEmpty(Model.Gender) ? "—" : Model.Gender)</p>
+            </div>
+            <div class="sd-field">
+                <p class="sd-field-label">Date of Birth</p>
+                <p class="sd-field-value">@Model.Birthdate.ToString("yyyy-MM-dd")</p>
+            </div>
+            <div class="sd-field">
+                <p class="sd-field-label">Contact</p>
+                <p class="sd-field-value">@(string.IsNullOrEmpty(Model.Contact) ? "—" : Model.Contact)</p>
+            </div>
+            <div class="sd-field">
+                <p class="sd-field-label">Email</p>
+                <p class="sd-field-value">@(string.IsNullOrEmpty(Model.Email) ? "—" : Model.Email)</p>
+            </div>
+            <div class="sd-field">
+                <p class="sd-field-label">Address</p>
+                <p class="sd-field-value">@(string.IsNullOrEmpty(Model.Address) ? "—" : Model.Address)</p>
+            </div>
+        </div>
+
+        <!-- Academic Info -->
+        <div class="sd-info-card">
+            <div class="sd-info-card-header sch-amber">🎓 Academic Info</div>
+            <div class="sd-field">
+                <p class="sd-field-label">Grade &amp; Section</p>
+                <p class="sd-field-value">@(string.IsNullOrEmpty(Model.GradeSec) ? "—" : Model.GradeSec)</p>
+            </div>
+            <div class="sd-field">
+                <p class="sd-field-label">LRN</p>
+                <p class="sd-field-value">@(string.IsNullOrEmpty(Model.StuLRN) ? "—" : Model.StuLRN)</p>
+            </div>
+            <div class="sd-field">
+                <p class="sd-field-label">Adviser</p>
+                <p class="sd-field-value">@(string.IsNullOrEmpty(Model.Adviser) ? "—" : Model.Adviser)</p>
+            </div>
+        </div>
+
+        <!-- Guardian Info -->
+        <div class="sd-info-card">
+            <div class="sd-info-card-header sch-cyan">👨‍👩‍👧 Guardian Info</div>
+            <div class="sd-field">
+                <p class="sd-field-label">Guardian</p>
+                <p class="sd-field-value">@(string.IsNullOrEmpty(Model.GuardianName) ? "—" : Model.GuardianName)</p>
+            </div>
+            <div class="sd-field">
+                <p class="sd-field-label">Relationship</p>
+                <p class="sd-field-value">@(string.IsNullOrEmpty(Model.Relationship) ? "—" : Model.Relationship)</p>
+            </div>
+            <div class="sd-field">
+                <p class="sd-field-label">Contact</p>
+                <p class="sd-field-value">@(string.IsNullOrEmpty(Model.GuardianContact) ? "—" : Model.GuardianContact)</p>
+            </div>
+            <div class="sd-field">
+                <p class="sd-field-label">Address</p>
+                <p class="sd-field-value">@(string.IsNullOrEmpty(Model.GuardianAddress) ? "—" : Model.GuardianAddress)</p>
+            </div>
+        </div>
+
+        <!-- Guidance Info (full width) -->
+        <div class="sd-info-card full">
+            <div class="sd-info-card-header sch-rose">🧠 Guidance Info</div>
+            <div class="sd-guidance-grid">
+                <div class="sd-field">
+                    <p class="sd-field-label">Case Type</p>
+                    <p class="sd-field-value">@(string.IsNullOrEmpty(Model.CaseType) ? "—" : Model.CaseType)</p>
+                </div>
+                <div class="sd-field">
+                    <p class="sd-field-label">Counseling Status</p>
+                    <p class="sd-field-value">@(string.IsNullOrEmpty(Model.CounselingStatus) ? "—" : Model.CounselingStatus)</p>
+                </div>
+                <div class="sd-field">
+                    <p class="sd-field-label">Reason</p>
+                    <p class="sd-field-value">@(string.IsNullOrEmpty(Model.Reason) ? "—" : Model.Reason)</p>
+                </div>
+                <div class="sd-field">
+                    <p class="sd-field-label">Remarks</p>
+                    <p class="sd-field-value">@(string.IsNullOrEmpty(Model.Remarks) ? "—" : Model.Remarks)</p>
+                </div>
+            </div>
+        </div>
+
     </div>
 </div>

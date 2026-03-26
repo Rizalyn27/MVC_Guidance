@@ -26,15 +26,14 @@
                 </div>
             </div>
 
-            <form method="post" class="hero-form" onsubmit="return checkPasswords()">
+            <form method="post" class="hero-form p-4 rounded shadow" onsubmit="return checkPasswords()">
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
-                <!-- Role (dropdown) -->
-                <div class="form-group mb-3">
-                    <label asp-for="Role" class="form-label">
-                        Register as <span class="text-danger">*</span>
-                    </label>
-                    <select asp-for="Role" class="form-select" aria-required="true" placeholder="-- Select Role --">
+                <!-- Role -->
+                <div class="mb-3">
+                    <label asp-for="Role" class="form-label">Register as <span class="text-danger">*</span></label>
+                    <select asp-for="Role" class="form-select" required>
+                        <option value="">-- Select Role --</option>
                         <option value="Student">Student</option>
                         <option value="Counselor">Counselor</option>
                         <option value="Admin">Admin</option>
@@ -42,57 +41,78 @@
                     <span asp-validation-for="Role" class="text-danger"></span>
                 </div>
 
+                <!-- Name Fields -->
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label asp-for="FirstName" class="form-label">First Name</label>
+                        <input asp-for="FirstName" class="form-control" placeholder="First Name" />
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="MiddleName" class="form-label">Middle Name</label>
+                        <input asp-for="MiddleName" class="form-control" placeholder="Middle Name" />
+                        <span asp-validation-for="MiddleName" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label asp-for="LastName" class="form-label">Last Name</label>
+                        <input asp-for="LastName" class="form-control" placeholder="Last Name" />
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <!-- Contact Number -->
+                <div class="mb-3">
+                    <label asp-for="ContactNumber" class="form-label">Contact Number</label>
+                    <input asp-for="ContactNumber" class="form-control" placeholder="09XXXXXXXXX" />
+                    <span asp-validation-for="ContactNumber" class="text-danger"></span>
+                </div>
+
                 <!-- Username -->
-                <div class="form-group mb-3">
-                    <label asp-for="Username" class="form-label">
-                        Username <span class="text-danger">*</span>
-                    </label>
-                    <input asp-for="Username" class="form-control" id="username" aria-required="true" placeholder="Enter username" />
+                <div class="mb-3">
+                    <label asp-for="Username" class="form-label">Username <span class="text-danger">*</span></label>
+                    <input asp-for="Username" class="form-control" placeholder="Enter username" />
                     <span asp-validation-for="Username" class="text-danger"></span>
                 </div>
 
                 <!-- Email -->
-                <div class="form-group mb-3">
-                    <label asp-for="Email" class="form-label">
-                        Email <span class="text-danger">*</span>
-                    </label>
-                    <input asp-for="Email" class="form-control" id="email" aria-required="true" placeholder="Enter Email" />
+                <div class="mb-3">
+                    <label asp-for="Email" class="form-label">Email <span class="text-danger">*</span></label>
+                    <input asp-for="Email" class="form-control" placeholder="Enter email" />
                     <span asp-validation-for="Email" class="text-danger"></span>
                 </div>
 
-                <!-- Password -->
-                <div class="form-group mb-3">
-                    <label asp-for="Password" class="form-label">Password <span class="text-danger">*</span></label>
-                    <div class="input-group">
-                        <input asp-for="Password" type="password" class="form-control" id="password" placeholder="Enter password" />
-                        <button type="button" class="btn btn-light" onclick="togglePassword('password')" tabindex="-1">
-                            <img id="passwordToggleImg" src="/photos/hidepass.png" alt="Toggle password" style="height:20px;">
-                        </button>
+                <!-- Password & Confirm Password -->
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label asp-for="Password" class="form-label">Password <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input asp-for="Password" type="password" class="form-control" id="password" placeholder="Enter password" />
+                            <button type="button" class="btn btn-light" onclick="togglePassword('password')" tabindex="-1">
+                                <img id="passwordToggleImg" src="/photos/hidepass.png" alt="Toggle password" style="height:20px;">
+                            </button>
+                        </div>
+                        <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
-                    <span asp-validation-for="Password" class="text-danger"></span>
-                </div>
-
-                <!-- Confirm Password -->
-                <div class="form-group mb-3">
-                    <label asp-for="ConfirmPassword" class="form-label">Confirm Password <span class="text-danger">*</span></label>
-                    <div class="input-group">
-                        <input asp-for="ConfirmPassword" type="password" class="form-control" id="confirmPassword" placeholder="Re-enter password" />
-                        <button type="button" class="btn btn-light" onclick="togglePassword('confirmPassword')" tabindex="-1">
-                            <img id="confirmPasswordToggleImg" src="/photos/hidepass.png" alt="Toggle password" style="height:20px;">
-                        </button>
+                    <div class="col-md-6">
+                        <label asp-for="ConfirmPassword" class="form-label">Confirm Password <span class="text-danger">*</span></label>
+                        <div class="input-group">
+                            <input asp-for="ConfirmPassword" type="password" class="form-control" id="confirmPassword" placeholder="Re-enter password" />
+                            <button type="button" class="btn btn-light" onclick="togglePassword('confirmPassword')" tabindex="-1">
+                                <img id="confirmPasswordToggleImg" src="/photos/hidepass.png" alt="Toggle password" style="height:20px;">
+                            </button>
+                        </div>
+                        <span asp-validation-for="ConfirmPassword" class="text-danger" id="confirmPasswordError"></span>
                     </div>
-                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                 </div>
 
-                <!-- Submit -->
-                <div class="form-group mb-3">
-                    <button type="submit" class="btn btn-primary w-100">Create</button>
+                <!-- Submit Button -->
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary w-100">Create Account</button>
                 </div>
 
-                <!-- Already have an Account -->
-                <a class="helper-text" style="margin-left: 150px;" asp-controller="Login" asp-action="Login">Already have an account? Login here</a>
-
-
+                <div class="text-center">
+                    <a asp-controller="Login" asp-action="Login">Already have an account? Login here</a>
+                </div>
             </form>
         </div>
 

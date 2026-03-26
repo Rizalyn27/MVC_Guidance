@@ -3,23 +3,187 @@
     ViewData["Title"] = "Error";
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
 
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-}
+<style>
+    :root {
+        --rose: #e5344a;
+        --rose-soft: #fdeef0;
+        --rose-border: #f5c0c8;
+        --amber: #d97706;
+        --amber-soft: #fef3e2;
+        --amber-border: #f9d89a;
+        --ink: #0e1523;
+        --muted: #6b7696;
+        --border: #e4e8f4;
+        --surface: #ffffff;
+        --bg: #f5f7fb;
+        --radius: 16px;
+        --shadow: 0 2px 16px rgba(14,21,35,0.07);
+    }
 
-<h3>Development Mode</h3>
-<p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
-</p>
-<p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
-</p>
+    .error-page {
+        font-family: Arial, Helvetica, sans-serif,;
+        background: var(--bg);
+        min-height: 60vh;
+        padding: 48px 24px;
+        max-width: 680px;
+        margin: 0 auto;
+    }
+
+    .error-icon {
+        font-size: 3.5rem;
+        margin-bottom: 16px;
+        display: block;
+    }
+
+    .error-title {
+        font-family: Arial, Helvetica, sans-serif,;
+        font-size: 2.2rem;
+        font-weight: 400;
+        color: var(--rose);
+        margin-bottom: 6px;
+        letter-spacing: -0.01em;
+    }
+
+    .error-subtitle {
+        font-size: 1rem;
+        color: var(--muted);
+        margin-bottom: 32px;
+    }
+
+    /* ── Request ID card ── */
+    .error-id-card {
+        background: var(--rose-soft);
+        border: 1px solid var(--rose-border);
+        border-radius: var(--radius);
+        padding: 16px 20px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .error-id-label {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--rose);
+        white-space: nowrap;
+    }
+
+    .error-id-value {
+        font-family: Arial, Helvetica, sans-serif,;
+        font-size: 0.88rem;
+        color: var(--ink);
+        background: rgba(229,52,74,0.08);
+        padding: 3px 10px;
+        border-radius: 6px;
+        word-break: break-all;
+    }
+
+    /* ── Info card ── */
+    .error-info-card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 24px;
+        box-shadow: var(--shadow);
+        margin-bottom: 20px;
+    }
+
+        .error-info-card h3 {
+            font-family: Arial, Helvetica, sans-serif,;
+            font-size: 1.15rem;
+            font-weight: 400;
+            color: var(--ink);
+            margin-bottom: 12px;
+        }
+
+        .error-info-card p {
+            font-size: 0.88rem;
+            color: var(--muted);
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+
+            .error-info-card p:last-child {
+                margin-bottom: 0;
+            }
+
+    /* ── Warning banner ── */
+    .error-warning {
+        background: var(--amber-soft);
+        border: 1px solid var(--amber-border);
+        border-radius: var(--radius);
+        padding: 14px 18px;
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        margin-bottom: 24px;
+    }
+
+    .error-warning-icon {
+        font-size: 1.1rem;
+        flex-shrink: 0;
+        margin-top: 1px;
+    }
+
+    .error-warning p {
+        font-size: 0.85rem;
+        color: var(--amber);
+        line-height: 1.6;
+        margin: 0;
+        font-weight: 500;
+    }
+
+    .error-warning strong {
+        color: #92400e;
+    }
+
+    .highlight {
+        background: rgba(217,119,6,0.1);
+        color: #92400e;
+        padding: 1px 6px;
+        border-radius: 4px;
+        font-size: 0.82rem;
+        font-weight: 600;
+    }
+</style>
+
+<div class="error-page">
+
+    <span class="error-icon">⚠️</span>
+    <h1 class="error-title">Error.</h1>
+    <p class="error-subtitle">An error occurred while processing your request.</p>
+
+    @if (Model.ShowRequestId)
+    {
+        <div class="error-id-card">
+            <span class="error-id-label">Request ID</span>
+            <span class="error-id-value">@Model.RequestId</span>
+        </div>
+    }
+
+    <div class="error-info-card">
+        <h3>Development Mode</h3>
+        <p>
+            Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
+        </p>
+        <p>
+            <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
+            It can result in displaying sensitive information from exceptions to end users.
+        </p>
+    </div>
+
+    <div class="error-warning">
+        <span class="error-warning-icon">💡</span>
+        <p>
+            For local debugging, enable the <strong>Development</strong> environment by setting the
+            <span class="highlight">ASPNETCORE_ENVIRONMENT</span> environment variable to
+            <span class="highlight">Development</span> and restarting the app.
+        </p>
+    </div>
+
+</div>
