@@ -430,14 +430,14 @@
 </div>
 
 <script>
-    // --- Populate datetime min
+    // datetime
     const dateInput = document.getElementById('AppointmentDate');
     if(dateInput){
         const now = new Date();
         dateInput.min = now.toISOString().slice(0,16);
     }
 
-    // --- Appointment type toggle
+    //Appointment type toggle
     function toggleOtherInput(select){
         const other = document.getElementById('appointmentTypeOther');
         if(select.value === 'Other'){
